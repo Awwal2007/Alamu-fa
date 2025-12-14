@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Alamu Football Academy (AFA)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+    <link rel="icon" href="./image/oluwo_logo-removebg-preview.png" type="image/png">
+    <style>
+        :root {
+            /* Blue & White Theme */
+            --gold: #007BFF;       /* Bright Blue */
+            --red: #003366;        /* Navy Blue */
+            --white: #FFFFFF;      /* White */
+            --dark-red: #002244;   /* Darker Navy */
+            --light-gold: #E6F2FF; /* Very Light Blue */
+            --dark-gold: #0056B3;  /* Medium Blue */
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--white);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        } 
+        
+        /* Header Styles (Synced with Home Page) */
+        header {
+            /* Uses the Blue gradient from Home Page */
+            background: linear-gradient(135deg, var(--gold), var(--dark-red));
+            color: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+        }
+        
+        .logo-text h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .logo-image img {
+            width: 100px;
+            height: auto;
+        }
+
+        .logo-image img:hover {
+            transform: scale(1.1);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--gold);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Ticker */
+        .ticker-container {
+            background: var(--red);
+            color: var(--white);
+            padding: 10px 0;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 2px solid var(--dark-gold);
+        }
+        
+        .ticker-content {
+            display: flex;
+            animation: ticker 25s linear infinite;
+            white-space: nowrap;
+        }
+        
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .ticker-icon {
+            color: var(--white);
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .ticker-container:hover .ticker-content {
+            animation-play-state: paused;
+        }
+
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background: var(--light-gray);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--red);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: var(--gold);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .about-content {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            height: 450px;
+            width: 100%;
+            background: url('/image/homepage3.jpg') center/cover;
+            transition: transform 0.3s ease;
+        }
+
+        .about-image:hover {
+            transform: scale(1.02);
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--dark-red);
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        /* Achievements Section */
+        .achievements {
+            padding: 60px 0;
+            background: var(--white);
+        }
+
+        .achievements-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .achievement-card {
+            background: var(--light-gray);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .achievement-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark-red);
+            margin-bottom: 10px;
+        }
+
+        .achievement-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark-gray);
+        }
+
+        .achievement-desc {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        /* History Section */
+        .history {
+            padding: 60px 0;
+            background: var(--light-gray);
+        }
+
+        .history-content {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .history-text {
+            flex: 1;
+        }
+
+        .history-text h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--dark-red);
+        }
+
+        .history-text p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .history-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            height: 400px;
+            width: 100%;
+            background: url('/image/playes1.jpg') center/cover;
+            transition: transform 0.3s ease;
+        }
+
+        .history-image:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Footer */
+         footer {
+            background: linear-gradient(135deg, var(--red), var(--dark-red));
+            color: var(--white);
+            padding: 60px 0 20px;
+        }
+
+        footer a {
+            color: var(--white);
+            text-decoration: none;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background: var(--gold);
+            bottom: 0;
+            left: 0;
+        }
+        
+        .contact-info {
+            list-style: none;
+        }
+        
+        .contact-info li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: var(--gold);
+            color: var(--dark-gray);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-image, .about-text {
+                flex: none;
+                width: 100%;
+            }
+
+            .history-content {
+                flex-direction: column-reverse;
+            }
+
+            .history-image, .history-text {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--dark-red);
+                flex-direction: column;
+                padding: 20px;
+                gap: 15px;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class=" container logo">
+                <div class="logo-image">
+                    <img src="/image/alamu.png" alt="AFA Logo">
+                </div>
+                <div class="logo-text">
+                    <h1>Alamu Football Academy (AFA)</h1>
+                    <p>Excellence in Youth Development</p>
+                </div>
+            </div>
+            
+            <nav class="container">
+                <ul id="nav-menu">
+                    <li><a href="/index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/pages/about.html" style="color: var(--gold);"><i class="fas fa-info-circle"></i> About</a></li>
+                    <li><a href="/pages/OurPlayers.html"><i class="fas fa-users"></i> Squad</a></li>
+                    <li><a href="/pages/gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
+                    <li><a href="/pages/news.html"><i class="fas fa-newspaper"></i> News</a></li>
+                    <li><a href="/pages/contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                    <li><a href="/admin.html"><i class="fas fa-user-shield"></i> Admin</a></li>
+                </ul>
+                <button class="mobile-menu-btn" id="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+    <div class="ticker-container">
+        <div class="ticker-content">
+            <div class="ticker-item">
+                <i class="fas fa-star ticker-icon"></i>
+                <span>Welcome to the official website of Alamu Football Academy (AFA)</span>
+            </div>
+            <div class="ticker-item">
+                <i class="fas fa-calendar-alt ticker-icon"></i>
+                <span>Open Trials: August 15-18, 2023 at the Academy Ground</span>
+            </div>
+            <div class="ticker-item">
+                <i class="fas fa-graduation-cap ticker-icon"></i>
+                <span>Scholarship applications now open for outstanding talents</span>
+            </div>
+            <div class="ticker-item">
+                <i class="fas fa-hands-helping ticker-icon"></i>
+                <span>Community development initiative launched to empower local athletes</span>
+            </div>
+        </div>
+    </div>
+    
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>About The Academy</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-image">
+                </div>
+                <div class="about-text">
+                    <h3>Alamu Football Academy (AFA)</h3>
+                    <p>Alamu Football Academy is the premier destination for youth football development in Iwo Land. Established with a vision to nurture the next generation of football stars, AFA combines athletic training with character education.</p>
+                    <p>Our academy is known for its progressive training methods, commitment to player development, and efforts to promote sportsmanship and discipline globally. We are dedicated to fostering unity and progress through the beautiful game.</p>
+                    <p>Since inception, AFA has witnessed significant success in youth leagues, talent discovery, and community engagement. The academy is also recognized for its advocacy for peace and initiatives to empower youth through sports.</p>
+                    <p>Founded on strong principles of integrity and hard work, AFA provides a platform for young talents to showcase their skills. We believe that football is more than just a game; it is a tool for social change and personal development.</p>
+                    <p>The academy's leadership emphasizes inclusivity, innovation, and sustainability. We have implemented numerous programs aimed at improving physical fitness, mental resilience, and economic opportunities for all our athletes.</p>
+                    <p>Internationally, Alamu Football Academy represents Iwo Land at various tournaments, strengthening sporting ties and promoting our rich heritage. Our efforts have earned us recognition as a bridge-builder between grassroots talent and professional football.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="achievements">
+        <div class="container">
+            <div class="section-title">
+                <h2>Achievements & Impact</h2>
+            </div>
+            <div class="achievements-container">
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="achievement-number">500+</div>
+                    <h3 class="achievement-title">Players Developed</h3>
+                    <p class="achievement-desc">Youth players trained and mentored across Iwo Land</p>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="achievement-number">15</div>
+                    <h3 class="achievement-title">Tournaments Won</h3>
+                    <p class="achievement-desc">Regional and state championships secured by our teams</p>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-futbol"></i>
+                    </div>
+                    <div class="achievement-number">50+</div>
+                    <h3 class="achievement-title">Professional Signings</h3>
+                    <p class="achievement-desc">Graduates signed to professional clubs locally and abroad</p>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <div class="achievement-number">10+</div>
+                    <h3 class="achievement-title">Club Partnerships</h3>
+                    <p class="achievement-desc">Collaborations with national and international football clubs</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="history">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Legacy</h2>
+            </div>
+            <div class="history-content">
+                <div class="history-text">
+                    <h3>The AFA Tradition</h3>
+                    <p>Alamu Football Academy has quickly become a cornerstone of youth sports in the region. The institution represents dedication, discipline, and the pursuit of excellence on and off the pitch.</p>
+                    <p>Throughout our history, AFA has played a pivotal role in keeping youth engaged, fostering community spirit, and upholding the values of fair play. Each coaching staff member brings unique experience while honoring the academy's core philosophy.</p>
+                    <p>We continue this noble tradition, blending modern coaching techniques with traditional values. Our journey marks a new chapter in the sporting history of Iwo Land.</p>
+                </div>
+                <div class="history-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Contact Information</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i> AFA Campus, Iwo, Osun State, Nigeria</li>
+                        <li><i class="fas fa-phone"></i> +234 123 456 7890</li>
+                        <li><i class="fas fa-envelope"></i> contact@alamu-fa.com</li>
+                    </ul>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="contact-info">
+                        <li><a href="index.html"><i class="fas fa-arrow-right"></i> Home</a></li>
+                        <li><a href="about.html"><i class="fas fa-arrow-right"></i> About AFA</a></li>
+                        <li><a href="squad.html"><i class="fas fa-arrow-right"></i> Our Squad</a></li>
+                        <li><a href="activities.html"><i class="fas fa-arrow-right"></i> Activities</a></li>
+                        <li><a href="gallery.html"><i class="fas fa-arrow-right"></i> Gallery</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Visit The Academy</h3>
+                    <p>Alamu Football Academy is open to visitors and prospective talents by appointment. Experience the passion and dedication of our team.</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Alamu Football Academy (AFA) - All Rights Reserved | Designed with <i class="fas fa-heart" style="color: var(--gold);"></i> for the Game</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9JVWFn9a6RjC-_7-RweStkBTbE9P1F1k",
+            authDomain: "alamu-fc.firebaseapp.com",
+            projectId: "alamu-fc",
+            storageBucket: "alamu-fc.firebasestorage.app",
+            messagingSenderId: "519243570056",
+            appId: "1:519243570056:web:b4d95c7266beb61757f83d",
+            measurementId: "G-3HDT240BLK"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+
+    <script>
+        const mobileMenuBtn = document.getElementById('mobile-menu');
+        const navMenu = document.getElementById('nav-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('show');
+        });
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                navMenu.classList.remove('show');
+            });
+        });
+    </script>
+</body>
+</html>

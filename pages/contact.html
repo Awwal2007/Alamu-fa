@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Alamu Football Academy (AFA)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="./image/oluwo_logo-removebg-preview.png" type="image/png">
+    <style>
+        :root {
+            /* Blue & White Theme */
+            --gold: #007BFF;       /* Bright Blue */
+            --red: #003366;        /* Navy Blue */
+            --white: #FFFFFF;      /* White */
+            --dark-red: #002244;   /* Darker Navy */
+            --light-gold: #E6F2FF; /* Very Light Blue */
+            --dark-gold: #0056B3;  /* Medium Blue */
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--white);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        } 
+        
+        /* Header Styles (Synced with Home Page) */
+        header {
+            background: linear-gradient(135deg, var(--gold), var(--dark-red));
+            color: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+        }
+        
+        .logo-text h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .logo-image img {
+            width: 100px;
+            height: auto;
+        }
+
+        .logo-image img:hover {
+            transform: scale(1.1);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--gold);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--red);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: var(--gold);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .contact-container {
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .contact-info-box {
+            flex: 1;
+            background: var(--light-gold);
+            padding: 40px;
+            border-radius: 10px;
+        }
+
+        .info-item {
+            margin-bottom: 30px;
+        }
+
+        .info-item h3 {
+            font-size: 1.3rem;
+            color: var(--dark-red);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item p {
+            font-size: 1.05rem;
+            color: #555;
+            padding-left: 35px;
+        }
+
+        .contact-form-box {
+            flex: 1.5;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border-top: 5px solid var(--gold);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--gold);
+            outline: none;
+        }
+
+        .submit-btn {
+            background: var(--red);
+            color: var(--white);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: var(--gold);
+        }
+        
+        /* Map Section */
+        .map-section {
+            width: 100%;
+            height: 400px;
+            background: #eee;
+        }
+        
+        .map-section iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--red), var(--dark-red));
+            color: var(--white);
+            padding: 60px 0 20px;
+        }
+
+        footer a {
+            color: var(--white);
+            text-decoration: none;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background: var(--gold);
+            bottom: 0;
+            left: 0;
+        }
+        
+        .contact-info-footer {
+            list-style: none;
+        }
+        
+        .contact-info-footer li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: var(--gold);
+            color: var(--dark-gray);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .contact-container {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--dark-red);
+                flex-direction: column;
+                padding: 20px;
+                gap: 15px;
+            }
+
+            nav ul.show {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class=" container logo">
+                <div class="logo-image">
+                    <img src="/image/alamu.png" alt="AFA Logo">
+                </div>
+                <div class="logo-text">
+                    <h1>Alamu Football Academy (AFA)</h1>
+                    <p>Excellence in Youth Development</p>
+                </div>
+            </div>
+            
+            <nav class="container">
+                <ul id="nav-menu">
+                    <li><a href="/index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/pages/about.html"><i class="fas fa-info-circle"></i> About</a></li>
+                    <li><a href="/pages/OurPlayers.html"><i class="fas fa-users"></i> Squad</a></li>
+                    <li><a href="/pages/gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
+                    <li><a href="/pages/news.html"><i class="fas fa-newspaper"></i> News</a></li>
+                    <li><a href="/pages/contact.html" style="color: var(--gold);"><i class="fas fa-envelope"></i> Contact</a></li>
+                    <li><a href="/admin.html"><i class="fas fa-user-shield"></i> Admin</a></li>
+                </ul>
+                <button class="mobile-menu-btn" id="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <section class="contact-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Get In Touch</h2>
+                <p style="margin-top:10px; color:#666;">We would love to hear from you. Fill out the form below or visit us.</p>
+            </div>
+            
+            <div class="contact-container">
+                <div class="contact-info-box">
+                    <div class="info-item">
+                        <h3><i class="fas fa-map-marker-alt"></i> Our Location</h3>
+                        <p>Alamu Football Academy Campus,<br>Iwo, Osun State, Nigeria.</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-phone-alt"></i> Phone Number</h3>
+                        <p>+234 123 456 7890<br>+234 987 654 3210</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-envelope"></i> Email Address</h3>
+                        <p>contact@alamu-fa.com<br>admissions@alamu-fa.com</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-clock"></i> Working Hours</h3>
+                        <p>Mon - Fri: 8:00 AM - 6:00 PM<br>Sat: 9:00 AM - 2:00 PM</p>
+                    </div>
+                </div>
+                
+                <div class="contact-form-box">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" placeholder="Enter your name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <select id="subject">
+                                <option value="Admissions">Academy Admissions</option>
+                                <option value="Partnership">Partnership Inquiry</option>
+                                <option value="General">General Inquiry</option>
+                                <option value="Trials">Trials Information</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" rows="5" placeholder="How can we help you?" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="map-section">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126615.4265691176!2d4.1166667!3d7.6333333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1039d09c31327429%3A0x1000000000000000!2sIwo%2C%20Osun!5e0!3m2!1sen!2sng!4v1625678901234!5m2!1sen!2sng" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Contact Information</h3>
+                    <ul class="contact-info-footer">
+                        <li><i class="fas fa-map-marker-alt"></i> AFA Campus, Iwo, Osun State, Nigeria</li>
+                        <li><i class="fas fa-phone"></i> +234 123 456 7890</li>
+                        <li><i class="fas fa-envelope"></i> contact@alamu-fa.com</li>
+                    </ul>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="contact-info-footer">
+                        <li><a href="/index.html">Home</a></li>
+                        <li><a href="/pages/about.html">About AFA</a></li>
+                        <li><a href="/pages/squad.html">Our Squad</a></li>
+                        <li><a href="/pages/activities.html">Activities</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Visit The Academy</h3>
+                    <p>The Alamu Football Academy is open to visitors and prospective talents by appointment. Experience the passion and dedication of our team.</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Alamu Football Academy (AFA) - All Rights Reserved | Designed with <i class="fas fa-heart" style="color: var(--gold);"></i> for the Game</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9JVWFn9a6RjC-_7-RweStkBTbE9P1F1k",
+            authDomain: "alamu-fc.firebaseapp.com",
+            projectId: "alamu-fc",
+            storageBucket: "alamu-fc.firebasestorage.app",
+            messagingSenderId: "519243570056",
+            appId: "1:519243570056:web:b4d95c7266beb61757f83d",
+            measurementId: "G-3HDT240BLK"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Simple Form Submission Logic
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.querySelector('.submit-btn');
+            const originalText = btn.innerText;
+            btn.innerText = 'Sending...';
+            btn.disabled = true;
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+
+            try {
+                await addDoc(collection(db, "contacts"), {
+                    name: name,
+                    email: email,
+                    subject: subject,
+                    message: message,
+                    createdAt: serverTimestamp()
+                });
+                alert('Message sent successfully! We will get back to you soon.');
+                e.target.reset();
+            } catch (error) {
+                console.error("Error sending message: ", error);
+                alert('Error sending message. Please try again later.');
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
+
+    <script>
+        const mobileMenuBtn = document.getElementById('mobile-menu');
+        const navMenu = document.getElementById('nav-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('show');
+        });
+    </script>
+</body>
+</html>
