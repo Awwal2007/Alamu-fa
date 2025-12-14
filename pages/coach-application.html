@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coach Application - Telu Football Club</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="/image/alamu.png" type="image/png">
+    <style>
+        :root {
+            --gold: #007BFF;
+            --red: #003366;
+            --white: #FFFFFF;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+            --border-color: #e0e0e0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--light-gray); color: var(--dark-gray); line-height: 1.6; }
+
+        .form-header {
+            background: linear-gradient(135deg, var(--red), var(--gold));
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .form-header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .form-header h2 { font-size: 1.5rem; font-weight: 400; opacity: 0.9; }
+
+        .container { max-width: 900px; margin: -30px auto 50px; padding: 0 20px; position: relative; z-index: 10; }
+
+        .form-wrapper {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+
+        fieldset {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            background: #fff;
+        }
+
+        legend {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--red);
+            padding: 0 10px;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .full-width { grid-column: 1 / -1; }
+
+        .form-group { margin-bottom: 15px; }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        input[type="text"], input[type="email"], input[type="date"], input[type="tel"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--gold);
+            outline: none;
+        }
+
+        /* Checkbox Groups */
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* File Upload Styling */
+        .file-upload-section {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px dashed var(--gold);
+        }
+        
+        .upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .file-input-wrapper label { font-size: 0.9rem; margin-bottom: 5px; }
+        .required-mark { color: red; }
+
+        /* Experience Table */
+        .experience-entry {
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            background: var(--red);
+            color: var(--white);
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            background: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .container { padding: 0 10px; }
+            .form-wrapper { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-header">
+        <h1>TELU FOOTBALL CLUB</h1>
+        <h2>Coaches Application Form</h2>
+    </div>
+
+    <div class="container">
+        <form class="form-wrapper" id="coachingForm">
+            
+            <fieldset>
+                <legend>Section A: Personal Information</legend>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Full Name (Surname First) <span class="required-mark">*</span></label>
+                        <input type="text" name="fullName" required placeholder="e.g. ADEBAYO, Emmanuel Oluwaseun">
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth <span class="required-mark">*</span></label>
+                        <input type="date" name="dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender <span class="required-mark">*</span></label>
+                        <select name="gender" required>
+                            <option value="">Select...</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Marital Status</label>
+                        <select name="maritalStatus">
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Nationality <span class="required-mark">*</span></label>
+                        <input type="text" name="nationality" required>
+                    </div>
+                    <div class="form-group">
+                        <label>State of Origin</label>
+                        <input type="text" name="stateOrigin">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Residential Address <span class="required-mark">*</span></label>
+                        <textarea name="address" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number <span class="required-mark">*</span></label>
+                        <input type="tel" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address <span class="required-mark">*</span></label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Next of Kin Name</label>
+                        <input type="text" name="kinName">
+                    </div>
+                    <div class="form-group">
+                        <label>Next of Kin Phone</label>
+                        <input type="tel" name="kinPhone">
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Section B: Position Applied For</legend>
+                <p style="margin-bottom: 15px; font-size: 0.9rem;">Select one or more positions:</p>
+                <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox" name="position" value="Head Coach"> Head Coach</label>
+                    <label class="checkbox-item"><input type="checkbox" name="position" value="Assistant Coach"> Assistant Coach</label>
+                    <label class="checkbox-item"><input type="checkbox" name="position" value="Goalkeeper Trainer"> GK Trainer</label>
+                    <label class="checkbox-item"><input type="checkbox" name="position" value="Fitness Trainer"> Fitness Trainer</label>
+                    <label class="checkbox-item"><input type="checkbox" name="position" value="Youth Coach"> Youth Coach</label>
+                    <label class="checkbox-item"><input type="checkbox" name="position" value="Technical Adviser"> Tech. Adviser</label>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Section C: Qualifications & Uploads</legend>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Highest Education</label>
+                        <select name="education">
+                            <option value="SSCE">SSCE</option>
+                            <option value="OND">OND</option>
+                            <option value="HND">HND</option>
+                            <option value="B.Sc">B.Sc</option>
+                            <option value="M.Sc">M.Sc</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Highest Coaching License</label>
+                        <select name="licenseLevel">
+                            <option value="None">None</option>
+                            <option value="NFF D">NFF D License</option>
+                            <option value="NFF C">NFF C License</option>
+                            <option value="NFF B">NFF B License</option>
+                            <option value="CAF">CAF License</option>
+                            <option value="FIFA">FIFA License</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="file-upload-section">
+                    <h3 style="color: var(--red); border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 15px;">Required Documents</h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Upload CV (PDF/Word) <span class="required-mark">*</span></label>
+                            <input type="file" name="cv_upload" required accept=".pdf,.doc,.docx">
+                        </div>
+                        <div class="form-group">
+                            <label>International Passport / ID <span class="required-mark">*</span></label>
+                            <input type="file" name="passport_upload" required accept="image/*,.pdf">
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 15px; font-size: 0.95rem;">Coaching Certificates (Upload at least 3) <span class="required-mark">*</span></h4>
+                    <div class="upload-grid">
+                        <div class="file-input-wrapper">
+                            <label>Certificate 1 (Required)</label>
+                            <input type="file" class="cert-upload" required accept="image/*,.pdf">
+                        </div>
+                        <div class="file-input-wrapper">
+                            <label>Certificate 2 (Required)</label>
+                            <input type="file" class="cert-upload" required accept="image/*,.pdf">
+                        </div>
+                        <div class="file-input-wrapper">
+                            <label>Certificate 3 (Required)</label>
+                            <input type="file" class="cert-upload" required accept="image/*,.pdf">
+                        </div>
+                        <div class="file-input-wrapper">
+                            <label>Certificate 4 (Optional)</label>
+                            <input type="file" class="cert-upload" accept="image/*,.pdf">
+                        </div>
+                        <div class="file-input-wrapper">
+                            <label>Certificate 5 (Optional)</label>
+                            <input type="file" class="cert-upload" accept="image/*,.pdf">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Section D: Experience & Skills</legend>
+                <div class="form-group">
+                    <label>Years of Coaching Experience</label>
+                    <input type="number" name="experienceYears" placeholder="e.g. 5">
+                </div>
+                <div class="form-group">
+                    <label>Previous Clubs/Teams (Summary)</label>
+                    <textarea name="previousClubs" rows="3" placeholder="Club Name - Position - Year"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Preferred Playing Formation</label>
+                    <input type="text" name="formation" placeholder="e.g. 4-3-3, 4-4-2">
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Can work with youths?</label>
+                        <select name="workWithYouth">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Can work under pressure?</label>
+                        <select name="underPressure">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="form-group">
+                <label style="font-weight: normal; font-size: 0.9rem;">
+                    <input type="checkbox" required> 
+                    I hereby declare that the information provided above is true and correct to the best of my knowledge. I understand that any false information may lead to disqualification.
+                </label>
+            </div>
+
+            <button type="submit" class="btn-submit">SUBMIT APPLICATION</button>
+        </form>
+    </div>
+
+<script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+            import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+        
+            const firebaseConfig = {
+                apiKey: "AIzaSyB9JVWFn9a6RjC-_7-RweStkBTbE9P1F1k",
+                authDomain: "alamu-fc.firebaseapp.com",
+                projectId: "alamu-fc",
+                storageBucket: "alamu-fc.firebasestorage.app",
+                messagingSenderId: "519243570056",
+                appId: "1:519243570056:web:b4d95c7266beb61757f83d",
+                measurementId: "G-3HDT240BLK"
+            };
+        
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);    
+                const submitBtn = document.querySelector('.btn-submit');
+        
+                // Helper function to read file as a Base64 data URL string (Firestore compatible)
+                function readFileAsDataURL(file) {
+                    return new Promise((resolve, reject) => {
+                        if (!file) {
+                            resolve(null);
+                            return;
+                        }
+                        // Add a size check to prevent massive files from crashing Firestore (max 1MB per document)
+                        // 500KB limit as a practical safety measure, considering Base64 encoding overhead
+                        const MAX_FILE_SIZE_BYTES = 500 * 1024; 
+                        if (file.size > MAX_FILE_SIZE_BYTES) { 
+                            reject(new Error(`File "${file.name}" is too large (${(file.size / 1024).toFixed(2)} KB). Maximum allowed size is ${MAX_FILE_SIZE_BYTES / 1024} KB.`));
+                            return;
+                        }
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+                }
+    document.getElementById('coachingForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const certInputs = document.querySelectorAll('.cert-upload');
+        let uploadedCount = 0;
+        certInputs.forEach(input => {
+            if(input.files.length > 0) uploadedCount++;
+        });
+
+        if(uploadedCount < 3) {
+            alert('Please upload at least 3 Coaching Certificates.');
+            return;
+        }
+
+        submitBtn.textContent = 'Submitting...';
+        submitBtn.disabled = true;
+
+        try {
+            const form = e.target;
+            const formData = new FormData(form); 
+            const data = Object.fromEntries(formData.entries());
+
+            const positions = [];
+            document.querySelectorAll('input[name="position"]:checked').forEach(checkbox => {
+                positions.push(checkbox.value);
+            });
+            data.position = positions;
+
+            // --- File Conversion to Base64 (Firestore Compatible) ---
+            
+            // 1. Get raw File objects
+            const cvFile = formData.get('cv_upload');
+            const passportFile = formData.get('passport_upload');
+            const certFiles = Array.from(document.querySelectorAll('.cert-upload')).map(input => input.files[0]).filter(file => file);
+
+            // 2. Convert raw File objects to Base64 strings using the helper function
+            data.cvUrl = await readFileAsDataURL(cvFile);
+            data.passportUrl = await readFileAsDataURL(passportFile);
+            data.certificateUrls = await Promise.all(certFiles.map(file => readFileAsDataURL(file)));
+            
+            // 3. IMPORTANT: Delete the raw File objects from the data payload
+            // This is to prevent sending File objects to Firestore and reduce document size
+            delete data.cv_upload;
+            delete data.passport_upload;
+
+
+            // --- Save application data (with file URLs) to Firestore ---
+            await addDoc(collection(db, "coach-applications"), {
+                ...data,
+                createdAt: serverTimestamp()
+            });
+
+            alert('Application submitted successfully! We will review your application and get back to you.');
+
+            // --- Email Notification Placeholder ---
+            console.log(`
+                --- Email Notification ---
+                To: ${data.email}
+                Subject: Your Coaching Application to Alamu FA has been received.
+
+                Dear ${data.fullName},
+
+                Thank you for applying for a coaching position at Alamu Football Academy.
+                Your application will be reviewed in the next 24 hours.
+
+                --- Admin Notification ---
+                To: olamilekanmuhayad@yahoo.com
+                Subject: New Coach Application: ${data.fullName}
+            `);
+
+
+            form.reset();
+
+        } catch (error) {
+            console.error("Error submitting application: ", error);
+            // Alert user about the error, including potential size issues
+            alert(`An error occurred during submission: ${error.message || 'Please check the console for details and ensure file sizes are small.'}`);
+        } finally {
+            submitBtn.textContent = 'SUBMIT APPLICATION';
+            submitBtn.disabled = false;
+        }
+    });
+</script>
+</body>
+</html>

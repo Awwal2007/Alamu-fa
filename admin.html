@@ -1,0 +1,391 @@
+<!--
+    Admin Page Summary:
+    - This page provides a dashboard for managing the website's content.
+    - All forms on the website now submit their data to Firestore collections, which are displayed in the tables below.
+    - A `firestore.rules` file has been created with security rules. You will need to deploy these to your Firebase project.
+    - Email notifications for coach applications require a backend service like Firebase Cloud Functions. A placeholder is in the `coach-application.html` file.
+    - The gallery management form now supports uploading multiple images at once.
+
+    CORS Issue on local development:
+    - If you are seeing a CORS error in the console when uploading images, you need to configure your Firebase Storage bucket to allow requests from your local development server.
+    - I have created a `cors.json` file in your project directory with the necessary configuration.
+    - To apply this configuration, run the following command in your terminal, after installing and authenticating the gsutil tool:
+    - gsutil cors set cors.json gs://alamu-fc.firebasestorage.app
+    
+    Next Steps:
+    1. Create a user in the Firebase Authentication section of your Firebase project console. This will be your admin user.
+    2. Deploy the `firestore.rules` to your Firebase project using the Firebase CLI: `firebase deploy --only firestore:rules`
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Alamu Football Academy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="./image/alamu.png" type="image/png">
+    <style>
+        :root {
+            --gold: #007BFF;
+            --red: #003366;
+            --white: #FFFFFF;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--light-gray); margin: 0; }
+        .container { max-width: 1400px; margin: 20px auto; padding: 20px; }
+        header { background: linear-gradient(135deg, var(--red), var(--gold)); color: var(--white); padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
+        h1 { font-size: 2rem; }
+        .admin-section { background: var(--white); border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .admin-section-header { background-color: var(--light-gold); padding: 15px 20px; border-bottom: 1px solid #ddd; border-radius: 8px 8px 0 0; }
+        .admin-section-header h2 { margin: 0; font-size: 1.5rem; color: var(--red); }
+        .admin-section-content { padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; }
+        input, textarea, select { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem; }
+        button { background: var(--red); color: var(--white); padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: var(--gold); }
+        #auth-container { text-align: center; padding: 50px; background: var(--white); border-radius: 8px; max-width: 400px; margin: 50px auto; }
+        #admin-dashboard { display: none; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th, .data-table td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        .data-table th { background-color: var(--light-gold); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Admin Dashboard</h1>
+        </header>
+
+        <div id="auth-container">
+            <h2>Admin Login</h2>
+            <div class="form-group">
+                <label for="admin-email">Email</label>
+                <input type="email" id="admin-email" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="admin-password">Password</label>
+                <input type="password" id="admin-password" placeholder="Enter your password">
+            </div>
+            <button id="login-btn">Login</button>
+        </div>
+
+        <div id="admin-dashboard">
+            <div class="admin-section">
+                <div class="admin-section-header"><h2>Gallery Management</h2></div>
+                <div class="admin-section-content">
+                    <form id="gallery-upload-form">
+                        <div class="form-group">
+                            <label for="gallery-title">Image Title</label>
+                            <input type="text" id="gallery-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gallery-date">Date</label>
+                            <input type="date" id="gallery-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gallery-image">Image Files (select one or more)</label>
+                            <input type="file" id="gallery-image" accept="image/*" required multiple>
+                        </div>
+                        <button type="submit">Upload to Gallery</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-header"><h2>News Management</h2></div>
+                <div class="admin-section-content">
+                    <form id="news-form">
+                        <div class="form-group">
+                            <label for="news-title">News Title</label>
+                            <input type="text" id="news-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="news-content">Content</label>
+                            <textarea id="news-content" rows="5" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="news-image">Image File (optional)</label>
+                            <input type="file" id="news-image" accept="image/*">
+                        </div>
+                        <button type="submit">Publish News</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-header"><h2>Player Applications</h2></div>
+                <div class="admin-section-content">
+                    <table class="data-table" id="player-applications-table">
+                        <thead><tr><th>Name</th><th>Position</th><th>Age</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-header"><h2>Coach Applications</h2></div>
+                <div class="admin-section-content">
+                    <table class="data-table" id="coach-applications-table">
+                        <thead><tr><th>Name</th><th>Email</th><th>Position</th><th>Applied On</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-header"><h2>Contact Messages</h2></div>
+                <div class="admin-section-content">
+                    <table class="data-table" id="contact-messages-table">
+                        <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Received On</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <button id="logout-btn">Logout</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9JVWFn9a6RjC-_7-RweStkBTbE9P1F1k",
+            authDomain: "alamu-fc.firebaseapp.com",
+            projectId: "alamu-fc",
+            storageBucket: "alamu-fc.firebasestorage.app",
+            messagingSenderId: "519243570056",
+            appId: "1:519243570056:web:b4d95c7266beb61757f83d",
+            measurementId: "G-3HDT240BLK"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const authContainer = document.getElementById('auth-container');
+        const adminDashboard = document.getElementById('admin-dashboard');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const adminEmailInput = document.getElementById('admin-email');
+        const adminPasswordInput = document.getElementById('admin-password');
+
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                authContainer.style.display = 'none';
+                adminDashboard.style.display = 'block';
+                // Load data for the dashboard
+                loadPlayerApplications();
+                loadCoachApplications();
+                loadContactMessages();
+            } else {
+                authContainer.style.display = 'block';
+                adminDashboard.style.display = 'none';
+            }
+        });
+
+        loginBtn.addEventListener('click', () => {
+            const email = adminEmailInput.value;
+            const password = adminPasswordInput.value;
+            signInWithEmailAndPassword(auth, email, password)
+                .catch(error => {
+                    alert("Login failed: " + error.message);
+                });
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth);
+        });
+
+        // Helper function to resize and encode image
+        function resizeImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 1920;
+                        const MAX_HEIGHT = 1080;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.9)); // Get JPEG data URL with 90% quality
+                    };
+                    img.onerror = reject;
+                    img.src = event.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Gallery Management
+        const galleryUploadForm = document.getElementById('gallery-upload-form');
+        galleryUploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('gallery-title').value;
+            const date = document.getElementById('gallery-date').value;
+            const imageFiles = document.getElementById('gallery-image').files;
+
+            if (imageFiles.length === 0) {
+                alert("Please select at least one image file.");
+                return;
+            }
+
+            const uploadPromises = [];
+            for (const imageFile of imageFiles) {
+                // Resize image before uploading
+                const uploadTask = resizeImage(imageFile).then(async (dataUrl) => {
+                    await addDoc(collection(db, 'gallery'), {
+                        title: title,
+                        date: date,
+                        src: dataUrl,
+                        createdAt: serverTimestamp()
+                    });
+                });
+                uploadPromises.push(uploadTask);
+            }
+
+            try {
+                await Promise.all(uploadPromises);
+                alert('All images uploaded successfully!');
+                galleryUploadForm.reset();
+            } catch (error) {
+                console.error("Error uploading images: ", error);
+                alert('An error occurred during upload. Please try again.');
+            }
+        });
+
+        // News Management
+        const newsForm = document.getElementById('news-form');
+        newsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('news-title').value;
+            const content = document.getElementById('news-content').value;
+            const imageFile = document.getElementById('news-image').files[0];
+            let imageUrl = '';
+
+            try {
+                if (imageFile) {
+                    imageUrl = await resizeImage(imageFile); // Use the resize function
+                }
+
+                await addDoc(collection(db, 'news'), {
+                    title: title,
+                    content: content,
+                    media: imageUrl,
+                    createdAt: serverTimestamp(),
+                    date: new Date().toISOString().split('T')[0]
+                });
+
+                alert('News published successfully!');
+                newsForm.reset();
+            } catch (error) {
+                console.error("Error publishing news: ", error);
+                alert('Error publishing news. Please try again.');
+            }
+        });
+
+
+        // Player Applications
+        async function loadPlayerApplications() {
+            const tableBody = document.getElementById('player-applications-table').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+            const querySnapshot = await getDocs(collection(db, "player-applications"));
+            querySnapshot.forEach(doc => {
+                const data = doc.data();
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${data.name}</td>
+                    <td>${data.position}</td>
+                    <td>${data.age}</td>
+                    <td>${data.status}</td>
+                    <td>
+                        <button class="approve-player-btn" data-id="${doc.id}">Approve</button>
+                        <button class="reject-player-btn" data-id="${doc.id}">Reject</button>
+                    </td>
+                `;
+            });
+        }
+        
+        document.addEventListener('click', async (e) => {
+            if (e.target && e.target.classList.contains('approve-player-btn')) {
+                const docId = e.target.dataset.id;
+                const appDocRef = doc(db, "player-applications", docId);
+                const appDoc = await getDoc(appDocRef);
+                if (appDoc.exists()) {
+                    const appData = appDoc.data();
+                    await addDoc(collection(db, "players"), appData);
+                    await updateDoc(appDocRef, { status: "approved" });
+                    loadPlayerApplications();
+                    alert('Player approved and added to squad.');
+                }
+            }
+            if (e.target && e.target.classList.contains('reject-player-btn')) {
+                const docId = e.target.dataset.id;
+                await deleteDoc(doc(db, "player-applications", docId));
+                loadPlayerApplications();
+                alert('Player application rejected.');
+            }
+        });
+
+        // Coach Applications
+        async function loadCoachApplications() {
+            const tableBody = document.getElementById('coach-applications-table').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+            const querySnapshot = await getDocs(collection(db, "coach-applications"));
+            querySnapshot.forEach(doc => {
+                const data = doc.data();
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${data.fullName}</td>
+                    <td>${data.email}</td>
+                    <td>${data.position.join(', ')}</td>
+                    <td>${data.createdAt.toDate().toLocaleDateString()}</td>
+                `;
+            });
+        }
+
+        // Contact Messages
+        async function loadContactMessages() {
+            const tableBody = document.getElementById('contact-messages-table').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+            const querySnapshot = await getDocs(collection(db, "contact-messages"));
+            querySnapshot.forEach(doc => {
+                const data = doc.data();
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${data.name}</td>
+                    <td>${data.email}</td>
+                    <td>${data.subject}</td>
+                    <td>${data.message}</td>
+                    <td>${data.createdAt.toDate().toLocaleDateString()}</td>
+                `;
+            });
+        }
+
+    </script>
+
+</body>
+</html>

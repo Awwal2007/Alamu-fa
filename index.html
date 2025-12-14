@@ -1,3 +1,7 @@
+<!--
+    - The "Apply Now" button in the hiring popup now links directly to the coach application page.
+    - The hardcoded images in the "Our Squad" and "AFA Gallery" sections have been removed. These sections will now only display images uploaded through the admin page.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,14 +10,14 @@
     <title>Alamu Football Academy (AFA) - Official Website</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
-    <link rel="icon" href="./image/oluwo_logo-removebg-preview.png" type="image/png">
+    <link rel="icon" href="./image/alamu.png" type="image/png">
     <style>
         :root {
             /* Blue & White Theme */
-            --gold: #007BFF;       /* Bright Blue */
-            --red: #003366;        /* Navy Blue */
-            --white: #FFFFFF;      /* White */
-            --dark-red: #002244;   /* Darker Navy */
+            --gold: #007BFF;        /* Bright Blue */
+            --red: #003366;         /* Navy Blue */
+            --white: #FFFFFF;       /* White */
+            --dark-red: #002244;    /* Darker Navy */
             --light-gold: #E6F2FF; /* Very Light Blue */
             --dark-gold: #0056B3;  /* Medium Blue */
             --light-gray: #f5f5f5;
@@ -992,6 +996,43 @@
             margin-right: 10px;
         }
         
+        /* New CSS for File Inputs */
+        .file-upload-group {
+            border: 1px dashed var(--gold);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .file-upload-group label {
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--dark-red);
+            font-size: 1rem;
+        }
+
+        .file-upload-group input[type="file"] {
+            display: block;
+            margin-top: 5px;
+            padding: 10px 0;
+            border: none;
+            background: transparent;
+            font-size: 0.95rem;
+        }
+
+        .required-star:before {
+            content: '*';
+            color: var(--red);
+            font-weight: 900;
+            margin-left: 3px;
+        }
+
+        .certificate-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
         /* Footer */
         footer {
             background: linear-gradient(135deg, var(--red), var(--dark-red));
@@ -1204,7 +1245,7 @@
         <div class="header-content">
             <div class=" container logo">
                 <div class="logo-image">
-                    <img src="image/alamu.png" alt="AFA Logo">
+                    <img src="image/alamu.png">
                 </div>
                 <div class="logo-text">
                     <h1>Alamu Football Academy (AFA)</h1>
@@ -1220,7 +1261,6 @@
                     <li><a href="/pages/gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
                     <li><a href="/pages/news.html"><i class="fas fa-newspaper"></i> News</a></li>
                     <li><a href="/pages/contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
-                    <li><a href="/admin.html"><i class="fas fa-user-shield"></i> Admin</a></li>
                 </ul>
                 <button class="mobile-menu-btn" id="mobile-menu">
                     <i class="fas fa-bars"></i>
@@ -1256,7 +1296,7 @@
             
             <div class="hero-right">
                 <h2 class="news-feed-title"><i class="fas fa-newspaper"></i> Academy News Feed</h2>
-                </div>
+            </div>
         </div>
     </section>
     <section class="about" id="about">
@@ -1288,7 +1328,7 @@
         </div>
     </section>
     
-    <section class="activities" id="activities">
+    <!-- <section class="activities" id="activities">
         <div class="container">
             <div class="section-title">
                 <h2>Academy Activities</h2>
@@ -1300,7 +1340,7 @@
                 <a href="pages/activities.html" class="view-all-btn">View All Activities <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
-    </section>
+    </section> -->
     
     <section class="gallery" id="gallery"> 
         <div class="container">
@@ -1308,53 +1348,6 @@
                 <h2>AFA Gallery</h2>
             </div>
             <div class="gallery-container">
-                <div class="gallery-item" onclick="openModal(0)">
-                    <img src="image/news2.jpg" alt="Academy Opening">
-                    <div class="gallery-caption">
-                        <h3>Academy Opening Ceremony</h3>
-                        <p>November 2015</p>
-                    </div>
-                </div>
-            
-                <div class="gallery-item" onclick="openModal(1)">
-                    <img src="image/players .jpg" alt="Training Session">
-                    <div class="gallery-caption">
-                        <h3>Morning Training Session</h3>
-                        <p>January 2023</p>
-                    </div>
-                </div>
-                
-                <div class="gallery-item" onclick="openModal(2)">
-                    <img src="image/news1.jpg" alt="Tournament Win">
-                    <div class="gallery-caption">
-                        <h3>Regional Tournament</h3>
-                        <p>August 2022</p>
-                    </div>
-                </div>
-                
-                <div class="gallery-item" onclick="openModal(3)">
-                    <img src="image/telu 21.jpg" alt="Team Meeting">
-                    <div class="gallery-caption">
-                        <h3>Strategy Meeting</h3>
-                        <p>March 2023</p>
-                    </div>
-                </div>
-                
-                <div class="gallery-item" onclick="openModal(4)">
-                    <img src="image/telu 12.jpg" alt="Award Ceremony">
-                    <div class="gallery-caption">
-                        <h3>Player Awards</h3>
-                        <p>February 2023</p>
-                    </div>
-                </div>
-                
-                <div class="gallery-item" onclick="openModal(5)">
-                    <img src="image/telu 14.jpg" alt="Youth Program">
-                    <div class="gallery-caption">
-                        <h3>Grassroots Program</h3>
-                        <p>May 2023</p>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -1377,193 +1370,11 @@
             </div>
             <h2>We Are Hiring!</h2>
             <p>Alamu Football Academy is looking for experienced and passionate coaches to join our team.</p>
-            <button class="apply-btn" onclick="openApplicationForm()">Apply Now</button>
+            <a href="pages/coach-application.html" class="apply-btn">Apply Now</a>
         </div>
     </div>
 
-    <div id="applicationFormModal" class="app-form-modal">
-        <div class="app-form-container">
-            <div class="form-header">
-                <h2>ALAMU FOOTBALL ACADEMY</h2>
-                <p>Coaches Application Form</p>
-            </div>
-            <form id="coachApplicationForm">
-                <div class="form-body">
-                    <div class="form-section">
-                        <h3>Section A: Personal Information</h3>
-                        <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label>Full Name (Surname First)</label>
-                                <input type="text" name="fullName" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Date of Birth</label>
-                                <input type="date" name="dob" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Gender</label>
-                                <select name="gender" class="form-control">
-                                    <option>Male</option>
-                                    <option>Female</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Marital Status</label>
-                                <select name="maritalStatus" class="form-control">
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Nationality</label>
-                                <input type="text" name="nationality" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>State of Origin</label>
-                                <input type="text" name="stateOfOrigin" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>LGA</label>
-                                <input type="text" name="lga" class="form-control" required>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>Residential Address</label>
-                                <input type="text" name="address" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Phone Number</label>
-                                <input type="tel" name="phone" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Email Address</label>
-                                <input type="email" name="email" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Next of Kin Name</label>
-                                <input type="text" name="nextOfKin" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label>Next of Kin Phone</label>
-                                <input type="tel" name="nextOfKinPhone" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3>Section B: Position Applied For</h3>
-                        <div class="checkbox-group">
-                            <label class="checkbox-item"><input type="checkbox" name="position" value="Head Coach"> Head Coach</label>
-                            <label class="checkbox-item"><input type="checkbox" name="position" value="Assistant Coach"> Assistant Coach</label>
-                            <label class="checkbox-item"><input type="checkbox" name="position" value="Goalkeeper Trainer"> Goalkeeper Trainer</label>
-                            <label class="checkbox-item"><input type="checkbox" name="position" value="Fitness Trainer"> Fitness Trainer</label>
-                            <label class="checkbox-item"><input type="checkbox" name="position" value="Youth Coach"> Youth Development Coach</label>
-                            <label class="checkbox-item"><input type="checkbox" name="position" value="Technical Adviser"> Technical Adviser</label>
-                        </div>
-                        <div class="form-group full-width" style="margin-top: 15px;">
-                            <label>Other (Specify)</label>
-                            <input type="text" name="positionOther" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3>Section C: Coaching Qualifications</h3>
-                        <div class="form-group">
-                            <label>Highest Educational Qualification</label>
-                            <select name="education" class="form-control">
-                                <option>SSCE</option>
-                                <option>OND</option>
-                                <option>HND</option>
-                                <option>B.Sc</option>
-                                <option>M.Sc</option>
-                                <option>Others</option>
-                            </select>
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Coaching Certifications (Select all that apply)</label>
-                            <div class="checkbox-group">
-                                <label class="checkbox-item"><input type="checkbox" name="certification" value="NFF D"> NFF D License</label>
-                                <label class="checkbox-item"><input type="checkbox" name="certification" value="NFF C"> NFF C License</label>
-                                <label class="checkbox-item"><input type="checkbox" name="certification" value="NFF B"> NFF B License</label>
-                                <label class="checkbox-item"><input type="checkbox" name="certification" value="CAF"> CAF License</label>
-                                <label class="checkbox-item"><input type="checkbox" name="certification" value="FIFA"> FIFA License</label>
-                            </div>
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Issuing Body</label>
-                                <input type="text" name="issuingBody" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label>Year Obtained</label>
-                                <input type="number" name="yearObtained" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3>Section D: Experience & Skills</h3>
-                        <div class="form-group">
-                            <label>Years of Experience</label>
-                            <input type="number" name="experienceYears" class="form-control">
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Previous Clubs/Teams Coached (List details)</label>
-                            <textarea name="previousClubs" class="form-control" rows="3"></textarea>
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Preferred Playing Formation(s)</label>
-                            <input type="text" name="formation" class="form-control">
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Area of Specialization</label>
-                            <div class="checkbox-group">
-                                <label class="checkbox-item"><input type="checkbox" name="specialization" value="Tactics"> Tactics</label>
-                                <label class="checkbox-item"><input type="checkbox" name="specialization" value="Player Development"> Player Development</label>
-                                <label class="checkbox-item"><input type="checkbox" name="specialization" value="Fitness"> Fitness</label>
-                                <label class="checkbox-item"><input type="checkbox" name="specialization" value="Match Analysis"> Match Analysis</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3>Section F: Availability</h3>
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Availability</label>
-                                <select name="availability" class="form-control">
-                                    <option>Full Time</option>
-                                    <option>Part Time</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Expected Monthly Salary (₦)</label>
-                                <input type="number" name="salary" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label>Date Available</label>
-                                <input type="date" name="startDate" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <h3>Declaration</h3>
-                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">
-                            I hereby declare that the information provided above is true and correct to the best of my knowledge. I understand that any false information may lead to disqualification.
-                        </p>
-                        <div class="checkbox-item">
-                            <input type="checkbox" required> I Agree to the terms.
-                        </div>
-                    </div>
-                </div>
-                <div class="form-footer">
-                    <button type="button" class="btn-cancel" onclick="closeApplicationForm()">Cancel</button>
-                    <button type="submit" class="btn-submit">Submit Application</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    
     
     <footer id="contact">
     
@@ -1606,7 +1417,7 @@
         </div>
     </footer>
 
-   <script type="module">
+    <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
@@ -1732,7 +1543,7 @@
             pinnedNews.className = 'news-card pinned';
             pinnedNews.innerHTML = `
                 <div class="news-image">
-                    <img src="/image/alamu.jpg" alt="We Are Hiring">
+                    <img src="/image/alamu.png" alt="We Are Hiring">
                 </div>
                 <div class="news-content">
                     <span class="news-date"><i class="fas fa-thumbtack"></i> Pinned Announcement</span>
@@ -1801,14 +1612,7 @@
                     count++;
                 });
             } catch (error) {
-                // Fallback Players
-                const fallbackPlayers = [
-                    { name: "Ahmed Musa", position: "Forward", number: 7, img: "image/players .jpg", age: 17 },
-                    { name: "Sodiq Beyioku", position: "Midfielder", number: 10, img: "image/telu 21.jpg", age: 18 },
-                    { name: "Tunde Alamu", position: "Defender", number: 4, img: "image/playes1.jpg", age: 16 },
-                    { name: "Victor Eze", position: "Goalkeeper", number: 1, img: "image/telu 12.jpg", age: 18 }
-                ];
-                fallbackPlayers.forEach(player => createPlayerCard(player, playersContainer));
+                playersContainer.innerHTML = '<p>No players found.</p>';
             }
         }
 
@@ -1908,62 +1712,15 @@
                          document.body.style.overflow = 'hidden';
                     }
                 }
-            } catch (error) { console.error(error); }
+            } catch (error) { 
+                galleryContainer.innerHTML = '<p>No gallery images found.</p>';
+            }
         }
 
         // --- EXPOSE MODAL FUNCTIONS TO WINDOW SCOPE ---
         window.closeHiringPopup = function() {
             document.getElementById('hiringPopup').style.display = 'none';
         }
-
-        window.openApplicationForm = function() {
-            document.getElementById('hiringPopup').style.display = 'none'; // Close hiring alert
-            document.getElementById('applicationFormModal').style.display = 'block';
-        }
-
-        window.closeApplicationForm = function() {
-            document.getElementById('applicationFormModal').style.display = 'none';
-        }
-
-        // --- FORM SUBMISSION HANDLER ---
-        const applicationForm = document.getElementById('coachApplicationForm');
-        applicationForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const submitBtn = applicationForm.querySelector('.btn-submit');
-            submitBtn.textContent = 'Submitting...';
-            submitBtn.disabled = true;
-
-            const formData = new FormData(applicationForm);
-            const data = Object.fromEntries(formData.entries());
-
-            // Handle Checkboxes manually (FormData only gets the last checked one for same name)
-            const positions = [];
-            document.querySelectorAll('input[name="position"]:checked').forEach(c => positions.push(c.value));
-            data.position = positions;
-
-            const certifications = [];
-            document.querySelectorAll('input[name="certification"]:checked').forEach(c => certifications.push(c.value));
-            data.certification = certifications;
-
-            const specs = [];
-            document.querySelectorAll('input[name="specialization"]:checked').forEach(c => specs.push(c.value));
-            data.specialization = specs;
-
-            data.submittedAt = new Date();
-
-            try {
-                await addDoc(collection(db, "applications"), data);
-                alert("Application Submitted Successfully! We will contact you soon.");
-                closeApplicationForm();
-                applicationForm.reset();
-            } catch (e) {
-                console.error("Error adding document: ", e);
-                alert("Error submitting form. Please try again.");
-            } finally {
-                submitBtn.textContent = 'Submit Application';
-                submitBtn.disabled = false;
-            }
-        });
 
     </script>
 
@@ -1991,16 +1748,29 @@
         });
 
         // Gallery functionality
-        let galleryImages = [];
+        // Note: galleryImages is populated by the module script above (window.galleryImages)
+        let galleryImages = window.galleryImages || [
+             // Fallback definition if module hasn't run yet
+            { src: "image/news2.jpg", title: "Academy Opening Ceremony", date: "November 2015" },
+            { src: "image/players .jpg", title: "Morning Training Session", date: "January 2023" },
+            { src: "image/news1.jpg", title: "Regional Tournament", date: "August 2022" },
+            { src: "image/telu 21.jpg", title: "Strategy Meeting", date: "March 2023" },
+            { src: "image/telu 12.jpg", title: "Player Awards", date: "February 2023" },
+            { src: "image/telu 14.jpg", title: "Grassroots Program", date: "May 2023" }
+        ];
+
         const modal = document.getElementById('galleryModal');
         const modalImg = document.getElementById('modalImg');
         const modalCaption = document.getElementById('modalCaption');
         let currentIndex = 0;
 
         function openModal(index) {
+            // Use the globally updated array
+            const currentImages = window.galleryImages.length > 0 ? window.galleryImages : galleryImages;
+
             currentIndex = index;
-            modalImg.src = galleryImages[index].src;
-            modalCaption.innerHTML = `<h3>${galleryImages[index].title}</h3><p>${galleryImages[index].date}</p>`;
+            modalImg.src = currentImages[index].src;
+            modalCaption.innerHTML = `<h3>${currentImages[index].title}</h3><p>${currentImages[index].date}</p>`;
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
@@ -2011,10 +1781,18 @@
         }
 
         function changeSlide(direction) {
-            currentIndex = (currentIndex + direction + galleryImages.length) % galleryImages.length;
-            modalImg.src = galleryImages[currentIndex].src;
-            modalCaption.innerHTML = `<h3>${galleryImages[currentIndex].title}</h3><p>${galleryImages[currentIndex].date}</p>`;
+            const currentImages = window.galleryImages.length > 0 ? window.galleryImages : galleryImages;
+
+            currentIndex = (currentIndex + direction + currentImages.length) % currentImages.length;
+            modalImg.src = currentImages[currentIndex].src;
+            modalCaption.innerHTML = `<h3>${currentImages[currentIndex].title}</h3><p>${currentImages[currentIndex].date}</p>`;
         }
+
+        // Expose functions globally for inline onclick attributes
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.changeSlide = changeSlide;
+
 
         // Close modal when clicking outside the image
         modal.addEventListener('click', (e) => {
@@ -2036,9 +1814,11 @@
             }
         });
 
-        // Update galleryImages array after loading
+        // Update galleryImages array after loading (to ensure local script uses data fetched by module script)
         setTimeout(() => {
-            galleryImages = window.galleryImages;
+            if (window.galleryImages.length > 0) {
+                galleryImages = window.galleryImages;
+            }
         }, 1000);
     </script>
 </body>

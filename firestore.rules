@@ -1,0 +1,55 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function to check for admin
+    function isAdmin() {
+      // In a real app, you would have a more secure way to identify admins.
+      // For example, checking a custom claim on the user's token.
+      // Or checking an 'isAdmin' field in a 'users' collection.
+      // For now, we will allow any authenticated user to act as an admin.
+      return request.auth != null;
+    }
+
+    // Players: Public can read, only admin can write
+    match /players/{playerId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Player Applications: Anyone can create, only admin can read/update/delete
+    match /player-applications/{applicationId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // News: Public can read, only admin can write
+    match /news/{newsId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Gallery: Public can read, only admin can write
+    match /gallery/{imageId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Coach Applications: Anyone can create, only admin can read/delete
+    match /coach-applications/{applicationId} {
+      allow create: if true;
+      allow read, delete: if isAdmin();
+    }
+
+    // Contact Messages: Anyone can create, only admin can read/delete
+    match /contact-messages/{messageId} {
+      allow create: if true;
+      allow read, delete: if isAdmin();
+    }
+
+    // Settings (for hero image, etc.): Public can read, only admin can write
+    match /settings/{settingId} {
+        allow read: if true;
+        allow write: if isAdmin();
+    }
+  }
+}

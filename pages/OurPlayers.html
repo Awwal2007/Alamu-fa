@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Squad - Alamu Football Academy (AFA)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="./image/oluwo_logo-removebg-preview.png" type="image/png">
+    <link rel="icon" href="/image/alamu.png" type="image/png">
     <style>
         :root {
             --gold: #007BFF;
@@ -123,7 +123,7 @@
         <div class="header-content">
             <div class=" container logo">
                 <div class="logo-image">
-                    <img src="image/alamu.png" alt="AFA Logo">
+                    <img src="/image/alamu.png" alt="AFA Logo">
                 </div>
                 <div class="logo-text">
                     <h1>Alamu Football Academy (AFA)</h1>
@@ -224,11 +224,15 @@
                         </div>
 
                         <div class="form-section-title"><i class="fas fa-phone"></i> Contact Details</div>
-                        <div class="form-group full-width">
+                        
+                        <div class="form-group">
                             <label for="pGuidance">Guardian Contact (Phone)</label>
-                            <input type="tel" id="pGuidance" class="form-control" placeholder="+234..." required>
+                            <input type="tel" id="pGuidance" name="guardianContactPhone" class="form-control" placeholder="+234 800 000 000" required>
                         </div>
-
+                        <div class="form-group">
+                            <label for="pEmail">Player/Guardian Email</label>
+                            <input type="email" id="pEmail" name="playerEmail" class="form-control" placeholder="example@domain.com">
+                        </div>
                         <div class="form-section-title"><i class="fas fa-graduation-cap"></i> Status</div>
                         
                         <div class="form-group full-width">
@@ -392,15 +396,34 @@
                 uniSpecific.classList.remove('hidden');
             }
         });
+
+        // Helper function to read file as a Base64 data URL string (Firestore compatible)
+        function readFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) {
+                    resolve(null);
+                    return;
+                }
+                // Add a size check to prevent massive files from crashing Firestore (max 1MB per document)
+                // 500KB limit as a practical safety measure, considering Base64 encoding overhead
+                const MAX_FILE_SIZE_BYTES = 500 * 1024; 
+                if (file.size > MAX_FILE_SIZE_BYTES) { 
+                    reject(new Error(`File "${file.name}" is too large (${(file.size / 1024).toFixed(2)} KB). Maximum allowed size is ${MAX_FILE_SIZE_BYTES / 1024} KB.`));
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, orderBy, query, addDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-        // Import Storage functions
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
+        import { getFirestore, collection, getDocs, orderBy, query, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-        // Firebase Configuration - YOUR SPECIFIC CREDENTIALS
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyB9JVWFn9a6RjC-_7-RweStkBTbE9P1F1k",
             authDomain: "alamu-fc.firebaseapp.com",
@@ -412,8 +435,7 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const storage = getStorage(app); // Initialize Storage
+        const db = getFirestore(app); 
 
         document.addEventListener('DOMContentLoaded', loadPlayers);
 
@@ -422,10 +444,14 @@
             grid.innerHTML = '<div style="text-align:center; width:100%; grid-column: 1/-1;"><i class="fas fa-spinner fa-spin fa-2x" style="color: var(--gold);"></i></div>';
 
             try {
+                // Load players from the 'players' collection (approved players)
                 const q = query(collection(db, 'players'), orderBy('number', 'asc'));
                 const querySnapshot = await getDocs(q);
                 
-                if (querySnapshot.empty) throw new Error("No players");
+                if (querySnapshot.empty) {
+                    grid.innerHTML = '<div style="text-align:center; width:100%; grid-column: 1/-1; color:#777;">The squad is currently empty.</div>';
+                    return;
+                }
 
                 grid.innerHTML = '';
                 querySnapshot.forEach((doc) => {
@@ -433,13 +459,8 @@
                 });
 
             } catch (error) {
-                console.log("Loading fallback data:", error);
-                grid.innerHTML = '';
-                // Simple Fallback
-                const fallbackPlayers = [
-                    { name: "Victor Eze", position: "Goalkeeper", number: 1, age: 18 }
-                ];
-                fallbackPlayers.forEach(p => renderPlayerCard(p, grid));
+                console.error("Error loading players:", error);
+                grid.innerHTML = '<div style="text-align:center; width:100%; grid-column: 1/-1; color:red;">Could not load player data.</div>';
             }
         }
 
@@ -467,28 +488,24 @@
             container.appendChild(card);
         }
 
-        // --- SUBMIT FORM WITH FILE UPLOAD ---
+        // --- SUBMIT PLAYER APPLICATION ---
         document.getElementById('addPlayerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.querySelector('.submit-btn-form');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
             btn.disabled = true;
 
             try {
-                // 1. Handle Image Upload
                 const fileInput = document.getElementById('pImgFile');
-                let imageUrl = '/image/players .jpg'; // Default fallback
+                let imageUrl = '/image/players .jpg';
 
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
-                    // Create a unique name for the file
-                    const storageRef = ref(storage, 'players/' + Date.now() + '_' + file.name);
+                    const storageRef = ref(storage, 'player-applications/' + Date.now() + '_' + file.name);
                     await uploadBytes(storageRef, file);
                     imageUrl = await getDownloadURL(storageRef);
                 }
 
-                // 2. Gather Data based on logic
                 const status = document.getElementById('pStatus').value;
                 const educationData = {
                     status: status,
@@ -512,7 +529,6 @@
                     }
                 }
 
-                // 3. Construct Final Object
                 const playerData = {
                     name: document.getElementById('pName').value,
                     position: document.getElementById('pPosition').value,
@@ -521,23 +537,24 @@
                     games: parseInt(document.getElementById('pGames').value) || 0,
                     goals: parseInt(document.getElementById('pGoals').value) || 0,
                     guardianContact: document.getElementById('pGuidance').value,
+                    email: document.getElementById('pEmail').value,
                     img: imageUrl,
-                    ...educationData // Spread the education/status data
+                    status: 'pending', // Initial status
+                    createdAt: serverTimestamp(),
+                    ...educationData
                 };
 
-                // 4. Save to Firestore
-                await addDoc(collection(db, 'players'), playerData);
+                await addDoc(collection(db, 'player-applications'), playerData);
                 
-                alert('Player added successfully!');
+                alert('Application submitted successfully! It will be reviewed by the admin.');
                 document.getElementById('addPlayerModal').style.display = 'none';
                 e.target.reset();
-                loadPlayers(); // Refresh grid
 
             } catch (error) {
-                console.error("Error adding player: ", error);
-                alert("Error saving player. Check console for details.");
+                console.error("Error submitting application: ", error);
+                alert("Error submitting application. Please try again.");
             } finally {
-                btn.innerHTML = originalText;
+                btn.innerHTML = '<i class="fas fa-save"></i> Save Player';
                 btn.disabled = false;
             }
         });
@@ -546,11 +563,17 @@
             const cards = document.querySelectorAll('.player-card');
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+
             cards.forEach(card => {
                 const position = card.getAttribute('data-position');
-                if (category === 'all' || position === category) card.style.display = 'block';
-                else card.style.display = 'none';
+                if (category === 'all' || position === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
             });
         };
     </script>
