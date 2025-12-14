@@ -497,13 +497,11 @@
 
             try {
                 const fileInput = document.getElementById('pImgFile');
-                let imageUrl = '/image/players .jpg';
+                let imageUrl = '/image/players .jpg'; // Default image
 
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
-                    const storageRef = ref(storage, 'player-applications/' + Date.now() + '_' + file.name);
-                    await uploadBytes(storageRef, file);
-                    imageUrl = await getDownloadURL(storageRef);
+                    imageUrl = await readFileAsDataURL(file); // Convert file to Base64
                 }
 
                 const status = document.getElementById('pStatus').value;
