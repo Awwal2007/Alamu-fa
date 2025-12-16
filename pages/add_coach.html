@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Coach - Alamu Football Academy Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../image/alamu.png" type="image/png">
+    <style>
+        :root {
+            --blue: #007BFF;
+            --dark-blue: #003366;
+            --white: #FFFFFF;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--light-gray); margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 20px auto; background: var(--white); border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 30px; }
+        header { background: linear-gradient(135deg, var(--dark-blue), var(--blue)); color: var(--white); padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
+        h1 { font-size: 2rem; margin: 0; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); }
+        input[type="text"], input[type="number"], input[type="file"], textarea { 
+            width: 100%; 
+            padding: 10px; 
+            border-radius: 5px; 
+            border: 1px solid #ccc; 
+            font-size: 1rem; 
+            box-sizing: border-box; 
+        }
+        button { 
+            background: var(--dark-blue); 
+            color: var(--white); 
+            padding: 10px 15px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            transition: background 0.3s;
+            margin-right: 10px;
+        }
+        button:hover { background: var(--blue); }
+        .btn-cancel { background: #6c757d; }
+        .btn-cancel:hover { background: #5a6268; }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-user-plus"></i> Add New Coach</h1>
+        </header>
+
+        <div id="message-area" class="alert" style="display: none;"></div>
+
+        <form id="add-coach-form">
+            <div class="form-group">
+                <label for="coach-name">Coach Name</label>
+                <input type="text" id="coach-name" required>
+            </div>
+            <div class="form-group">
+                <label for="coach-position">Position</label>
+                <input type="text" id="coach-position" placeholder="e.g., Head Coach, Assistant Coach" required>
+            </div>
+
+            <div class="form-group">
+                <label for="coach-image">Coach Image</label>
+                <input type="file" id="coach-image" accept="image/*" required>
+            </div>
+            <button type="submit"><i class="fas fa-plus"></i> Add Coach</button>
+            <button type="button" class="btn-cancel" onclick="window.location.href='../admin.html'"><i class="fas fa-arrow-left"></i> Back to Dashboard</button>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+        // If you're going to use Firebase Storage for images, you'd import:
+        // import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9JVWFn9a6RjC-_7-RweStkBTbE9P1F1k",
+            authDomain: "alamu-fc.firebaseapp.com",
+            projectId: "alamu-fc",
+            storageBucket: "alamu-fc.firebasestorage.app",
+            messagingSenderId: "519243570056",
+            appId: "1:519243570056:web:b4d95c7266beb61757f83d",
+            measurementId: "G-3HDT240BLK"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        // const storage = getStorage(app); // Initialize storage if used
+
+        const addCoachForm = document.getElementById('add-coach-form');
+        const messageArea = document.getElementById('message-area');
+
+        function showMessage(message, type) {
+            messageArea.textContent = message;
+            messageArea.className = `alert alert-${type}`;
+            messageArea.style.display = 'block';
+        }
+
+        function clearMessage() {
+            messageArea.style.display = 'none';
+            messageArea.textContent = '';
+        }
+
+        // Helper function to resize and encode image (copied from admin.html for consistency)
+        function resizeImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 1920;
+                        const MAX_HEIGHT = 1080;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        // Using image/webp for better compression and quality on a modern site
+                        resolve(canvas.toDataURL('image/webp', 0.8)); 
+                    };
+                    img.onerror = reject;
+                    img.src = event.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        addCoachForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearMessage();
+
+            const name = document.getElementById('coach-name').value;
+            const position = document.getElementById('coach-position').value;
+
+            const imageFile = document.getElementById('coach-image').files[0];
+
+            if (!imageFile) {
+                showMessage('Please select a coach image.', 'danger');
+                return;
+            }
+
+            const submitBtn = addCoachForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+
+            try {
+                const imageUrl = await resizeImage(imageFile); // Resize and get data URL
+
+                await addDoc(collection(db, 'coaches'), {
+                    name: name,
+                    position: position,
+
+                    img: imageUrl, // Storing image as data URL
+                    createdAt: serverTimestamp()
+                });
+
+                showMessage('Coach added successfully!', 'success');
+                addCoachForm.reset();
+            } catch (error) {
+                console.error("Error adding coach: ", error);
+                showMessage(`Error adding coach: ${error.message}`, 'danger');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Coach';
+            }
+        });
+    </script>
+
+</body>
+</html>

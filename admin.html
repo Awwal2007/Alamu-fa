@@ -1,21 +1,3 @@
-<!--
-    Admin Page Summary:
-    - This page provides a dashboard for managing the website's content.
-    - All forms on the website now submit their data to Firestore collections, which are displayed in the tables below.
-    - A `firestore.rules` file has been created with security rules. You will need to deploy these to your Firebase project.
-    - Email notifications for coach applications require a backend service like Firebase Cloud Functions. A placeholder is in the `coach-application.html` file.
-    - The gallery management form now supports uploading multiple images at once.
-
-    CORS Issue on local development:
-    - If you are seeing a CORS error in the console when uploading images, you need to configure your Firebase Storage bucket to allow requests from your local development server.
-    - I have created a `cors.json` file in your project directory with the necessary configuration.
-    - To apply this configuration, run the following command in your terminal, after installing and authenticating the gsutil tool:
-    - gsutil cors set cors.json gs://alamu-fc.firebasestorage.app
-    
-    Next Steps:
-    1. Create a user in the Firebase Authentication section of your Firebase project console. This will be your admin user.
-    2. Deploy the `firestore.rules` to your Firebase project using the Firebase CLI: `firebase deploy --only firestore:rules`
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,37 +8,140 @@
     <link rel="icon" href="./image/alamu.png" type="image/png">
     <style>
         :root {
-            --gold: #007BFF;
-            --red: #003366;
+            --blue: #007BFF;
+            --dark-blue: #003366;
             --white: #FFFFFF;
             --light-gray: #f5f5f5;
             --dark-gray: #333;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
         }
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--light-gray); margin: 0; }
         .container { max-width: 1400px; margin: 20px auto; padding: 20px; }
-        header { background: linear-gradient(135deg, var(--red), var(--gold)); color: var(--white); padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
+        header { background: linear-gradient(135deg, var(--dark-blue), var(--blue)); color: var(--white); padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
         h1 { font-size: 2rem; }
         .admin-section { background: var(--white); border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 30px; }
-        .admin-section-header { background-color: var(--light-gold); padding: 15px 20px; border-bottom: 1px solid #ddd; border-radius: 8px 8px 0 0; }
-        .admin-section-header h2 { margin: 0; font-size: 1.5rem; color: var(--red); }
+        .admin-section-header { background-color: #f0f8ff; padding: 15px 20px; border-bottom: 1px solid #ddd; border-radius: 8px 8px 0 0; }
+        .admin-section-header h2 { margin: 0; font-size: 1.5rem; color: var(--dark-blue); }
         .admin-section-content { padding: 20px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: 600; }
-        input, textarea, select { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem; }
-        button { background: var(--red); color: var(--white); padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
-        button:hover { background: var(--gold); }
+        input, textarea, select { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem; box-sizing: border-box; }
+        button { 
+            background: var(--dark-blue); 
+            color: var(--white); 
+            padding: 10px 15px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            transition: background 0.3s;
+            margin-right: 5px;
+        }
+        button:hover { background: var(--blue); }
+
+        .btn-success { background: var(--success); }
+        .btn-success:hover { background: #1e7e34; }
+        .btn-danger { background: var(--danger); }
+        .btn-danger:hover { background: #bd2130; }
+        .btn-warning { background: var(--warning); color: var(--dark-gray); }
+        .btn-warning:hover { background: #d39e00; }
+
         #auth-container { text-align: center; padding: 50px; background: var(--white); border-radius: 8px; max-width: 400px; margin: 50px auto; }
         #admin-dashboard { display: none; }
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th, .data-table td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-        .data-table th { background-color: var(--light-gold); }
+        .data-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .data-table th, .data-table td { padding: 12px; border: 1px solid #ddd; text-align: left; word-wrap: break-word; }
+        .data-table th { background-color: #e9ecef; color: var(--dark-blue); font-weight: 700; }
+        .data-table tbody tr:nth-child(even) { background-color: var(--light-gray); }
+
+        /* Actions column width for better table layout */
+        .data-table th:last-child, .data-table td:last-child { width: 180px; text-align: center; }
+
+        /* Modal Styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-btn:hover, .close-btn:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* Flex container for action buttons */
+        .action-btns {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        /* --- Responsiveness (Mobile First) --- */
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            h1 { font-size: 1.5rem; }
+            .admin-section-header h2 { font-size: 1.2rem; }
+            .data-table, .data-table tbody, .data-table td, .data-table th, .data-table thead, .data-table tr {
+                display: block; /* Stacks table elements */
+            }
+            .data-table thead { display: none; } /* Hides the header */
+            .data-table tr { 
+                margin-bottom: 10px; 
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+            .data-table td { 
+                border: none; 
+                border-bottom: 1px solid #eee; 
+                position: relative;
+                padding-left: 50%; /* Space for the label */
+                text-align: right;
+            }
+            .data-table td:before { /* Pseudo-element for custom header labels */
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 45%;
+                padding-left: 10px;
+                font-weight: bold;
+                text-align: left;
+                color: var(--dark-blue);
+            }
+            .data-table td:last-child { 
+                border-bottom: none; 
+                padding-left: 10px;
+                text-align: center;
+                width: auto;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <header>
-            <h1>Admin Dashboard</h1>
+            <h1><i class="fas fa-tools"></i> Admin Dashboard</h1>
         </header>
 
         <div id="auth-container">
@@ -69,12 +154,15 @@
                 <label for="admin-password">Password</label>
                 <input type="password" id="admin-password" placeholder="Enter your password">
             </div>
-            <button id="login-btn">Login</button>
+            <button id="login-btn"><i class="fas fa-sign-in-alt"></i> Login</button>
         </div>
 
         <div id="admin-dashboard">
+            <button id="logout-btn" class="btn-danger" style="float: right; margin-bottom: 20px;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <div style="clear: both;"></div>
+
             <div class="admin-section">
-                <div class="admin-section-header"><h2>Gallery Management</h2></div>
+                <div class="admin-section-header"><h2><i class="fas fa-images"></i> Gallery Management</h2></div>
                 <div class="admin-section-content">
                     <form id="gallery-upload-form">
                         <div class="form-group">
@@ -89,13 +177,19 @@
                             <label for="gallery-image">Image Files (select one or more)</label>
                             <input type="file" id="gallery-image" accept="image/*" required multiple>
                         </div>
-                        <button type="submit">Upload to Gallery</button>
+                        <button type="submit"><i class="fas fa-upload"></i> Upload to Gallery</button>
                     </form>
+                    
+                    <h3 style="margin-top: 30px; color: var(--dark-blue);">Existing Gallery Items</h3>
+                    <table class="data-table" id="gallery-table">
+                        <thead><tr><th>Title</th><th>Date</th><th>Image Preview</th><th>Actions</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
 
             <div class="admin-section">
-                <div class="admin-section-header"><h2>News Management</h2></div>
+                <div class="admin-section-header"><h2><i class="fas fa-newspaper"></i> News Management</h2></div>
                 <div class="admin-section-content">
                     <form id="news-form">
                         <div class="form-group">
@@ -110,41 +204,74 @@
                             <label for="news-image">Image File (optional)</label>
                             <input type="file" id="news-image" accept="image/*">
                         </div>
-                        <button type="submit">Publish News</button>
+                        <button type="submit"><i class="fas fa-plus"></i> Publish News</button>
                     </form>
-                </div>
-            </div>
 
-            <div class="admin-section">
-                <div class="admin-section-header"><h2>Player Applications</h2></div>
-                <div class="admin-section-content">
-                    <table class="data-table" id="player-applications-table">
-                        <thead><tr><th>Name</th><th>Position</th><th>Age</th><th>Status</th><th>Action</th></tr></thead>
+                    <h3 style="margin-top: 30px; color: var(--dark-blue);">Published News</h3>
+                    <table class="data-table" id="news-table">
+                        <thead><tr><th>Title</th><th>Date</th><th>Content Snippet</th><th>Actions</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
 
             <div class="admin-section">
-                <div class="admin-section-header"><h2>Coach Applications</h2></div>
+                <div class="admin-section-header"><h2><i class="fas fa-chalkboard-teacher"></i> Coach Management</h2></div>
                 <div class="admin-section-content">
-                    <table class="data-table" id="coach-applications-table">
-                        <thead><tr><th>Name</th><th>Email</th><th>Position</th><th>Applied On</th></tr></thead>
+                    <a href="pages/add_coach.html" class="button"><i class="fas fa-plus"></i> Add Coach</a>
+                    <h3 style="margin-top: 30px; color: var(--dark-blue);">Existing Coaches</h3>
+                    <table class="data-table" id="coaches-table">
+                        <thead><tr><th>Name</th><th>Position</th><th>Age</th><th>Image Preview</th><th>Actions</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
 
             <div class="admin-section">
-                <div class="admin-section-header"><h2>Contact Messages</h2></div>
+                <div class="admin-section-header"><h2><i class="fas fa-envelope"></i> Contact Messages</h2></div>
                 <div class="admin-section-content">
                     <table class="data-table" id="contact-messages-table">
-                        <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Received On</th></tr></thead>
+                        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Subject</th><th>Message Content</th><th>Received On</th><th>Actions</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
-            <button id="logout-btn">Logout</button>
+
+            <div class="admin-section">
+                <div class="admin-section-header"><h2><i class="fas fa-user-plus"></i> Join Us Applications</h2></div>
+                <div class="admin-section-content">
+                    <table class="data-table" id="join-requests-table">
+                        <thead><tr><th>Full Name</th><th>Email</th><th>Phone</th><th>DOB</th><th>Position</th><th>Message</th><th>Applied On</th><th>Actions</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="news-edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Edit News Item</h2>
+            <form id="news-edit-form">
+                <input type="hidden" id="edit-news-id">
+                <div class="form-group">
+                    <label for="edit-news-title">Title</label>
+                    <input type="text" id="edit-news-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-news-content">Content</label>
+                    <textarea id="edit-news-content" rows="8" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Current Image</label>
+                    <img id="edit-news-current-img" style="max-width: 100px; max-height: 100px; display: block; margin-bottom: 10px;">
+                    <label for="edit-news-new-image">Replace Image (optional)</label>
+                    <input type="file" id="edit-news-new-image" accept="image/*">
+                </div>
+                <button type="submit" class="btn-success"><i class="fas fa-save"></i> Save Changes</button>
+            </form>
         </div>
     </div>
 
@@ -152,6 +279,9 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, addDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+        // Import necessary Storage functions (if you switch from data URLs to Firebase Storage)
+        // import { getStorage, ref, deleteObject } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
+
 
         const firebaseConfig = {
             apiKey: "AIzaSyB9JVWFn9a6RjC-_7-RweStkBTbE9P1F1k",
@@ -166,6 +296,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        // const storage = getStorage(app); // For actual storage operations
 
         const authContainer = document.getElementById('auth-container');
         const adminDashboard = document.getElementById('admin-dashboard');
@@ -174,14 +305,16 @@
         const adminEmailInput = document.getElementById('admin-email');
         const adminPasswordInput = document.getElementById('admin-password');
 
+        const newsEditModal = document.getElementById('news-edit-modal');
+        const newsEditForm = document.getElementById('news-edit-form');
+        const closeModalBtn = document.querySelector('#news-edit-modal .close-btn');
+
+        // --- Authentication ---
         onAuthStateChanged(auth, user => {
             if (user) {
                 authContainer.style.display = 'none';
                 adminDashboard.style.display = 'block';
-                // Load data for the dashboard
-                loadPlayerApplications();
-                loadCoachApplications();
-                loadContactMessages();
+                loadAllData();
             } else {
                 authContainer.style.display = 'block';
                 adminDashboard.style.display = 'none';
@@ -201,7 +334,18 @@
             signOut(auth);
         });
 
-        // Helper function to resize and encode image
+        // --- Modal Control ---
+        closeModalBtn.addEventListener('click', () => {
+            newsEditModal.style.display = 'none';
+        });
+
+        window.onclick = function(event) {
+            if (event.target == newsEditModal) {
+                newsEditModal.style.display = 'none';
+            }
+        }
+
+        // --- Helper function to resize and encode image ---
         function resizeImage(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -230,7 +374,8 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.9)); // Get JPEG data URL with 90% quality
+                        // Using image/webp for better compression and quality on a modern site
+                        resolve(canvas.toDataURL('image/webp', 0.8)); 
                     };
                     img.onerror = reject;
                     img.src = event.target.result;
@@ -240,7 +385,36 @@
             });
         }
 
-        // Gallery Management
+        // --- Central Data Loading ---
+        async function loadData(collectionName, tableId, renderRowFunction) {
+            const tableBody = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">Loading...</td></tr>';
+            try {
+                const querySnapshot = await getDocs(collection(db, collectionName));
+                tableBody.innerHTML = '';
+                querySnapshot.forEach(doc => {
+                    const data = doc.data();
+                    const row = tableBody.insertRow();
+                    row.innerHTML = renderRowFunction(doc.id, data);
+                });
+                if (querySnapshot.empty) {
+                     tableBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">No data found.</td></tr>';
+                }
+            } catch(e) {
+                 console.error("Error loading data from " + collectionName, e);
+                 tableBody.innerHTML = '<tr><td colspan="10" style="color:red; text-align:center;">Failed to load data.</td></tr>';
+            }
+        }
+
+        function loadAllData() {
+            loadContactMessages();
+            loadGallery();
+            loadNews();
+            loadCoaches();
+            loadJoinRequests(); // Added for "Join Us" applications
+        }
+
+        // --- Gallery Management ---
         const galleryUploadForm = document.getElementById('gallery-upload-form');
         galleryUploadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -252,15 +426,20 @@
                 alert("Please select at least one image file.");
                 return;
             }
+            
+            // Disable button and show loading state
+            const submitBtn = e.submitter;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+
 
             const uploadPromises = [];
             for (const imageFile of imageFiles) {
-                // Resize image before uploading
                 const uploadTask = resizeImage(imageFile).then(async (dataUrl) => {
                     await addDoc(collection(db, 'gallery'), {
                         title: title,
                         date: date,
-                        src: dataUrl,
+                        src: dataUrl, // Data URL is stored here
                         createdAt: serverTimestamp()
                     });
                 });
@@ -271,13 +450,49 @@
                 await Promise.all(uploadPromises);
                 alert('All images uploaded successfully!');
                 galleryUploadForm.reset();
+                loadGallery();
             } catch (error) {
                 console.error("Error uploading images: ", error);
-                alert('An error occurred during upload. Please try again.');
+                alert('An error occurred during upload: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-upload"></i> Upload to Gallery';
             }
         });
 
-        // News Management
+        async function loadGallery() {
+             await loadData('gallery', 'gallery-table', (id, data) => `
+                <td data-label="Title">${data.title}</td>
+                <td data-label="Date">${data.date}</td>
+                <td data-label="Preview"><img src="${data.src}" style="max-width: 50px; height: auto; border-radius: 3px;"></td>
+                <td data-label="Actions">
+                    <div class="action-btns">
+                        <button class="delete-gallery-btn btn-danger" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </td>
+            `);
+        }
+
+        document.addEventListener('click', async (e) => {
+            // Delete Gallery Item
+            if (e.target && e.target.classList.contains('delete-gallery-btn')) {
+                if (!confirm("Are you sure you want to delete this gallery item?")) return;
+                const docId = e.target.dataset.id;
+                try {
+                    // NOTE: If you switch to Firebase Storage, you must first get the storage path from the document,
+                    // and then use deleteObject(ref(storage, path)) before deleting the Firestore document.
+                    await deleteDoc(doc(db, "gallery", docId));
+                    alert('Gallery item deleted successfully.');
+                    loadGallery();
+                } catch (error) {
+                    console.error("Error deleting gallery item: ", error);
+                    alert('Error deleting item.');
+                }
+            }
+        });
+
+
+        // --- News Management (Add/Publish) ---
         const newsForm = document.getElementById('news-form');
         newsForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -285,6 +500,10 @@
             const content = document.getElementById('news-content').value;
             const imageFile = document.getElementById('news-image').files[0];
             let imageUrl = '';
+
+            const submitBtn = e.submitter;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
 
             try {
                 if (imageFile) {
@@ -301,89 +520,207 @@
 
                 alert('News published successfully!');
                 newsForm.reset();
+                loadNews();
             } catch (error) {
                 console.error("Error publishing news: ", error);
                 alert('Error publishing news. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-plus"></i> Publish News';
             }
         });
 
-
-        // Player Applications
-        async function loadPlayerApplications() {
-            const tableBody = document.getElementById('player-applications-table').getElementsByTagName('tbody')[0];
-            tableBody.innerHTML = '';
-            const querySnapshot = await getDocs(collection(db, "player-applications"));
-            querySnapshot.forEach(doc => {
-                const data = doc.data();
-                const row = tableBody.insertRow();
-                row.innerHTML = `
-                    <td>${data.name}</td>
-                    <td>${data.position}</td>
-                    <td>${data.age}</td>
-                    <td>${data.status}</td>
-                    <td>
-                        <button class="approve-player-btn" data-id="${doc.id}">Approve</button>
-                        <button class="reject-player-btn" data-id="${doc.id}">Reject</button>
-                    </td>
-                `;
-            });
+        // --- News Management (Load/Edit/Delete) ---
+        async function loadNews() {
+             await loadData('news', 'news-table', (id, data) => `
+                <td data-label="Title">${data.title}</td>
+                <td data-label="Date">${data.date || 'N/A'}</td>
+                <td data-label="Content Snippet">${data.content.substring(0, 50)}${data.content.length > 50 ? '...' : ''}</td>
+                <td data-label="Actions">
+                    <div class="action-btns">
+                        <button class="edit-news-btn btn-warning" data-id="${id}"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="delete-news-btn btn-danger" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </td>
+            `);
         }
         
-        document.addEventListener('click', async (e) => {
-            if (e.target && e.target.classList.contains('approve-player-btn')) {
-                const docId = e.target.dataset.id;
-                const appDocRef = doc(db, "player-applications", docId);
-                const appDoc = await getDoc(appDocRef);
-                if (appDoc.exists()) {
-                    const appData = appDoc.data();
-                    await addDoc(collection(db, "players"), appData);
-                    await updateDoc(appDocRef, { status: "approved" });
-                    loadPlayerApplications();
-                    alert('Player approved and added to squad.');
+        // Handle News Edit Form Submission
+        newsEditForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const docId = document.getElementById('edit-news-id').value;
+            const title = document.getElementById('edit-news-title').value;
+            const content = document.getElementById('edit-news-content').value;
+            const newImageFile = document.getElementById('edit-news-new-image').files[0];
+            const submitBtn = e.submitter;
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            try {
+                const newsDocRef = doc(db, "news", docId);
+                const updateData = {
+                    title: title,
+                    content: content,
+                    updatedAt: serverTimestamp()
+                };
+
+                if (newImageFile) {
+                    // Resize and get the new data URL
+                    updateData.media = await resizeImage(newImageFile);
                 }
-            }
-            if (e.target && e.target.classList.contains('reject-player-btn')) {
-                const docId = e.target.dataset.id;
-                await deleteDoc(doc(db, "player-applications", docId));
-                loadPlayerApplications();
-                alert('Player application rejected.');
+
+                await updateDoc(newsDocRef, updateData);
+                alert('News updated successfully!');
+                newsEditModal.style.display = 'none';
+                newsEditForm.reset();
+                loadNews();
+
+            } catch (error) {
+                console.error("Error updating news: ", error);
+                alert('Error updating news. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
             }
         });
 
-        // Coach Applications
-        async function loadCoachApplications() {
-            const tableBody = document.getElementById('coach-applications-table').getElementsByTagName('tbody')[0];
-            tableBody.innerHTML = '';
-            const querySnapshot = await getDocs(collection(db, "coach-applications"));
-            querySnapshot.forEach(doc => {
-                const data = doc.data();
-                const row = tableBody.insertRow();
-                row.innerHTML = `
-                    <td>${data.fullName}</td>
-                    <td>${data.email}</td>
-                    <td>${data.position.join(', ')}</td>
-                    <td>${data.createdAt.toDate().toLocaleDateString()}</td>
-                `;
-            });
+
+        document.addEventListener('click', async (e) => {
+            if (e.target && e.target.classList.contains('edit-news-btn')) {
+                const docId = e.target.dataset.id;
+                try {
+                    const docSnap = await getDoc(doc(db, "news", docId));
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        
+                        // Populate modal fields
+                        document.getElementById('edit-news-id').value = docId;
+                        document.getElementById('edit-news-title').value = data.title;
+                        document.getElementById('edit-news-content').value = data.content;
+                        document.getElementById('edit-news-current-img').src = data.media || '';
+
+                        // Show modal
+                        newsEditModal.style.display = 'block';
+                    } else {
+                        alert('News item not found.');
+                    }
+                } catch(error) {
+                    console.error("Error loading news for edit:", error);
+                    alert("Could not load news data.");
+                }
+            }
+
+            // Delete News Item
+            if (e.target && e.target.classList.contains('delete-news-btn')) {
+                if (!confirm("Are you sure you want to delete this news item?")) return;
+                const docId = e.target.dataset.id;
+                try {
+                    // NOTE: If using Firebase Storage, delete the image from storage first.
+                    await deleteDoc(doc(db, "news", docId));
+                    alert('News item deleted successfully.');
+                    loadNews();
+                } catch (error) {
+                    console.error("Error deleting news item: ", error);
+                    alert('Error deleting news item.');
+                }
+            }
+        });
+
+        // --- Coach Management ---
+        async function loadCoaches() {
+            await loadData('coaches', 'coaches-table', (id, data) => `
+                <td data-label="Name">${data.name}</td>
+                <td data-label="Position">${data.position}</td>
+                <td data-label="Age">${data.age}</td>
+                <td data-label="Preview"><img src="${data.img}" style="max-width: 50px; height: auto; border-radius: 3px;"></td>
+                <td data-label="Actions">
+                    <div class="action-btns">
+                        <button class="delete-coach-btn btn-danger" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </td>
+            `);
         }
 
-        // Contact Messages
+        document.addEventListener('click', async (e) => {
+            if (e.target && e.target.classList.contains('delete-coach-btn')) {
+                if (!confirm("Are you sure you want to delete this coach?")) return;
+                const docId = e.target.dataset.id;
+                try {
+                    await deleteDoc(doc(db, "coaches", docId));
+                    alert('Coach deleted successfully.');
+                    loadCoaches();
+                } catch (error) {
+                    console.error("Error deleting coach: ", error);
+                    alert('Error deleting coach.');
+                }
+            }
+        });
+
+
+        // --- Contact Messages (Load/Delete) ---
         async function loadContactMessages() {
-            const tableBody = document.getElementById('contact-messages-table').getElementsByTagName('tbody')[0];
-            tableBody.innerHTML = '';
-            const querySnapshot = await getDocs(collection(db, "contact-messages"));
-            querySnapshot.forEach(doc => {
-                const data = doc.data();
-                const row = tableBody.insertRow();
-                row.innerHTML = `
-                    <td>${data.name}</td>
-                    <td>${data.email}</td>
-                    <td>${data.subject}</td>
-                    <td>${data.message}</td>
-                    <td>${data.createdAt.toDate().toLocaleDateString()}</td>
-                `;
-            });
+             await loadData('contact-messages', 'contact-messages-table', (id, data) => `
+                <td data-label="Name">${data.name}</td>
+                <td data-label="Email">${data.email}</td>
+                <td data-label="Phone">${data.phone || 'N/A'}</td> <td data-label="Subject">${data.subject}</td>
+                <td data-label="Message Content">${data.message.substring(0, 50)}${data.message.length > 50 ? '...' : ''}</td>
+                <td data-label="Received On">${data.createdAt.toDate().toLocaleDateString()}</td>
+                <td data-label="Actions">
+                    <div class="action-btns">
+                        <button class="delete-message-btn btn-danger" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </td>
+            `);
         }
+
+        // --- Join Us Applications Management ---
+        async function loadJoinRequests() {
+             await loadData('joinRequests', 'join-requests-table', (id, data) => `
+                <td data-label="Full Name">${data.fullName}</td>
+                <td data-label="Email">${data.email}</td>
+                <td data-label="Phone">${data.phone || 'N/A'}</td>
+                <td data-label="DOB">${data.dob || 'N/A'}</td>
+                <td data-label="Position">${data.position || 'N/A'}</td>
+                <td data-label="Message">${data.message.substring(0, 50)}${data.message.length > 50 ? '...' : ''}</td>
+                <td data-label="Applied On">${data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString() : 'N/A'}</td>
+                <td data-label="Actions">
+                    <div class="action-btns">
+                        <button class="delete-join-request-btn btn-danger" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </td>
+            `);
+        }
+
+        document.addEventListener('click', async (e) => {
+            // Delete Contact Message
+            if (e.target && e.target.classList.contains('delete-message-btn')) {
+                if (!confirm("Are you sure you want to delete this contact message?")) return;
+                const docId = e.target.dataset.id;
+                try {
+                    await deleteDoc(doc(db, "contact-messages", docId));
+                    alert('Contact message deleted successfully.');
+                    loadContactMessages();
+                } catch (error) {
+                    console.error("Error deleting contact message: ", error);
+                    alert('Error deleting message.');
+                }
+            }
+
+            // Delete Join Request
+            if (e.target && e.target.classList.contains('delete-join-request-btn')) {
+                if (!confirm("Are you sure you want to delete this application?")) return;
+                const docId = e.target.dataset.id;
+                try {
+                    await deleteDoc(doc(db, "joinRequests", docId));
+                    alert('Application deleted successfully.');
+                    loadJoinRequests();
+                } catch (error) {
+                    console.error("Error deleting application: ", error);
+                    alert('Error deleting application.');
+                }
+            }
+        });
 
     </script>
 

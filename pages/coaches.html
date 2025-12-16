@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Coaches - Alamu Football Academy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="/image/alamu.png" type="image/png">
+    <style>
+        :root {
+            --gold: #007BFF;
+            --red: #003366;
+            --white: #FFFFFF;
+            --dark-red: #002244;
+            --light-gold: #E6F2FF;
+            --dark-gold: #0056B3;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--light-gray); color: var(--dark-gray); line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; } 
+        
+        /* Header */
+        header { background: linear-gradient(135deg, var(--gold), var(--dark-red)); color: var(--white); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 15px; }
+        .logo-text h1 { font-size: 1.2rem; font-weight: 700; }
+        .logo-text p { font-size: 0.9rem; opacity: 0.9; }
+        .logo-image img { width: 100px; height: auto; transition: transform 0.3s; }
+        .logo-image img:hover { transform: scale(1.1); }
+        
+        nav ul { display: flex; list-style: none; gap: 25px; }
+        nav a { color: var(--white); text-decoration: none; font-weight: 500; font-size: 1.1rem; transition: all 0.3s ease; padding: 5px 10px; border-radius: 4px; }
+        nav a:hover { background: rgba(255, 255, 255, 0.1); color: var(--gold); }
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: pointer; }
+
+        /* Banner */
+        .page-banner { background: linear-gradient(rgba(0, 34, 68, 0.8), rgba(0, 51, 102, 0.8)), url('/image/group .jpg'); background-size: cover; background-position: center; padding: 80px 0; text-align: center; color: var(--white); }
+        .page-banner h1 { font-size: 3rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* Coaches Section */
+        .coaches-section { padding: 60px 0; }
+        
+        /* Grid */
+        .coaches-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        
+        /* Coach Card */
+        .coach-card { background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); transition: all 0.3s ease; position: relative; border-bottom: 4px solid var(--gold); }
+        .coach-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .card-img-wrapper { height: 350px; width: 100%; overflow: hidden; position: relative; background: #e0e0e0; }
+        .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .coach-card:hover .card-img-wrapper img { transform: scale(1.05); }
+        .coach-details { padding: 20px; text-align: center; }
+        .coach-name { font-size: 1.4rem; color: var(--dark-red); margin-bottom: 5px; font-weight: 700; }
+        .coach-pos-label { display: inline-block; background: var(--light-gold); color: var(--dark-gold); padding: 4px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 15px; }
+        .coach-stats-row { display: flex; justify-content: space-around; border-top: 1px solid #eee; padding-top: 15px; }
+        .c-stat { display: flex; flex-direction: column; }
+        .c-stat span:first-child { font-size: 1.1rem; font-weight: 700; color: var(--dark-gray); }
+        .c-stat span:last-child { font-size: 0.75rem; color: #888; text-transform: uppercase; }
+
+        /* Footer */
+        footer { background: linear-gradient(135deg, var(--red), var(--dark-red)); color: var(--white); padding: 60px 0 20px; }
+        footer a { color: var(--white); text-decoration: none; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-column h3 { font-size: 1.5rem; margin-bottom: 20px; position: relative; padding-bottom: 10px; }
+        .footer-column h3::after { content: ''; position: absolute; width: 50px; height: 3px; background: var(--gold); bottom: 0; left: 0; }
+        .contact-info li { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .copyright { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); opacity: 0.8; }
+        
+        @media (max-width: 768px) {
+            nav ul { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--dark-red); flex-direction: column; padding: 20px; gap: 15px; }
+            nav ul.show { display: flex; }
+            .mobile-menu-btn { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class=" container logo">
+                <a href="/index.html" class="logo-image">
+                    <img src="/image/alamu.png" alt="AFA Logo">
+                </a>
+                <div class="logo-text">
+                    <h1>Alamu Football Academy</h1>
+                    <p>Our Pride Thier Fear</p>
+                </div>
+            </div>
+            
+            <nav class="container">
+                <ul id="nav-menu">
+                    <li><a href="/index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/pages/about.html"><i class="fas fa-info-circle"></i> About</a></li>
+                    <li><a href="/pages/OurPlayers.html"><i class="fas fa-users"></i> Our Players</a></li>
+                    <li><a href="/pages/coaches.html" style="color: var(--gold);"><i class="fas fa-chalkboard-teacher"></i> Coaches</a></li>
+                    <li><a href="/pages/gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
+                    <li><a href="/pages/news.html"><i class="fas fa-newspaper"></i> News</a></li>
+                    <li><a href="/pages/contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+                <button class="mobile-menu-btn" id="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-banner">
+        <div class="container">
+            <h1>Our Coaches</h1>
+            <p>The experienced team behind our success.</p>
+        </div>
+    </div>
+
+    <section class="coaches-section">
+        <div class="container">
+            <div class="coaches-grid" id="coaches-grid">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Contact Information</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i> Campus, Iwo, Osun State, Nigeria</li>
+                        <li><i class="fas fa-phone"></i> +234 123 456 7890</li>
+                        <li><i class="fas fa-envelope"></i> contact@alamu-fa.com</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="contact-info">
+                        <li><a href="/index.html">Home</a></li>
+                        <li><a href="/pages/about.html">About </a></li>
+                        <li><a href="/pages/OurPlayers.html">Our Players</a></li>
+                        <li><a href="/pages/coaches.html">Coaches</a></li>
+                        <li><a href="/pages/gallery.html">Gallery</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Visit The Academy</h3>
+                    <p>The Alamu Football Academy is open to visitors and prospective talents by appointment. Experience the passion and dedication of our team.</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Alamu Football Academy - All Rights Reserved | Designed with <i class="fas fa-heart" style="color: var(--gold);"></i> for the Game</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu');
+        const navMenu = document.getElementById('nav-menu');
+        mobileMenuBtn.addEventListener('click', () => { navMenu.classList.toggle('show'); });
+    </script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9JVWFn9a6RjC-_7-RweStkBTbE9P1F1k",
+            authDomain: "alamu-fc.firebaseapp.com",
+            projectId: "alamu-fc",
+            storageBucket: "alamu-fc.firebasestorage.app",
+            messagingSenderId: "519243570056",
+            appId: "1:519243570056:web:b4d95c7266beb61757f83d",
+            measurementId: "G-3HDT240BLK"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const coachesGrid = document.getElementById('coaches-grid');
+
+        async function loadCoaches() {
+            try {
+                const querySnapshot = await getDocs(collection(db, 'coaches'));
+                coachesGrid.innerHTML = ''; // Clear existing content
+
+                if (querySnapshot.empty) {
+                    coachesGrid.innerHTML = '<p style="text-align: center; width: 100%; grid-column: 1 / -1;">No coaches found yet.</p>';
+                    return;
+                }
+
+                querySnapshot.forEach(doc => {
+                    const coach = doc.data();
+                    const coachCard = `
+                        <div class="coach-card">
+                            <div class="card-img-wrapper">
+                                <img src="${coach.img || '/image/default-coach.png'}" alt="${coach.name}">
+                            </div>
+                            <div class="coach-details">
+                                <h3 class="coach-name">${coach.name}</h3>
+                                <span class="coach-pos-label">${coach.position}</span>
+                                <div class="coach-stats-row">
+                                    <div class="c-stat">
+                                        <span>${coach.age || 'N/A'}</span>
+                                        <span>Age</span>
+                                    </div>
+                                    <!-- Add more stats if needed -->
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    coachesGrid.innerHTML += coachCard;
+                });
+            } catch (error) {
+                console.error("Error loading coaches: ", error);
+                coachesGrid.innerHTML = '<p style="text-align: center; width: 100%; grid-column: 1 / -1; color: red;">Failed to load coaches. Please try again later.</p>';
+            }
+        }
+
+        // Load coaches when the page loads
+        document.addEventListener('DOMContentLoaded', loadCoaches);
+    </script>
+</body>
+</html>

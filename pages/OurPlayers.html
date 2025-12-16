@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Squad - Alamu Football Academy (AFA)</title>
+    <title>Our Squad - Alamu Football Academy </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="/image/alamu.png" type="image/png">
     <style>
@@ -122,11 +122,11 @@
     <header>
         <div class="header-content">
             <div class=" container logo">
-                <div class="logo-image">
+                <a a href="/index.html" class="logo-image">
                     <img src="/image/alamu.png" alt="AFA Logo">
-                </div>
+                </a>
                 <div class="logo-text">
-                    <h1>Alamu Football Academy (AFA)</h1>
+                    <h1>Alamu Football Academy </h1>
                     <p>Our Pride Thier Fear</p>
                 </div>
             </div>
@@ -135,11 +135,12 @@
                 <ul id="nav-menu">
                     <li><a href="/index.html"><i class="fas fa-home"></i> Home</a></li>
                     <li><a href="/pages/about.html"><i class="fas fa-info-circle"></i> About</a></li>
-                    <li><a href="/pages/squad.html" style="color: var(--gold);"><i class="fas fa-users"></i> Squad</a></li>
+                    <li><a href="/pages/squad.html" style="color: var(--gold);"><i class="fas fa-users"></i> Our Players</a></li>
+                    <li><a href="/pages/coaches.html"><i class="fas fa-chalkboard-teacher"></i> Coaches</a></li>
                     <li><a href="/pages/gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
                     <li><a href="/pages/news.html"><i class="fas fa-newspaper"></i> News</a></li>
                     <li><a href="/pages/contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
-                    <li><a href="/admin.html"><i class="fas fa-user-shield"></i> Admin</a></li>
+                    
                 </ul>
                 <button class="mobile-menu-btn" id="mobile-menu">
                     <i class="fas fa-bars"></i>
@@ -150,19 +151,13 @@
 
     <div class="page-banner">
         <div class="container">
-            <h1>Our Squad</h1>
+            <h1>Our Players</h1>
             <p>Meet the future stars of Nigerian Football</p>
         </div>
     </div>
 
     <section class="squad-section">
         <div class="container">
-            <div class="add-player-container">
-                <button id="openModalBtn" class="add-player-btn">
-                    <i class="fas fa-plus-circle"></i> Add New Player
-                </button>
-            </div>
-
             <div class="squad-filters">
                 <button class="filter-btn active" onclick="filterPlayers('all')">All Players</button>
                 <button class="filter-btn" onclick="filterPlayers('Goalkeeper')">Goalkeepers</button>
@@ -178,125 +173,6 @@
             </div>
         </div>
     </section>
-
-    <div id="addPlayerModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-user-plus"></i> Add New Player</h2>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="addPlayerForm">
-                    <div class="form-grid">
-                        
-                        <div class="form-section-title"><i class="fas fa-info-circle"></i> Basic Info</div>
-
-                        <div class="form-group full-width">
-                            <label for="pName">Full Name</label>
-                            <input type="text" id="pName" class="form-control" placeholder="e.g. Ahmed Musa" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="pPosition">Position</label>
-                            <select id="pPosition" class="form-control" required>
-                                <option value="" disabled selected>Select Position</option>
-                                <option value="Goalkeeper">Goalkeeper</option>
-                                <option value="Defender">Defender</option>
-                                <option value="Midfielder">Midfielder</option>
-                                <option value="Forward">Forward</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="pNumber">Jersey Number</label>
-                            <input type="number" id="pNumber" class="form-control" placeholder="e.g. 10" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="pAge">Age</label>
-                            <input type="number" id="pAge" class="form-control" placeholder="18">
-                        </div>
-                        <div class="form-group">
-                            <label for="pGames">Games Played</label>
-                            <input type="number" id="pGames" class="form-control" placeholder="0">
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="pGoals">Goals Scored</label>
-                            <input type="number" id="pGoals" class="form-control" placeholder="0">
-                        </div>
-
-                        <div class="form-section-title"><i class="fas fa-phone"></i> Contact Details</div>
-                        
-                        <div class="form-group">
-                            <label for="pGuidance">Guardian Contact (Phone)</label>
-                            <input type="tel" id="pGuidance" name="guardianContactPhone" class="form-control" placeholder="+234 800 000 000" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="pEmail">Player/Guardian Email</label>
-                            <input type="email" id="pEmail" name="playerEmail" class="form-control" placeholder="example@domain.com">
-                        </div>
-                        <div class="form-section-title"><i class="fas fa-graduation-cap"></i> Status</div>
-                        
-                        <div class="form-group full-width">
-                            <label for="pStatus">Is the player a Student or Graduate?</label>
-                            <select id="pStatus" class="form-control" required>
-                                <option value="" disabled selected>Select Status</option>
-                                <option value="Student">Student</option>
-                                <option value="Graduate">Graduate</option>
-                            </select>
-                        </div>
-
-                        <div id="studentFields" class="form-grid full-width hidden">
-                            <div class="form-group">
-                                <label for="pSchoolName">School Name</label>
-                                <input type="text" id="pSchoolName" class="form-control" placeholder="e.g. Iwo Grammar School">
-                            </div>
-                            <div class="form-group">
-                                <label for="pClass">Class/Grade</label>
-                                <input type="text" id="pClass" class="form-control" placeholder="e.g. SSS 2">
-                            </div>
-                        </div>
-
-                        <div id="graduateFields" class="form-grid full-width hidden">
-                            <div class="form-group full-width">
-                                <label for="pGradStatus">Occupation or University?</label>
-                                <select id="pGradStatus" class="form-control">
-                                    <option value="" disabled selected>Select Option</option>
-                                    <option value="Occupation">Working (Occupation)</option>
-                                    <option value="University">University</option>
-                                </select>
-                            </div>
-
-                            <div id="occupationSpecific" class="form-group full-width hidden">
-                                <label for="pOccupation">What Occupation?</label>
-                                <input type="text" id="pOccupation" class="form-control" placeholder="e.g. Engineer, Business Owner">
-                            </div>
-
-                            <div id="uniSpecific" class="form-grid full-width hidden">
-                                <div class="form-group">
-                                    <label for="pUniName">School Name (University)</label>
-                                    <input type="text" id="pUniName" class="form-control" placeholder="e.g. OAU, Unilag">
-                                </div>
-                                <div class="form-group">
-                                    <label for="pDept">Department</label>
-                                    <input type="text" id="pDept" class="form-control" placeholder="e.g. Economics">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-section-title"><i class="fas fa-camera"></i> Player Photo</div>
-                        <div class="form-group full-width">
-                            <label for="pImgFile">Upload Image</label>
-                            <input type="file" id="pImgFile" class="form-control" accept="image/*">
-                            <small style="color:#666">Formats: JPG, PNG. Max size: 2MB.</small>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="submit-btn-form">
-                        <i class="fas fa-save"></i> Save Player
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <section class="join-cta">
         <div class="container">
@@ -314,7 +190,7 @@
                 <div class="footer-column">
                     <h3>Contact Information</h3>
                     <ul class="contact-info">
-                        <li><i class="fas fa-map-marker-alt"></i> AFA Campus, Iwo, Osun State, Nigeria</li>
+                        <li><i class="fas fa-map-marker-alt"></i>  Campus, Iwo, Osun State, Nigeria</li>
                         <li><i class="fas fa-phone"></i> +234 123 456 7890</li>
                         <li><i class="fas fa-envelope"></i> contact@alamu-fa.com</li>
                     </ul>
@@ -330,7 +206,7 @@
                     <h3>Quick Links</h3>
                     <ul class="contact-info">
                         <li><a href="/index.html">Home</a></li>
-                        <li><a href="/pages/about.html">About AFA</a></li>
+                        <li><a href="/pages/about.html">About </a></li>
                         <li><a href="/pages/squad.html">Our Squad</a></li>
                         <li><a href="/pages/activities.html">Activities</a></li>
                     </ul>
@@ -343,7 +219,7 @@
             </div>
             
             <div class="copyright">
-                <p>&copy; 2023 Alamu Football Academy (AFA) - All Rights Reserved | Designed with <i class="fas fa-heart" style="color: var(--gold);"></i> for the Game</p>
+                <p>&copy; 2023 Alamu Football Academy - All Rights Reserved | Designed with <i class="fas fa-heart" style="color: var(--gold);"></i> for the Game</p>
             </div>
         </div>
     </footer>
@@ -353,49 +229,6 @@
         const mobileMenuBtn = document.getElementById('mobile-menu');
         const navMenu = document.getElementById('nav-menu');
         mobileMenuBtn.addEventListener('click', () => { navMenu.classList.toggle('show'); });
-
-        // Modal Logic
-        const modal = document.getElementById('addPlayerModal');
-        const openBtn = document.getElementById('openModalBtn');
-        const closeBtn = document.querySelector('.close-modal');
-
-        openBtn.addEventListener('click', () => { modal.style.display = 'block'; });
-        closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
-        window.addEventListener('click', (e) => { if (e.target == modal) { modal.style.display = 'none'; } });
-
-        // --- CONDITIONAL FORM LOGIC ---
-        const pStatus = document.getElementById('pStatus');
-        const studentFields = document.getElementById('studentFields');
-        const graduateFields = document.getElementById('graduateFields');
-        const pGradStatus = document.getElementById('pGradStatus');
-        const occupationSpecific = document.getElementById('occupationSpecific');
-        const uniSpecific = document.getElementById('uniSpecific');
-
-        // 1. Student vs Graduate Toggle
-        pStatus.addEventListener('change', function() {
-            // Reset visibility
-            studentFields.classList.add('hidden');
-            graduateFields.classList.add('hidden');
-
-            if (this.value === 'Student') {
-                studentFields.classList.remove('hidden');
-            } else if (this.value === 'Graduate') {
-                graduateFields.classList.remove('hidden');
-            }
-        });
-
-        // 2. Graduate: Occupation vs University Toggle
-        pGradStatus.addEventListener('change', function() {
-            // Reset visibility
-            occupationSpecific.classList.add('hidden');
-            uniSpecific.classList.add('hidden');
-
-            if (this.value === 'Occupation') {
-                occupationSpecific.classList.remove('hidden');
-            } else if (this.value === 'University') {
-                uniSpecific.classList.remove('hidden');
-            }
-        });
 
         // Helper function to read file as a Base64 data URL string (Firestore compatible)
         function readFileAsDataURL(file) {
@@ -487,75 +320,6 @@
             `;
             container.appendChild(card);
         }
-
-        // --- SUBMIT PLAYER APPLICATION ---
-        document.getElementById('addPlayerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.querySelector('.submit-btn-form');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
-            btn.disabled = true;
-
-            try {
-                const fileInput = document.getElementById('pImgFile');
-                let imageUrl = '/image/players .jpg'; // Default image
-
-                if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    imageUrl = await readFileAsDataURL(file); // Convert file to Base64
-                }
-
-                const status = document.getElementById('pStatus').value;
-                const educationData = {
-                    status: status,
-                    schoolName: "",
-                    class: "",
-                    occupation: "",
-                    uniName: "",
-                    uniDept: ""
-                };
-
-                if (status === 'Student') {
-                    educationData.schoolName = document.getElementById('pSchoolName').value;
-                    educationData.class = document.getElementById('pClass').value;
-                } else if (status === 'Graduate') {
-                    const gradStatus = document.getElementById('pGradStatus').value;
-                    if (gradStatus === 'Occupation') {
-                        educationData.occupation = document.getElementById('pOccupation').value;
-                    } else if (gradStatus === 'University') {
-                        educationData.uniName = document.getElementById('pUniName').value;
-                        educationData.uniDept = document.getElementById('pDept').value;
-                    }
-                }
-
-                const playerData = {
-                    name: document.getElementById('pName').value,
-                    position: document.getElementById('pPosition').value,
-                    number: parseInt(document.getElementById('pNumber').value),
-                    age: parseInt(document.getElementById('pAge').value) || 0,
-                    games: parseInt(document.getElementById('pGames').value) || 0,
-                    goals: parseInt(document.getElementById('pGoals').value) || 0,
-                    guardianContact: document.getElementById('pGuidance').value,
-                    email: document.getElementById('pEmail').value,
-                    img: imageUrl,
-                    status: 'pending', // Initial status
-                    createdAt: serverTimestamp(),
-                    ...educationData
-                };
-
-                await addDoc(collection(db, 'player-applications'), playerData);
-                
-                alert('Application submitted successfully! It will be reviewed by the admin.');
-                document.getElementById('addPlayerModal').style.display = 'none';
-                e.target.reset();
-
-            } catch (error) {
-                console.error("Error submitting application: ", error);
-                alert("Error submitting application. Please try again.");
-            } finally {
-                btn.innerHTML = '<i class="fas fa-save"></i> Save Player';
-                btn.disabled = false;
-            }
-        });
 
         window.filterPlayers = function(category) {
             const cards = document.querySelectorAll('.player-card');
