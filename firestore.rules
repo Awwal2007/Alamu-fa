@@ -52,5 +52,11 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+
+    // Join Us Applications: Anyone can create, only admin can read/delete
+    match /applications/{applicationId} {
+      allow create: if true;
+      allow read, delete: if isAdmin();
+    }
   }
 }

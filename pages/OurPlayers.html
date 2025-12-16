@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Squad - Alamu Football Academy </title>
+    <title>Our Squad - Alamu Football Academy</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="/image/alamu.png" type="image/png">
     <style>
@@ -72,7 +72,7 @@
         .p-stat span:last-child { font-size: 0.75rem; color: #888; text-transform: uppercase; }
 
         /* --- PROFESSIONAL MODAL STYLES --- */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
         .modal-content { background-color: var(--white); margin: 3% auto; padding: 0; border-radius: 15px; width: 90%; max-width: 700px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); animation: slideDown 0.4s ease; }
         @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .modal-header { background: linear-gradient(135deg, var(--gold), var(--dark-red)); padding: 20px 30px; border-radius: 15px 15px 0 0; display: flex; justify-content: space-between; align-items: center; color: var(--white); }
@@ -135,7 +135,7 @@
                 <ul id="nav-menu">
                     <li><a href="/index.html"><i class="fas fa-home"></i> Home</a></li>
                     <li><a href="/pages/about.html"><i class="fas fa-info-circle"></i> About</a></li>
-                    <li><a href="/pages/squad.html" style="color: var(--gold);"><i class="fas fa-users"></i> Our Players</a></li>
+                    <li><a href="pages/OurPlayers.html" style="color: var(--gold);"><i class="fas fa-users"></i> Our Players</a></li>
                     <li><a href="/pages/coaches.html"><i class="fas fa-chalkboard-teacher"></i> Coaches</a></li>
                     <li><a href="/pages/gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
                     <li><a href="/pages/news.html"><i class="fas fa-newspaper"></i> News</a></li>
@@ -180,9 +180,121 @@
             <p style="margin-top: 10px; max-width: 600px; margin-left: auto; margin-right: auto; color: #555;">
                 We are constantly looking for young talents to join our ranks. Check our requirements and trial dates.
             </p>
-            <a href="/pages/contact.html" class="cta-btn">Register for Trials</a>
+            <button class="cta-btn" id="joinUsBtn">Join Us <i class="fas fa-user-plus"></i></button>
         </div>
     </section>
+
+    <div id="joinUsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2>Join Alamu Football Academy</h2>
+            <p>Fill out the form below to express your interest in joining our academy. We'll get back to you soon!</p>
+            <form id="joinUsForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address">
+                </div>
+                <div class="form-group">
+                    <label for="dateOfBirth">Date Of Birth</label>
+                    <input type="date" id="dateOfBirth" name="dateOfBirth">
+                </div>
+                <div class="form-group">
+                    <label for="parentFullName">Parent Full Name</label>
+                    <input type="text" id="parentFullName" name="parentFullName">
+                </div>
+                <div class="form-group">
+                    <label for="parentAddress">Parent Address</label>
+                    <input type="text" id="parentAddress" name="parentAddress">
+                </div>
+                <div class="form-group">
+                    <label for="parentPhone1">Parent Phone Number 1</label>
+                    <input type="tel" id="parentPhone1" name="parentPhone1">
+                </div>
+                <div class="form-group">
+                    <label for="parentPhone2">Parent Phone Number 2</label>
+                    <input type="tel" id="parentPhone2" name="parentPhone2">
+                </div>
+                <div class="form-group">
+                    <label for="studentOrGraduate">Student or Graduate *</label>
+                    <select id="studentOrGraduate" name="studentOrGraduate" required>
+                        <option value="">Select Option</option>
+                        <option value="student">Student</option>
+                        <option value="graduate">Graduate</option>
+                    </select>
+                </div>
+                <div class="form-group conditional-field" id="studentFields">
+                    <label for="schoolName">School Name</label>
+                    <input type="text" id="schoolName" name="schoolName">
+                    <label for="schoolClass">Class</label>
+                    <input type="text" id="schoolClass" name="schoolClass">
+                </div>
+                <div class="form-group conditional-field" id="graduateFields">
+                    <label for="gradType">University or Occupation *</label>
+                    <select id="gradType" name="gradType" required>
+                        <option value="">Select Option</option>
+                        <option value="university">University</option>
+                        <option value="occupation">Occupation</option>
+                    </select>
+                </div>
+                <div class="form-group conditional-field" id="universityFields">
+                    <label for="universityName">University Name</label>
+                    <input type="text" id="universityName" name="universityName">
+                    <label for="department">Department</label>
+                    <input type="text" id="department" name="department">
+                </div>
+                <div class="form-group conditional-field" id="occupationFields">
+                    <label for="job">What Job</label>
+                    <input type="text" id="job" name="job">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="photograph">Photograph</label>
+                    <input type="file" id="photograph" name="photograph" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="previousAcademy">Previous Academy or Club</label>
+                    <input type="text" id="previousAcademy" name="previousAcademy">
+                </div>
+                <div class="form-group">
+                    <label for="position">Preferred Position</label>
+                    <select id="position" name="position">
+                        <option value="">Select Position</option>
+                        <option value="Goalkeeper">Goalkeeper</option>
+                        <option value="Defender">Defender</option>
+                        <option value="Midfielder">Midfielder</option>
+                        <option value="Forward">Forward</option>
+                        <option value="Not Sure">Not Sure</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="experience">Football Experience</label>
+                    <select id="experience" name="experience">
+                        <option value="">Select Experience Level</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                        <option value="Professional">Professional</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Additional Message</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Tell us about yourself, your goals, or any questions you have..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Submit Application</button>
+            </form>
+        </div>
+    </div>
 
     <footer>
         <div class="container">
@@ -190,9 +302,9 @@
                 <div class="footer-column">
                     <h3>Contact Information</h3>
                     <ul class="contact-info">
-                        <li><i class="fas fa-map-marker-alt"></i>  Campus, Iwo, Osun State, Nigeria</li>
-                        <li><i class="fas fa-phone"></i> +234 123 456 7890</li>
-                        <li><i class="fas fa-envelope"></i> contact@alamu-fa.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i>  Telu Football Club, Iwo, Osun State, Nigeria</li>
+                        <li><i class="fas fa-phone"></i> +234 808 574 2261</li>
+                        <li><i class="fas fa-envelope"></i> telufciwo@gmail.com</li>
                     </ul>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -207,7 +319,7 @@
                     <ul class="contact-info">
                         <li><a href="/index.html">Home</a></li>
                         <li><a href="/pages/about.html">About </a></li>
-                        <li><a href="/pages/squad.html">Our Squad</a></li>
+                        <li><a href="/pages/OurPlayers.html">Our Players</a></li>
                         <li><a href="/pages/activities.html">Activities</a></li>
                     </ul>
                 </div>
@@ -252,6 +364,68 @@
         }
     </script>
 
+    <script>
+        // Modal functionality
+        const joinUsBtn = document.getElementById('joinUsBtn');
+        const joinUsModal = document.getElementById('joinUsModal');
+        const closeModal = document.getElementById('closeModal');
+        const joinUsForm = document.getElementById('joinUsForm');
+
+        // Open modal
+        joinUsBtn.addEventListener('click', () => {
+            joinUsModal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        });
+
+        // Close modal
+        closeModal.addEventListener('click', () => {
+            joinUsModal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            if (event.target === joinUsModal) {
+                joinUsModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Conditional field display logic
+        const studentOrGraduateSelect = document.getElementById('studentOrGraduate');
+        const gradTypeSelect = document.getElementById('gradType');
+
+        studentOrGraduateSelect.addEventListener('change', () => {
+            const value = studentOrGraduateSelect.value;
+            // Hide all conditional fields first
+            document.getElementById('studentFields').style.display = 'none';
+            document.getElementById('graduateFields').style.display = 'none';
+            document.getElementById('universityFields').style.display = 'none';
+            document.getElementById('occupationFields').style.display = 'none';
+
+            if (value === 'student') {
+                document.getElementById('studentFields').style.display = 'block';
+            } else if (value === 'graduate') {
+                document.getElementById('graduateFields').style.display = 'block';
+                // Reset internal graduate fields when switching
+                gradTypeSelect.value = "";
+            }
+        });
+
+        gradTypeSelect.addEventListener('change', () => {
+            const value = gradTypeSelect.value;
+            // Hide internal graduate fields first
+            document.getElementById('universityFields').style.display = 'none';
+            document.getElementById('occupationFields').style.display = 'none';
+
+            if (value === 'university') {
+                document.getElementById('universityFields').style.display = 'block';
+            } else if (value === 'occupation') {
+                document.getElementById('occupationFields').style.display = 'block';
+            }
+        });
+    </script>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getFirestore, collection, getDocs, orderBy, query, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
@@ -268,7 +442,147 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app); 
+        const db = getFirestore(app);
+
+        // Helper function to resize and encode image
+        function resizeImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 1920;
+                        const MAX_HEIGHT = 1080;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/webp', 0.8));
+                    };
+                    img.onerror = reject;
+                    img.src = event.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('joinUsForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            // Get form data
+            const formData = new FormData(joinUsForm);
+            const data = Object.fromEntries(formData.entries());
+
+            let errors = [];
+
+            // Core Required Fields Check
+            if (!data.fullName) errors.push('Full Name');
+            if (!data.email) errors.push('Email');
+            if (!data.phone) errors.push('Phone');
+
+            // Special Check for required Select field
+            if (!data.studentOrGraduate || data.studentOrGraduate === "") errors.push('Student or Graduate');
+
+            // Conditional Fields Check
+            if (data.studentOrGraduate === 'student') {
+                if (!data.schoolName) errors.push('School Name');
+                if (!data.schoolClass) errors.push('Class');
+            } else if (data.studentOrGraduate === 'graduate') {
+                if (!data.gradType || data.gradType === "") errors.push('University or Occupation');
+
+                if (data.gradType === 'university') {
+                    if (!data.universityName) errors.push('University Name');
+                    if (!data.department) errors.push('Department');
+                } else if (data.gradType === 'occupation') {
+                    if (!data.job) errors.push('Job');
+                }
+            }
+
+            if (errors.length > 0) {
+                alert(`Please fill in all required fields: ${errors.join(', ')}`);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Application';
+                return;
+            }
+
+            try {
+                // Handle photograph upload
+                let photographUrl = '';
+                const photographFile = document.getElementById('photograph').files[0];
+                if (photographFile) {
+                    photographUrl = await resizeImage(photographFile);
+                }
+
+                // Prepare data for Firebase
+                const applicationData = {
+                    fullName: data.fullName,
+                    address: data.address || '',
+                    dob: data.dateOfBirth || null,
+                    parentFullName: data.parentFullName || '',
+                    parentAddress: data.parentAddress || '',
+                    parentPhone1: data.parentPhone1 || '',
+                    parentPhone2: data.parentPhone2 || '',
+                    studentOrGraduate: data.studentOrGraduate,
+                    schoolName: data.schoolName || '',
+                    schoolClass: data.schoolClass || '',
+                    gradType: data.gradType || '',
+                    universityName: data.universityName || '',
+                    department: data.department || '',
+                    job: data.job || '',
+                    email: data.email,
+                    phone: data.phone,
+                    photograph: photographUrl,
+                    previousAcademy: data.previousAcademy || '',
+                    position: data.position || '',
+                    experience: data.experience || '',
+                    message: data.message || '',
+                    createdAt: serverTimestamp()
+                };
+
+                // Submit to Firebase
+                await addDoc(collection(db, 'applications'), applicationData);
+
+                alert('Thank you for your interest! We will contact you soon.');
+
+                // Reset form and close modal
+                joinUsForm.reset();
+                document.getElementById('studentFields').style.display = 'none';
+                document.getElementById('graduateFields').style.display = 'none';
+                document.getElementById('universityFields').style.display = 'none';
+                document.getElementById('occupationFields').style.display = 'none';
+                document.getElementById('joinUsModal').style.display = 'none';
+                document.body.style.overflow = 'auto';
+
+            } catch (error) {
+                console.error('Error submitting application:', error);
+                alert('An error occurred while submitting your application. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Application';
+            }
+        });
 
         document.addEventListener('DOMContentLoaded', loadPlayers);
 
@@ -277,18 +591,19 @@
             grid.innerHTML = '<div style="text-align:center; width:100%; grid-column: 1/-1;"><i class="fas fa-spinner fa-spin fa-2x" style="color: var(--gold);"></i></div>';
 
             try {
-                // Load players from the 'players' collection (approved players)
-                const q = query(collection(db, 'players'), orderBy('number', 'asc'));
+                // Load players from the 'players' collection
+                const q = query(collection(db, 'players'), orderBy('createdAt', 'desc'));
                 const querySnapshot = await getDocs(q);
-                
+
                 if (querySnapshot.empty) {
-                    grid.innerHTML = '<div style="text-align:center; width:100%; grid-column: 1/-1; color:#777;">The squad is currently empty.</div>';
+                    grid.innerHTML = '<div style="text-align:center; width:100%; grid-column: 1/-1; color:#777;">No players have been added yet.</div>';
                     return;
                 }
 
                 grid.innerHTML = '';
                 querySnapshot.forEach((doc) => {
-                    renderPlayerCard(doc.data(), grid);
+                    const data = doc.data();
+                    renderPlayerCard(data, grid);
                 });
 
             } catch (error) {
@@ -298,23 +613,41 @@
         }
 
         function renderPlayerCard(data, container) {
-            const imgSrc = data.img || '/image/players .jpg';
+            const imgSrc = data.image || data.img || 'image/players .jpg';
             const card = document.createElement('div');
             card.className = 'player-card';
-            card.setAttribute('data-position', data.position);
+            card.setAttribute('data-position', data.position || 'Unknown');
             
+            // Calculate age from date of birth
+            let ageDisplay = '--';
+            if (data.dateOfBirth) {
+                const birthDate = new Date(data.dateOfBirth);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                ageDisplay = age;
+            }
+            
+            // Generate a jersey number based on player name for display
+            const jerseyNumber = data.name ? 
+                data.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % 99 + 1 : 
+                0;
+
             card.innerHTML = `
-                <div class="player-jersey">${data.number}</div>
+                <div class="player-jersey">${jerseyNumber}</div>
                 <div class="card-img-wrapper">
-                    <img src="${imgSrc}" alt="${data.name}" onerror="this.src='/image/players .jpg'">
+                    <img src="${imgSrc}" alt="${data.name}" onerror="this.src='image/players .jpg'">
                 </div>
                 <div class="player-details">
-                    <div class="player-name">${data.name}</div>
-                    <div class="player-pos-label">${data.position}</div>
+                    <div class="player-name">${data.name || 'Unknown Player'}</div>
+                    <div class="player-pos-label">${data.position || 'Position'}</div>
                     <div class="player-stats-row">
-                        <div class="p-stat"><span>${data.age || '--'}</span><span>Age</span></div>
-                        <div class="p-stat"><span>${data.games || '0'}</span><span>Games</span></div>
-                        <div class="p-stat"><span>${data.goals || '0'}</span><span>Goals</span></div>
+                        <div class="p-stat"><span>${ageDisplay}</span><span>Age</span></div>
+                        <div class="p-stat"><span>${data.nationality || '--'}</span><span>Nationality</span></div>
+                        <div class="p-stat"><span>${data.position?.substring(0, 3) || 'POS'}</span><span>Position</span></div>
                     </div>
                 </div>
             `;

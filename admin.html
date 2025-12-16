@@ -161,6 +161,61 @@
             <button id="logout-btn" class="btn-danger" style="float: right; margin-bottom: 20px;"><i class="fas fa-sign-out-alt"></i> Logout</button>
             <div style="clear: both;"></div>
 
+            <!-- Player Management Section -->
+            <div class="admin-section">
+                <div class="admin-section-header"><h2><i class="fas fa-users"></i> Player Management</h2></div>
+                <div class="admin-section-content">
+                    <form id="player-form">
+                        <div class="form-group">
+                            <label for="player-name">Player Name</label>
+                            <input type="text" id="player-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="player-position">Position</label>
+                            <select id="player-position" required>
+                                <option value="">Select Position</option>
+                                <option value="Goalkeeper">Goalkeeper</option>
+                                <option value="Defender">Defender</option>
+                                <option value="Midfielder">Midfielder</option>
+                                <option value="Forward">Forward</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="player-dob">Date of Birth</label>
+                            <input type="date" id="player-dob" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="player-nationality">Nationality</label>
+                            <input type="text" id="player-nationality" placeholder="e.g., Nigerian">
+                        </div>
+                        <div class="form-group">
+                            <label for="player-description">Description/Bio</label>
+                            <textarea id="player-description" rows="3" placeholder="Player background, achievements, etc."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="player-image">Player Image</label>
+                            <input type="file" id="player-image" accept="image/*" required>
+                        </div>
+                        <button type="submit"><i class="fas fa-plus"></i> Add Player</button>
+                    </form>
+                    
+                    <h3 style="margin-top: 30px; color: var(--dark-blue);">Existing Players</h3>
+                    <table class="data-table" id="players-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Date of Birth</th>
+                                <th>Nationality</th>
+                                <th>Image</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="admin-section">
                 <div class="admin-section-header"><h2><i class="fas fa-images"></i> Gallery Management</h2></div>
                 <div class="admin-section-content">
@@ -279,9 +334,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, addDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-        // Import necessary Storage functions (if you switch from data URLs to Firebase Storage)
-        // import { getStorage, ref, deleteObject } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
-
 
         const firebaseConfig = {
             apiKey: "AIzaSyB9JVWFn9a6RjC-_7-RweStkBTbE9P1F1k",
@@ -296,7 +348,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        // const storage = getStorage(app); // For actual storage operations
 
         const authContainer = document.getElementById('auth-container');
         const adminDashboard = document.getElementById('admin-dashboard');
@@ -374,7 +425,6 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        // Using image/webp for better compression and quality on a modern site
                         resolve(canvas.toDataURL('image/webp', 0.8)); 
                     };
                     img.onerror = reject;
@@ -383,6 +433,19 @@
                 reader.onerror = reject;
                 reader.readAsDataURL(file);
             });
+        }
+
+        // --- Calculate age from date of birth ---
+        function calculateAge(dob) {
+            if (!dob) return 'N/A';
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
         }
 
         // --- Central Data Loading ---
@@ -407,11 +470,81 @@
         }
 
         function loadAllData() {
+            loadPlayers();
             loadContactMessages();
             loadGallery();
             loadNews();
             loadCoaches();
-            loadJoinRequests(); // Added for "Join Us" applications
+            loadApplications();
+        }
+
+        // --- Player Management ---
+        const playerForm = document.getElementById('player-form');
+        playerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('player-name').value;
+            const position = document.getElementById('player-position').value;
+            const dob = document.getElementById('player-dob').value;
+            const nationality = document.getElementById('player-nationality').value;
+            const description = document.getElementById('player-description').value;
+            const imageFile = document.getElementById('player-image').files[0];
+
+            if (!imageFile) {
+                alert("Please select a player image.");
+                return;
+            }
+
+            if (!dob) {
+                alert("Please select date of birth.");
+                return;
+            }
+
+            const submitBtn = e.submitter;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding Player...';
+
+            try {
+                const imageUrl = await resizeImage(imageFile);
+                
+                await addDoc(collection(db, 'players'), {
+                    name: name,
+                    position: position,
+                    dateOfBirth: dob,
+                    nationality: nationality || 'N/A',
+                    description: description || '',
+                    image: imageUrl,
+                    createdAt: serverTimestamp()
+                });
+
+                alert('Player added successfully!');
+                playerForm.reset();
+                loadPlayers();
+            } catch (error) {
+                console.error("Error adding player: ", error);
+                alert('Error adding player. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Player';
+            }
+        });
+
+        async function loadPlayers() {
+            await loadData('players', 'players-table', (id, data) => {
+                const age = calculateAge(data.dateOfBirth);
+                return `
+                    <td data-label="Name">${data.name}</td>
+                    <td data-label="Position">${data.position}</td>
+                    <td data-label="Date of Birth">${data.dateOfBirth} (${age} years)</td>
+                    <td data-label="Nationality">${data.nationality || 'N/A'}</td>
+                    <td data-label="Image"><img src="${data.image}" style="max-width: 50px; height: auto; border-radius: 3px;"></td>
+                    <td data-label="Actions">
+                        <div class="action-btns">
+                            <button class="delete-player-btn btn-danger" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    </td>
+                `;
+            });
         }
 
         // --- Gallery Management ---
@@ -427,11 +560,9 @@
                 return;
             }
             
-            // Disable button and show loading state
             const submitBtn = e.submitter;
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
-
 
             const uploadPromises = [];
             for (const imageFile of imageFiles) {
@@ -439,7 +570,7 @@
                     await addDoc(collection(db, 'gallery'), {
                         title: title,
                         date: date,
-                        src: dataUrl, // Data URL is stored here
+                        src: dataUrl,
                         createdAt: serverTimestamp()
                     });
                 });
@@ -473,25 +604,6 @@
             `);
         }
 
-        document.addEventListener('click', async (e) => {
-            // Delete Gallery Item
-            if (e.target && e.target.classList.contains('delete-gallery-btn')) {
-                if (!confirm("Are you sure you want to delete this gallery item?")) return;
-                const docId = e.target.dataset.id;
-                try {
-                    // NOTE: If you switch to Firebase Storage, you must first get the storage path from the document,
-                    // and then use deleteObject(ref(storage, path)) before deleting the Firestore document.
-                    await deleteDoc(doc(db, "gallery", docId));
-                    alert('Gallery item deleted successfully.');
-                    loadGallery();
-                } catch (error) {
-                    console.error("Error deleting gallery item: ", error);
-                    alert('Error deleting item.');
-                }
-            }
-        });
-
-
         // --- News Management (Add/Publish) ---
         const newsForm = document.getElementById('news-form');
         newsForm.addEventListener('submit', async (e) => {
@@ -507,7 +619,7 @@
 
             try {
                 if (imageFile) {
-                    imageUrl = await resizeImage(imageFile); // Use the resize function
+                    imageUrl = await resizeImage(imageFile);
                 }
 
                 await addDoc(collection(db, 'news'), {
@@ -566,7 +678,6 @@
                 };
 
                 if (newImageFile) {
-                    // Resize and get the new data URL
                     updateData.media = await resizeImage(newImageFile);
                 }
 
@@ -585,48 +696,6 @@
             }
         });
 
-
-        document.addEventListener('click', async (e) => {
-            if (e.target && e.target.classList.contains('edit-news-btn')) {
-                const docId = e.target.dataset.id;
-                try {
-                    const docSnap = await getDoc(doc(db, "news", docId));
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        
-                        // Populate modal fields
-                        document.getElementById('edit-news-id').value = docId;
-                        document.getElementById('edit-news-title').value = data.title;
-                        document.getElementById('edit-news-content').value = data.content;
-                        document.getElementById('edit-news-current-img').src = data.media || '';
-
-                        // Show modal
-                        newsEditModal.style.display = 'block';
-                    } else {
-                        alert('News item not found.');
-                    }
-                } catch(error) {
-                    console.error("Error loading news for edit:", error);
-                    alert("Could not load news data.");
-                }
-            }
-
-            // Delete News Item
-            if (e.target && e.target.classList.contains('delete-news-btn')) {
-                if (!confirm("Are you sure you want to delete this news item?")) return;
-                const docId = e.target.dataset.id;
-                try {
-                    // NOTE: If using Firebase Storage, delete the image from storage first.
-                    await deleteDoc(doc(db, "news", docId));
-                    alert('News item deleted successfully.');
-                    loadNews();
-                } catch (error) {
-                    console.error("Error deleting news item: ", error);
-                    alert('Error deleting news item.');
-                }
-            }
-        });
-
         // --- Coach Management ---
         async function loadCoaches() {
             await loadData('coaches', 'coaches-table', (id, data) => `
@@ -641,22 +710,6 @@
                 </td>
             `);
         }
-
-        document.addEventListener('click', async (e) => {
-            if (e.target && e.target.classList.contains('delete-coach-btn')) {
-                if (!confirm("Are you sure you want to delete this coach?")) return;
-                const docId = e.target.dataset.id;
-                try {
-                    await deleteDoc(doc(db, "coaches", docId));
-                    alert('Coach deleted successfully.');
-                    loadCoaches();
-                } catch (error) {
-                    console.error("Error deleting coach: ", error);
-                    alert('Error deleting coach.');
-                }
-            }
-        });
-
 
         // --- Contact Messages (Load/Delete) ---
         async function loadContactMessages() {
@@ -675,8 +728,8 @@
         }
 
         // --- Join Us Applications Management ---
-        async function loadJoinRequests() {
-             await loadData('joinRequests', 'join-requests-table', (id, data) => `
+        async function loadApplications() {
+             await loadData('applications', 'join-requests-table', (id, data) => `
                 <td data-label="Full Name">${data.fullName}</td>
                 <td data-label="Email">${data.email}</td>
                 <td data-label="Phone">${data.phone || 'N/A'}</td>
@@ -692,7 +745,87 @@
             `);
         }
 
+        // --- Event Delegation for Delete Buttons ---
         document.addEventListener('click', async (e) => {
+            // Delete Player
+            if (e.target && e.target.classList.contains('delete-player-btn')) {
+                if (!confirm("Are you sure you want to delete this player?")) return;
+                const docId = e.target.dataset.id;
+                try {
+                    await deleteDoc(doc(db, "players", docId));
+                    alert('Player deleted successfully.');
+                    loadPlayers();
+                } catch (error) {
+                    console.error("Error deleting player: ", error);
+                    alert('Error deleting player.');
+                }
+            }
+
+            // Delete Gallery Item
+            if (e.target && e.target.classList.contains('delete-gallery-btn')) {
+                if (!confirm("Are you sure you want to delete this gallery item?")) return;
+                const docId = e.target.dataset.id;
+                try {
+                    await deleteDoc(doc(db, "gallery", docId));
+                    alert('Gallery item deleted successfully.');
+                    loadGallery();
+                } catch (error) {
+                    console.error("Error deleting gallery item: ", error);
+                    alert('Error deleting item.');
+                }
+            }
+
+            // Edit News Item
+            if (e.target && e.target.classList.contains('edit-news-btn')) {
+                const docId = e.target.dataset.id;
+                try {
+                    const docSnap = await getDoc(doc(db, "news", docId));
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        
+                        document.getElementById('edit-news-id').value = docId;
+                        document.getElementById('edit-news-title').value = data.title;
+                        document.getElementById('edit-news-content').value = data.content;
+                        document.getElementById('edit-news-current-img').src = data.media || '';
+
+                        newsEditModal.style.display = 'block';
+                    } else {
+                        alert('News item not found.');
+                    }
+                } catch(error) {
+                    console.error("Error loading news for edit:", error);
+                    alert("Could not load news data.");
+                }
+            }
+
+            // Delete News Item
+            if (e.target && e.target.classList.contains('delete-news-btn')) {
+                if (!confirm("Are you sure you want to delete this news item?")) return;
+                const docId = e.target.dataset.id;
+                try {
+                    await deleteDoc(doc(db, "news", docId));
+                    alert('News item deleted successfully.');
+                    loadNews();
+                } catch (error) {
+                    console.error("Error deleting news item: ", error);
+                    alert('Error deleting news item.');
+                }
+            }
+
+            // Delete Coach
+            if (e.target && e.target.classList.contains('delete-coach-btn')) {
+                if (!confirm("Are you sure you want to delete this coach?")) return;
+                const docId = e.target.dataset.id;
+                try {
+                    await deleteDoc(doc(db, "coaches", docId));
+                    alert('Coach deleted successfully.');
+                    loadCoaches();
+                } catch (error) {
+                    console.error("Error deleting coach: ", error);
+                    alert('Error deleting coach.');
+                }
+            }
+
             // Delete Contact Message
             if (e.target && e.target.classList.contains('delete-message-btn')) {
                 if (!confirm("Are you sure you want to delete this contact message?")) return;
@@ -712,9 +845,9 @@
                 if (!confirm("Are you sure you want to delete this application?")) return;
                 const docId = e.target.dataset.id;
                 try {
-                    await deleteDoc(doc(db, "joinRequests", docId));
+                    await deleteDoc(doc(db, "applications", docId));
                     alert('Application deleted successfully.');
-                    loadJoinRequests();
+                    loadApplications();
                 } catch (error) {
                     console.error("Error deleting application: ", error);
                     alert('Error deleting application.');
