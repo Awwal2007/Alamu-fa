@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Latest News - Alamu Football Academy </title>
+    <title>Latest News - Alamu Football Academy</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="/image/alamu.png" type="image/png">
     <style>
@@ -123,6 +123,7 @@
             color: #555;
             font-size: 1rem;
             margin-bottom: 20px;
+            flex-grow: 1;
         }
 
         .read-more-btn {
@@ -139,11 +140,127 @@
             transition: all 0.3s ease;
             align-self: flex-start;
             margin-top: auto;
+            cursor: pointer;
+            border: none;
         }
 
         .read-more-btn:hover {
             background: var(--dark-gold);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* --- Modal Styles --- */
+        .news-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            padding: 60px 20px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--white);
+            margin: 0 auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--gold), var(--dark-red));
+            color: var(--white);
+            padding: 25px 30px;
+            border-radius: 15px 15px 0 0;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            padding-right: 40px;
+        }
+
+        .modal-date {
+            font-size: 1rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            color: var(--white);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(255,255,255,0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .modal-content-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .modal-content-text p {
+            margin-bottom: 20px;
         }
 
         /* --- Footer (Copied from Index) --- */
@@ -166,6 +283,9 @@
             nav ul { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--dark-red); flex-direction: column; padding: 20px; gap: 15px; }
             nav ul.show { display: flex; }
             .mobile-menu-btn { display: block; }
+            .modal-content { width: 95%; }
+            .modal-title { font-size: 1.5rem; }
+            .modal-body { padding: 20px; }
         }
     </style>
 </head>
@@ -173,12 +293,12 @@
     <header>
         <div class="header-content">
             <div class=" container logo">
-                <a a href="/index.html" class="logo-image">
+                <a href="/index.html" class="logo-image">
                     <img src="/image/alamu.png" alt="AFA Logo">
                 </a>
                 <div class="logo-text">
                     <h1>Alamu Football Academy</h1>
-                    <p>Our Pride Thier Fear</p>
+                    <p>Our Pride Their Fear</p>
                 </div>
             </div>
             
@@ -191,7 +311,6 @@
                     <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
                     <li><a href="#" class="active"><i class="fas fa-newspaper"></i> News</a></li>
                     <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
-                    
                 </ul>
                 <button class="mobile-menu-btn" id="mobile-menu">
                     <i class="fas fa-bars"></i>
@@ -203,7 +322,7 @@
     <div class="page-hero">
         <div class="container">
             <h1>Academy Headlines</h1>
-            <p>Stay updated with the latest news, match reports, and announcements from .</p>
+            <p>Stay updated with the latest news, match reports, and announcements.</p>
         </div>
     </div>
 
@@ -215,13 +334,28 @@
         </div>
     </section>
 
+    <!-- News Modal -->
+    <div id="newsModal" class="news-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalNewsTitle"></h2>
+                <div class="modal-date" id="modalNewsDate"></div>
+                <span class="close-modal" id="closeModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img id="modalNewsImage" src="" alt="" class="modal-image">
+                <div class="modal-content-text" id="modalNewsContent"></div>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
                     <h3>Contact Information</h3>
                     <ul class="contact-info">
-                        <li><i class="fas fa-map-marker-alt"></i>  Telu Football Club, Iwo, Osun State, Nigeria</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Telu Football Club, Iwo, Osun State, Nigeria</li>
                         <li><i class="fas fa-phone"></i> +234 808 574 2261</li>
                         <li><i class="fas fa-envelope"></i>telufciwo@gmail.com</li>
                     </ul>
@@ -237,8 +371,8 @@
                     <h3>Quick Links</h3>
                     <ul class="contact-info">
                         <li><a href="../index.html"><i class="fas fa-arrow-right"></i> Home</a></li>
-                        <li><a href="about.html"><i class="fas fa-arrow-right"></i> About </a></li>
-                        <li><a href="activities.html"><i class="fas fa-arrow-right"></i> Activities</a></li>
+                        <li><a href="about.html"><i class="fas fa-arrow-right"></i> About</a></li>
+                        <li><a href="OurPlayers.html"><i class="fas fa-arrow-right"></i> Our Players</a></li>
                         <li><a href="gallery.html"><i class="fas fa-arrow-right"></i> Gallery</a></li>
                     </ul>
                 </div>
@@ -250,7 +384,7 @@
             </div>
             
             <div class="copyright">
-                <p>&copy; 2023 Alamu Football Academy  - All Rights Reserved</p>
+                <p>&copy; 2023 Alamu Football Academy - All Rights Reserved</p>
             </div>
         </div>
     </footer>
@@ -278,6 +412,9 @@
         document.addEventListener('DOMContentLoaded', loadAllNews);
         // --- END FIREBASE CONFIGURATION ---
 
+        // Store news data globally for modal access
+        let newsArticles = [];
+
         /**
          * Fetches and displays all news articles from the 'news' collection in Firestore.
          */
@@ -295,8 +432,23 @@
                     return;
                 }
 
+                // Clear and repopulate news articles array
+                newsArticles = [];
+                let index = 0;
+                
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
+                    const id = doc.id;
+                    
+                    // Store article data for modal access
+                    newsArticles.push({
+                        id: id,
+                        title: data.title || 'Untitled Article',
+                        content: data.content || '',
+                        date: data.date || '',
+                        media: data.media || '../image/default_news.jpg',
+                        index: index
+                    });
                     
                     // Format Date safely
                     let displayDate = 'Unknown Date';
@@ -313,7 +465,9 @@
                     newsCard.className = 'news-card';
                     
                     // Simple summary truncation (adjust length as needed)
-                    const summary = data.content ? data.content.substring(0, 100) + '...' : 'Click to read the full article.';
+                    const summary = data.content ? 
+                        data.content.substring(0, 150) + (data.content.length > 150 ? '...' : '') : 
+                        'Click to read the full article.';
 
                     newsCard.innerHTML = `
                         <div class="news-image-wrapper">
@@ -323,17 +477,115 @@
                             <span class="news-date"><i class="fas fa-calendar-alt"></i> ${displayDate}</span>
                             <h3 class="news-title">${data.title || 'Untitled Article'}</h3>
                             <p class="news-summary">${summary}</p>
-                            <a href="#" class="read-more-btn">Read More <i class="fas fa-arrow-right"></i></a>
+                            <button class="read-more-btn" data-index="${index}">
+                                <i class="fas fa-book-open"></i> Read More
+                            </button>
                         </div>
                     `;
                     newsGrid.appendChild(newsCard);
+                    index++;
                 });
+
+                // Add event listeners to all "Read More" buttons
+                setTimeout(() => {
+                    document.querySelectorAll('.read-more-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const articleIndex = parseInt(this.getAttribute('data-index'));
+                            openNewsModal(articleIndex);
+                        });
+                    });
+                }, 100);
 
             } catch (error) {
                 console.error("Error loading news articles:", error);
                 newsGrid.innerHTML = '<p style="grid-column: 1/-1; color: red;">Error connecting to the news server. Please try again later.</p>';
             }
         }
+
+        /**
+         * Opens the modal with the full news article content
+         * @param {number} index - The index of the article in the newsArticles array
+         */
+        function openNewsModal(index) {
+            const modal = document.getElementById('newsModal');
+            const article = newsArticles[index];
+            
+            if (!article) {
+                console.error('Article not found at index:', index);
+                return;
+            }
+
+            // Set modal content
+            document.getElementById('modalNewsTitle').textContent = article.title;
+            document.getElementById('modalNewsImage').src = article.media;
+            document.getElementById('modalNewsImage').alt = article.title;
+            
+            // Format and set date
+            let displayDate = 'Unknown Date';
+            if (article.date) {
+                if(typeof article.date.toDate === 'function') {
+                    displayDate = article.date.toDate().toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                } else if (article.date) {
+                    displayDate = new Date(article.date).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+            }
+            document.getElementById('modalNewsDate').innerHTML = `<i class="fas fa-calendar-alt"></i> ${displayDate}`;
+            
+            // Set content with paragraph formatting
+            const contentElement = document.getElementById('modalNewsContent');
+            if (article.content) {
+                // Split content by newlines and wrap each in paragraph tags
+                const paragraphs = article.content.split('\n').filter(p => p.trim() !== '');
+                contentElement.innerHTML = paragraphs.map(p => `<p>${p}</p>`).join('');
+            } else {
+                contentElement.textContent = 'No content available for this article.';
+            }
+            
+            // Show modal
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
+        }
+
+        /**
+         * Closes the news modal
+         */
+        function closeNewsModal() {
+            const modal = document.getElementById('newsModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        // --- Event Listeners for Modal ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Close modal when clicking the X
+            document.getElementById('closeModal').addEventListener('click', closeNewsModal);
+            
+            // Close modal when clicking outside the modal content
+            document.getElementById('newsModal').addEventListener('click', function(event) {
+                if (event.target === this) {
+                    closeNewsModal();
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeNewsModal();
+                }
+            });
+        });
 
         // --- Standard JS for Navbar/Responsiveness ---
         document.getElementById('mobile-menu').addEventListener('click', () => {
