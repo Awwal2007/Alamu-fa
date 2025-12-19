@@ -62,7 +62,7 @@
             gap: 15px;
         }
         
-        .logo-icon {
+        .logo-icon {    
             font-size: 2.5rem;
             color: var(--gold);
         }
@@ -812,6 +812,125 @@
             box-shadow: none;
         }
 
+        /* Image preview styles */
+        .image-preview-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .image-preview-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-red);
+            font-size: 0.95rem;
+        }
+
+        .image-preview-box {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #f9f9f9;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .image-preview-box:hover {
+            border-color: var(--gold);
+            background: #f0f8ff;
+        }
+
+        .image-preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .image-preview-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #777;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .image-preview-placeholder i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--gold);
+        }
+
+        .preview-instructions {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .remove-image-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-preview-box:hover .remove-image-btn {
+            opacity: 1;
+        }
+
+        .remove-image-btn:hover {
+            background: rgba(255, 0, 0, 1);
+        }
+
+        .file-upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--gold);
+            color: var(--dark-gray);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            margin-top: 10px;
+        }
+
+        .file-upload-btn:hover {
+            background: var(--dark-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+            gap: 12px;
+        }
+
+        /* Adjust the form group for photograph */
+        #photograph {
+            display: none;
+        }
+
         .activity-card {
             background: var(--white);
             border-radius: 10px;
@@ -1371,8 +1490,24 @@
                     <input type="tel" id="phone" name="phone" required>
                 </div>
                 <div class="form-group">
-                    <label for="photograph">Photograph</label>
-                    <input type="file" id="photograph" name="photograph" accept="image/*">
+                    <div class="image-preview-container">
+                        <label class="image-preview-label">Photograph Preview</label>
+                        <div class="image-preview-box" id="imagePreviewBox">
+                            <div class="image-preview-placeholder">
+                                <i class="fas fa-camera"></i>
+                                <span>No image selected</span>
+                            </div>
+                            <img id="previewImage" src="" alt="Image Preview">
+                            <button type="button" class="remove-image-btn" id="removeImageBtn" title="Remove image">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <p class="preview-instructions">Click the button below to select an image</p>
+                        <button type="button" class="file-upload-btn" id="uploadImageBtn">
+                            <i class="fas fa-upload"></i> Select Photograph
+                        </button>
+                        <input type="file" id="photograph" name="photograph" accept="image/*" style="display: none;">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="previousAcademy">Previous Academy or Club</label>
@@ -1517,6 +1652,7 @@
             
             // Attach modal and form listeners AFTER DOM is ready
             setupModalAndFormListeners();
+            setupImagePreview();
         });
 
         // Function to start/render the slider
@@ -1615,9 +1751,6 @@
                 console.error('Error loading news:', error);
             }
         }
-        
-        // ... (loadHomepageCoaches, createCoachCard, loadSquad, createPlayerCard, loadActivities, loadGallery, showFallbackGallery remain the same)
-        // Note: For brevity, I'm omitting these unchanged functions but assume they are present.
         
         async function loadHomepageCoaches() {
             const homepageCoachesContainer = document.getElementById('homepageCoachesContainer');
@@ -1852,7 +1985,7 @@
             });
         }
         
-        // Helper function to resize and encode image (kept the same)
+        // Helper function to resize and encode image
         function resizeImage(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1891,7 +2024,93 @@
             });
         }
         
-        // 2. MODAL & FORM LOGIC MOVED HERE (To access imported functions like serverTimestamp)
+        // Image preview functionality
+        function setupImagePreview() {
+            const photographInput = document.getElementById('photograph');
+            const uploadImageBtn = document.getElementById('uploadImageBtn');
+            const previewImage = document.getElementById('previewImage');
+            const imagePreviewBox = document.getElementById('imagePreviewBox');
+            const imagePreviewPlaceholder = imagePreviewBox.querySelector('.image-preview-placeholder');
+            const removeImageBtn = document.getElementById('removeImageBtn');
+            
+            // Open file dialog when button is clicked
+            uploadImageBtn.addEventListener('click', function() {
+                photographInput.click();
+            });
+            
+            // Handle image selection
+            photographInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    
+                    // Check if file is an image
+                    if (!file.type.match('image.*')) {
+                        alert('Please select an image file (JPEG, PNG, etc.)');
+                        this.value = '';
+                        return;
+                    }
+                    
+                    // Check file size (max 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('Image size should be less than 5MB');
+                        this.value = '';
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        // Show the image preview
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = 'block';
+                        imagePreviewPlaceholder.style.display = 'none';
+                        
+                        // Update button text
+                        uploadImageBtn.innerHTML = '<i class="fas fa-sync"></i> Change Photograph';
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Remove image
+            removeImageBtn.addEventListener('click', function() {
+                photographInput.value = '';
+                previewImage.src = '';
+                previewImage.style.display = 'none';
+                imagePreviewPlaceholder.style.display = 'flex';
+                uploadImageBtn.innerHTML = '<i class="fas fa-upload"></i> Select Photograph';
+            });
+            
+            // Reset preview when modal is closed
+            closeModal.addEventListener('click', function() {
+                resetImagePreview();
+            });
+            
+            // Reset preview when clicking outside modal
+            window.addEventListener('click', function(event) {
+                if (event.target === joinUsModal) {
+                    resetImagePreview();
+                }
+            });
+            
+            // Reset image preview
+            function resetImagePreview() {
+                photographInput.value = '';
+                previewImage.src = '';
+                previewImage.style.display = 'none';
+                imagePreviewPlaceholder.style.display = 'flex';
+                uploadImageBtn.innerHTML = '<i class="fas fa-upload"></i> Select Photograph';
+            }
+            
+            // Also reset when form is submitted successfully
+            joinUsForm.addEventListener('submit', function() {
+                // This will be called before the actual submission
+                setTimeout(resetImagePreview, 1000);
+            });
+        }
+        
+        // 2. MODAL & FORM LOGIC
         function setupModalAndFormListeners() {
             // Open modal
             joinUsBtn.addEventListener('click', () => {

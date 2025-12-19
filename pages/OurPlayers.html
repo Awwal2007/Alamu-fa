@@ -58,11 +58,10 @@
         
         /* Player Card */
         .player-card { background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); transition: all 0.3s ease; position: relative; border-bottom: 4px solid var(--gold); }
-        .player-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .player-card:hover { transform: translateY(-210px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
         .card-img-wrapper { height: 350px; width: 100%; overflow: hidden; position: relative; background: #e0e0e0; }
         .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
         .player-card:hover .card-img-wrapper img { transform: scale(1.05); }
-        .player-jersey { position: absolute; top: 15px; right: 15px; width: 50px; height: 50px; background: var(--red); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; border: 2px solid var(--white); z-index: 2; }
         .player-details { padding: 20px; text-align: center; }
         .player-name { font-size: 1.4rem; color: var(--dark-red); margin-bottom: 5px; font-weight: 700; }
         .player-pos-label { display: inline-block; background: var(--light-gold); color: var(--dark-gold); padding: 4px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 15px; }
@@ -174,7 +173,7 @@
         </div>
     </section>
 
-    <section class="join-cta">
+    <!-- <section class="join-cta">
         <div class="container">
             <h2>Do you have what it takes?</h2>
             <p style="margin-top: 10px; max-width: 600px; margin-left: auto; margin-right: auto; color: #555;">
@@ -182,7 +181,7 @@
             </p>
             <button class="cta-btn" id="joinUsBtn">Join Us <i class="fas fa-user-plus"></i></button>
         </div>
-    </section>
+    </section> -->
 
     <div id="joinUsModal" class="modal">
         <div class="modal-content">
@@ -637,7 +636,7 @@
                 0;
 
             card.innerHTML = `
-                <div class="player-jersey">${jerseyNumber}</div>
+                
                 <div class="card-img-wrapper">
                     <img src="${imgSrc}" alt="${data.name}" onerror="this.src='image/players .jpg'">
                 </div>

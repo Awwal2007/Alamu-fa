@@ -18,21 +18,21 @@
   }
 ]
 
-on index.html in Our Players section add a button Join us, in the button make a form pop-up and this should be in the form 
-Name
-address
-Date Of Birth
-Parent Full Name
-Parent address
-parent Phone number1
-parent Phone number2
- student or Graduate
-if student: school name Class
-if Graduate: University or Occupation
-if University: school name and department
-if Occupation: wat job
-email
-phone number
-Photograph
-previous academy or club 
-and make all the details go to the admin page so the admin can review it and accep or reject it 
+// on index.html in Our Players section add a button Join us, in the button make a form pop-up and this should be in the form 
+// Name
+// address
+// Date Of Birth
+// Parent Full Name
+// Parent address
+// parent Phone number1
+// parent Phone number2
+//  student or Graduate
+// if student: school name Class
+// if Graduate: University or Occupation
+// if University: school name and department
+// if Occupation: wat job
+// email
+// phone number
+// Photograph
+// previous academy or club 
+// and make all the details go to the admin page so the admin can review it and accep or reject it 

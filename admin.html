@@ -55,8 +55,11 @@
         .data-table tbody tr:nth-child(even) { background-color: var(--light-gray); }
 
         /* Actions column width for better table layout */
-        .data-table th:last-child, .data-table td:last-child { width: 180px; text-align: center; }
+        .data-table th:last-child, .data-table td:last-child { width: 220px; text-align: center; }
 
+        /* Image display in tables */
+        .table-image { max-width: 100px; max-height: 100px; border-radius: 5px; object-fit: cover; border: 2px solid #eee; }
+        
         /* Modal Styles */
         .modal {
             display: none; 
@@ -75,26 +78,47 @@
             margin: 5% auto; 
             padding: 20px;
             border: 1px solid #888;
-            width: 80%; 
+            width: 90%; 
+            max-width: 600px;
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            max-height: 80vh;
+            overflow-y: auto;
         }
         .close-btn {
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
+            cursor: pointer;
         }
         .close-btn:hover, .close-btn:focus {
             color: #000;
             text-decoration: none;
-            cursor: pointer;
         }
+        
         /* Flex container for action buttons */
         .action-btns {
             display: flex;
             gap: 5px;
             justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* View more button for messages */
+        .view-more-btn {
+            background: var(--blue);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        .view-more-btn:hover {
+            background: var(--dark-blue);
         }
 
         /* --- Responsiveness (Mobile First) --- */
@@ -110,6 +134,7 @@
                 margin-bottom: 10px; 
                 border: 1px solid #ccc;
                 border-radius: 5px;
+                padding: 10px;
             }
             .data-table td { 
                 border: none; 
@@ -117,13 +142,13 @@
                 position: relative;
                 padding-left: 50%; /* Space for the label */
                 text-align: right;
+                display: block;
             }
             .data-table td:before { /* Pseudo-element for custom header labels */
                 content: attr(data-label);
                 position: absolute;
-                left: 0;
+                left: 10px;
                 width: 45%;
-                padding-left: 10px;
                 font-weight: bold;
                 text-align: left;
                 color: var(--dark-blue);
@@ -134,7 +159,32 @@
                 text-align: center;
                 width: auto;
             }
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+            .action-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+            .action-btns button {
+                width: 100%;
+                margin-bottom: 5px;
+            }
         }
+        
+        /* Status badge styles */
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-reviewed { background: #d1ecf1; color: #0c5460; }
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
     </style>
 </head>
 <body>
@@ -166,12 +216,13 @@
                 <div class="admin-section-header"><h2><i class="fas fa-users"></i> Player Management</h2></div>
                 <div class="admin-section-content">
                     <form id="player-form">
+                        <input type="hidden" id="player-id">
                         <div class="form-group">
-                            <label for="player-name">Player Name</label>
+                            <label for="player-name">Player Name *</label>
                             <input type="text" id="player-name" required>
                         </div>
                         <div class="form-group">
-                            <label for="player-position">Position</label>
+                            <label for="player-position">Position *</label>
                             <select id="player-position" required>
                                 <option value="">Select Position</option>
                                 <option value="Goalkeeper">Goalkeeper</option>
@@ -181,7 +232,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="player-dob">Date of Birth</label>
+                            <label for="player-dob">Date of Birth *</label>
                             <input type="date" id="player-dob" required>
                         </div>
                         <div class="form-group">
@@ -194,9 +245,11 @@
                         </div>
                         <div class="form-group">
                             <label for="player-image">Player Image</label>
-                            <input type="file" id="player-image" accept="image/*" required>
+                            <div id="player-image-preview" style="margin: 10px 0;"></div>
+                            <input type="file" id="player-image" accept="image/*">
                         </div>
-                        <button type="submit"><i class="fas fa-plus"></i> Add Player</button>
+                        <button type="submit" id="player-submit-btn"><i class="fas fa-plus"></i> Add Player</button>
+                        <button type="button" id="player-cancel-btn" style="display: none;" class="btn-danger"><i class="fas fa-times"></i> Cancel</button>
                     </form>
                     
                     <h3 style="margin-top: 30px; color: var(--dark-blue);">Existing Players</h3>
@@ -205,7 +258,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Position</th>
-                                <th>Date of Birth</th>
+                                <th>Age</th>
                                 <th>Nationality</th>
                                 <th>Image</th>
                                 <th>Actions</th>
@@ -216,23 +269,31 @@
                 </div>
             </div>
 
+            <!-- Gallery Management Section -->
             <div class="admin-section">
                 <div class="admin-section-header"><h2><i class="fas fa-images"></i> Gallery Management</h2></div>
                 <div class="admin-section-content">
                     <form id="gallery-upload-form">
+                        <input type="hidden" id="gallery-id">
                         <div class="form-group">
-                            <label for="gallery-title">Image Title</label>
+                            <label for="gallery-title">Image Title *</label>
                             <input type="text" id="gallery-title" required>
                         </div>
                         <div class="form-group">
-                            <label for="gallery-date">Date</label>
+                            <label for="gallery-description">Description</label>
+                            <textarea id="gallery-description" rows="2" placeholder="Image description..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="gallery-date">Date *</label>
                             <input type="date" id="gallery-date" required>
                         </div>
                         <div class="form-group">
-                            <label for="gallery-image">Image Files (select one or more)</label>
-                            <input type="file" id="gallery-image" accept="image/*" required multiple>
+                            <label for="gallery-image">Image Files *</label>
+                            <div id="gallery-image-preview" style="margin: 10px 0;"></div>
+                            <input type="file" id="gallery-image" accept="image/*">
                         </div>
-                        <button type="submit"><i class="fas fa-upload"></i> Upload to Gallery</button>
+                        <button type="submit" id="gallery-submit-btn"><i class="fas fa-plus"></i> Add Gallery Item</button>
+                        <button type="button" id="gallery-cancel-btn" style="display: none;" class="btn-danger"><i class="fas fa-times"></i> Cancel</button>
                     </form>
                     
                     <h3 style="margin-top: 30px; color: var(--dark-blue);">Existing Gallery Items</h3>
@@ -243,37 +304,72 @@
                 </div>
             </div>
 
+            <!-- News Management Section -->
             <div class="admin-section">
                 <div class="admin-section-header"><h2><i class="fas fa-newspaper"></i> News Management</h2></div>
                 <div class="admin-section-content">
                     <form id="news-form">
+                        <input type="hidden" id="news-id">
                         <div class="form-group">
-                            <label for="news-title">News Title</label>
+                            <label for="news-title">News Title *</label>
                             <input type="text" id="news-title" required>
                         </div>
                         <div class="form-group">
-                            <label for="news-content">Content</label>
+                            <label for="news-content">Content *</label>
                             <textarea id="news-content" rows="5" required></textarea>
                         </div>
                         <div class="form-group">
+                            <label for="news-date">Date *</label>
+                            <input type="date" id="news-date" required>
+                        </div>
+                        <div class="form-group">
                             <label for="news-image">Image File (optional)</label>
+                            <div id="news-image-preview" style="margin: 10px 0;"></div>
                             <input type="file" id="news-image" accept="image/*">
                         </div>
-                        <button type="submit"><i class="fas fa-plus"></i> Publish News</button>
+                        <button type="submit" id="news-submit-btn"><i class="fas fa-plus"></i> Publish News</button>
+                        <button type="button" id="news-cancel-btn" style="display: none;" class="btn-danger"><i class="fas fa-times"></i> Cancel</button>
                     </form>
 
                     <h3 style="margin-top: 30px; color: var(--dark-blue);">Published News</h3>
                     <table class="data-table" id="news-table">
-                        <thead><tr><th>Title</th><th>Date</th><th>Content Snippet</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>Title</th><th>Date</th><th>Image</th><th>Content Snippet</th><th>Actions</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
 
+            <!-- Coach Management Section -->
             <div class="admin-section">
                 <div class="admin-section-header"><h2><i class="fas fa-chalkboard-teacher"></i> Coach Management</h2></div>
                 <div class="admin-section-content">
-                    <a href="pages/add_coach.html" class="button"><i class="fas fa-plus"></i> Add Coach</a>
+                    <form id="coach-form">
+                        <input type="hidden" id="coach-id">
+                        <div class="form-group">
+                            <label for="coach-name">Coach Name *</label>
+                            <input type="text" id="coach-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="coach-position">Position *</label>
+                            <input type="text" id="coach-position" required placeholder="e.g., Head Coach">
+                        </div>
+                        <div class="form-group">
+                            <label for="coach-age">Age *</label>
+                            <input type="number" id="coach-age" required min="18" max="80">
+                        </div>
+                        <div class="form-group">
+                            <label for="coach-experience">Experience</label>
+                            <textarea id="coach-experience" rows="3" placeholder="Coaching experience, qualifications..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="coach-image">Coach Image *</label>
+                            <div id="coach-image-preview" style="margin: 10px 0;"></div>
+                            <input type="file" id="coach-image" accept="image/*">
+                        </div>
+                        <button type="submit" id="coach-submit-btn"><i class="fas fa-plus"></i> Add Coach</button>
+                        <button type="button" id="coach-cancel-btn" style="display: none;" class="btn-danger"><i class="fas fa-times"></i> Cancel</button>
+                    </form>
+                    
                     <h3 style="margin-top: 30px; color: var(--dark-blue);">Existing Coaches</h3>
                     <table class="data-table" id="coaches-table">
                         <thead><tr><th>Name</th><th>Position</th><th>Age</th><th>Image Preview</th><th>Actions</th></tr></thead>
@@ -282,21 +378,23 @@
                 </div>
             </div>
 
+            <!-- Contact Messages Section -->
             <div class="admin-section">
                 <div class="admin-section-header"><h2><i class="fas fa-envelope"></i> Contact Messages</h2></div>
                 <div class="admin-section-content">
                     <table class="data-table" id="contact-messages-table">
-                        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Subject</th><th>Message Content</th><th>Received On</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Subject</th><th>Message</th><th>Received</th><th>Status</th><th>Actions</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
 
+            <!-- Join Us Applications Section -->
             <div class="admin-section">
                 <div class="admin-section-header"><h2><i class="fas fa-user-plus"></i> Join Us Applications</h2></div>
                 <div class="admin-section-content">
                     <table class="data-table" id="join-requests-table">
-                        <thead><tr><th>Full Name</th><th>Email</th><th>Phone</th><th>DOB</th><th>Position</th><th>Message</th><th>Applied On</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>Full Name</th><th>Email</th><th>Phone</th><th>Age</th><th>Position</th><th>Status</th><th>Applied On</th><th>Actions</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -305,28 +403,21 @@
         </div>
     </div>
 
-    <div id="news-edit-modal" class="modal">
+    <!-- View Full Message Modal -->
+    <div id="view-message-modal" class="modal">
         <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>Edit News Item</h2>
-            <form id="news-edit-form">
-                <input type="hidden" id="edit-news-id">
-                <div class="form-group">
-                    <label for="edit-news-title">Title</label>
-                    <input type="text" id="edit-news-title" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-news-content">Content</label>
-                    <textarea id="edit-news-content" rows="8" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Current Image</label>
-                    <img id="edit-news-current-img" style="max-width: 100px; max-height: 100px; display: block; margin-bottom: 10px;">
-                    <label for="edit-news-new-image">Replace Image (optional)</label>
-                    <input type="file" id="edit-news-new-image" accept="image/*">
-                </div>
-                <button type="submit" class="btn-success"><i class="fas fa-save"></i> Save Changes</button>
-            </form>
+            <span class="close-btn" onclick="closeModal('view-message-modal')">&times;</span>
+            <h2 id="message-modal-title">Message Details</h2>
+            <div id="message-modal-content"></div>
+        </div>
+    </div>
+
+    <!-- View Application Modal -->
+    <div id="view-application-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('view-application-modal')">&times;</span>
+            <h2>Application Details</h2>
+            <div id="application-modal-content"></div>
         </div>
     </div>
 
@@ -349,6 +440,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // DOM Elements
         const authContainer = document.getElementById('auth-container');
         const adminDashboard = document.getElementById('admin-dashboard');
         const loginBtn = document.getElementById('login-btn');
@@ -356,9 +448,10 @@
         const adminEmailInput = document.getElementById('admin-email');
         const adminPasswordInput = document.getElementById('admin-password');
 
-        const newsEditModal = document.getElementById('news-edit-modal');
-        const newsEditForm = document.getElementById('news-edit-form');
-        const closeModalBtn = document.querySelector('#news-edit-modal .close-btn');
+        // Global modal control function
+        window.closeModal = function(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        };
 
         // --- Authentication ---
         onAuthStateChanged(auth, user => {
@@ -384,17 +477,6 @@
         logoutBtn.addEventListener('click', () => {
             signOut(auth);
         });
-
-        // --- Modal Control ---
-        closeModalBtn.addEventListener('click', () => {
-            newsEditModal.style.display = 'none';
-        });
-
-        window.onclick = function(event) {
-            if (event.target == newsEditModal) {
-                newsEditModal.style.display = 'none';
-            }
-        }
 
         // --- Helper function to resize and encode image ---
         function resizeImage(file) {
@@ -425,7 +507,7 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/webp', 0.8)); 
+                        resolve(canvas.toDataURL('image/jpeg', 0.8)); 
                     };
                     img.onerror = reject;
                     img.src = event.target.result;
@@ -448,6 +530,37 @@
             return age;
         }
 
+        // --- Image Preview Functionality ---
+        function setupImagePreview(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            
+            input.addEventListener('change', function() {
+                preview.innerHTML = '';
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.style.maxWidth = '150px';
+                        img.style.maxHeight = '150px';
+                        img.style.borderRadius = '5px';
+                        img.style.margin = '5px';
+                        preview.appendChild(img);
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        }
+
+        // Initialize image previews
+        document.addEventListener('DOMContentLoaded', () => {
+            setupImagePreview('player-image', 'player-image-preview');
+            setupImagePreview('gallery-image', 'gallery-image-preview');
+            setupImagePreview('news-image', 'news-image-preview');
+            setupImagePreview('coach-image', 'coach-image-preview');
+        });
+
         // --- Central Data Loading ---
         async function loadData(collectionName, tableId, renderRowFunction) {
             const tableBody = document.getElementById(tableId).getElementsByTagName('tbody')[0];
@@ -455,31 +568,37 @@
             try {
                 const querySnapshot = await getDocs(collection(db, collectionName));
                 tableBody.innerHTML = '';
+                if (querySnapshot.empty) {
+                    tableBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">No data found.</td></tr>';
+                    return;
+                }
+                
                 querySnapshot.forEach(doc => {
                     const data = doc.data();
                     const row = tableBody.insertRow();
                     row.innerHTML = renderRowFunction(doc.id, data);
                 });
-                if (querySnapshot.empty) {
-                     tableBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">No data found.</td></tr>';
-                }
             } catch(e) {
-                 console.error("Error loading data from " + collectionName, e);
-                 tableBody.innerHTML = '<tr><td colspan="10" style="color:red; text-align:center;">Failed to load data.</td></tr>';
+                console.error("Error loading data from " + collectionName, e);
+                tableBody.innerHTML = '<tr><td colspan="10" style="color:red; text-align:center;">Failed to load data.</td></tr>';
             }
         }
 
         function loadAllData() {
             loadPlayers();
-            loadContactMessages();
             loadGallery();
             loadNews();
             loadCoaches();
+            loadContactMessages();
             loadApplications();
         }
 
         // --- Player Management ---
         const playerForm = document.getElementById('player-form');
+        const playerSubmitBtn = document.getElementById('player-submit-btn');
+        const playerCancelBtn = document.getElementById('player-cancel-btn');
+        let editingPlayerId = null;
+
         playerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -490,44 +609,71 @@
             const description = document.getElementById('player-description').value;
             const imageFile = document.getElementById('player-image').files[0];
 
-            if (!imageFile) {
-                alert("Please select a player image.");
-                return;
-            }
-
             if (!dob) {
                 alert("Please select date of birth.");
                 return;
             }
 
-            const submitBtn = e.submitter;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding Player...';
+            playerSubmitBtn.disabled = true;
+            playerSubmitBtn.innerHTML = editingPlayerId ? 
+                '<i class="fas fa-spinner fa-spin"></i> Updating...' : 
+                '<i class="fas fa-spinner fa-spin"></i> Adding...';
 
             try {
-                const imageUrl = await resizeImage(imageFile);
-                
-                await addDoc(collection(db, 'players'), {
+                const playerData = {
                     name: name,
                     position: position,
                     dateOfBirth: dob,
                     nationality: nationality || 'N/A',
                     description: description || '',
-                    image: imageUrl,
-                    createdAt: serverTimestamp()
-                });
+                    updatedAt: serverTimestamp()
+                };
 
-                alert('Player added successfully!');
-                playerForm.reset();
+                if (imageFile) {
+                    playerData.image = await resizeImage(imageFile);
+                } else if (editingPlayerId) {
+                    // Keep existing image if not uploading new one
+                    const existingDoc = await getDoc(doc(db, 'players', editingPlayerId));
+                    if (existingDoc.exists()) {
+                        playerData.image = existingDoc.data().image;
+                    }
+                } else {
+                    alert("Please select a player image for new players.");
+                    playerSubmitBtn.disabled = false;
+                    playerSubmitBtn.innerHTML = editingPlayerId ? '<i class="fas fa-save"></i> Update Player' : '<i class="fas fa-plus"></i> Add Player';
+                    return;
+                }
+
+                if (editingPlayerId) {
+                    await updateDoc(doc(db, 'players', editingPlayerId), playerData);
+                    alert('Player updated successfully!');
+                } else {
+                    playerData.createdAt = serverTimestamp();
+                    await addDoc(collection(db, 'players'), playerData);
+                    alert('Player added successfully!');
+                }
+
+                resetPlayerForm();
                 loadPlayers();
             } catch (error) {
-                console.error("Error adding player: ", error);
-                alert('Error adding player. Please try again.');
+                console.error("Error saving player: ", error);
+                alert('Error saving player. Please try again.');
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Player';
+                playerSubmitBtn.disabled = false;
+                playerSubmitBtn.innerHTML = editingPlayerId ? '<i class="fas fa-save"></i> Update Player' : '<i class="fas fa-plus"></i> Add Player';
             }
         });
+
+        playerCancelBtn.addEventListener('click', resetPlayerForm);
+
+        function resetPlayerForm() {
+            playerForm.reset();
+            document.getElementById('player-image-preview').innerHTML = '';
+            document.getElementById('player-id').value = '';
+            editingPlayerId = null;
+            playerSubmitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Player';
+            playerCancelBtn.style.display = 'none';
+        }
 
         async function loadPlayers() {
             await loadData('players', 'players-table', (id, data) => {
@@ -535,11 +681,12 @@
                 return `
                     <td data-label="Name">${data.name}</td>
                     <td data-label="Position">${data.position}</td>
-                    <td data-label="Date of Birth">${data.dateOfBirth} (${age} years)</td>
+                    <td data-label="Age">${age} years</td>
                     <td data-label="Nationality">${data.nationality || 'N/A'}</td>
-                    <td data-label="Image"><img src="${data.image}" style="max-width: 50px; height: auto; border-radius: 3px;"></td>
+                    <td data-label="Image"><img src="${data.image || 'image/players .jpg'}" class="table-image"></td>
                     <td data-label="Actions">
                         <div class="action-btns">
+                            <button class="edit-player-btn btn-warning" data-id="${id}"><i class="fas fa-edit"></i> Edit</button>
                             <button class="delete-player-btn btn-danger" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
                         </div>
                     </td>
@@ -548,105 +695,165 @@
         }
 
         // --- Gallery Management ---
-        const galleryUploadForm = document.getElementById('gallery-upload-form');
-        galleryUploadForm.addEventListener('submit', async (e) => {
+        const galleryForm = document.getElementById('gallery-upload-form');
+        const gallerySubmitBtn = document.getElementById('gallery-submit-btn');
+        const galleryCancelBtn = document.getElementById('gallery-cancel-btn');
+        let editingGalleryId = null;
+
+        galleryForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const title = document.getElementById('gallery-title').value;
+            const description = document.getElementById('gallery-description').value;
             const date = document.getElementById('gallery-date').value;
-            const imageFiles = document.getElementById('gallery-image').files;
+            const imageFile = document.getElementById('gallery-image').files[0];
 
-            if (imageFiles.length === 0) {
-                alert("Please select at least one image file.");
+            if (!imageFile && !editingGalleryId) {
+                alert("Please select an image file.");
                 return;
             }
             
-            const submitBtn = e.submitter;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
-
-            const uploadPromises = [];
-            for (const imageFile of imageFiles) {
-                const uploadTask = resizeImage(imageFile).then(async (dataUrl) => {
-                    await addDoc(collection(db, 'gallery'), {
-                        title: title,
-                        date: date,
-                        src: dataUrl,
-                        createdAt: serverTimestamp()
-                    });
-                });
-                uploadPromises.push(uploadTask);
-            }
+            gallerySubmitBtn.disabled = true;
+            gallerySubmitBtn.innerHTML = editingGalleryId ? 
+                '<i class="fas fa-spinner fa-spin"></i> Updating...' : 
+                '<i class="fas fa-spinner fa-spin"></i> Uploading...';
 
             try {
-                await Promise.all(uploadPromises);
-                alert('All images uploaded successfully!');
-                galleryUploadForm.reset();
+                const galleryData = {
+                    title: title,
+                    description: description || '',
+                    date: date,
+                    updatedAt: serverTimestamp()
+                };
+
+                if (imageFile) {
+                    galleryData.src = await resizeImage(imageFile);
+                } else if (editingGalleryId) {
+                    // Keep existing image if not uploading new one
+                    const existingDoc = await getDoc(doc(db, 'gallery', editingGalleryId));
+                    if (existingDoc.exists()) {
+                        galleryData.src = existingDoc.data().src;
+                    }
+                }
+
+                if (editingGalleryId) {
+                    await updateDoc(doc(db, 'gallery', editingGalleryId), galleryData);
+                    alert('Gallery item updated successfully!');
+                } else {
+                    galleryData.createdAt = serverTimestamp();
+                    await addDoc(collection(db, 'gallery'), galleryData);
+                    alert('Gallery item added successfully!');
+                }
+
+                resetGalleryForm();
                 loadGallery();
             } catch (error) {
-                console.error("Error uploading images: ", error);
-                alert('An error occurred during upload: ' + error.message);
+                console.error("Error saving gallery item: ", error);
+                alert('An error occurred: ' + error.message);
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-upload"></i> Upload to Gallery';
+                gallerySubmitBtn.disabled = false;
+                gallerySubmitBtn.innerHTML = editingGalleryId ? '<i class="fas fa-save"></i> Update' : '<i class="fas fa-plus"></i> Add Gallery Item';
             }
         });
+
+        galleryCancelBtn.addEventListener('click', resetGalleryForm);
+
+        function resetGalleryForm() {
+            galleryForm.reset();
+            document.getElementById('gallery-image-preview').innerHTML = '';
+            document.getElementById('gallery-id').value = '';
+            editingGalleryId = null;
+            gallerySubmitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Gallery Item';
+            galleryCancelBtn.style.display = 'none';
+        }
 
         async function loadGallery() {
              await loadData('gallery', 'gallery-table', (id, data) => `
                 <td data-label="Title">${data.title}</td>
                 <td data-label="Date">${data.date}</td>
-                <td data-label="Preview"><img src="${data.src}" style="max-width: 50px; height: auto; border-radius: 3px;"></td>
+                <td data-label="Preview"><img src="${data.src}" class="table-image"></td>
                 <td data-label="Actions">
                     <div class="action-btns">
+                        <button class="edit-gallery-btn btn-warning" data-id="${id}"><i class="fas fa-edit"></i> Edit</button>
                         <button class="delete-gallery-btn btn-danger" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
                     </div>
                 </td>
             `);
         }
 
-        // --- News Management (Add/Publish) ---
+        // --- News Management ---
         const newsForm = document.getElementById('news-form');
+        const newsSubmitBtn = document.getElementById('news-submit-btn');
+        const newsCancelBtn = document.getElementById('news-cancel-btn');
+        let editingNewsId = null;
+
         newsForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const title = document.getElementById('news-title').value;
             const content = document.getElementById('news-content').value;
+            const date = document.getElementById('news-date').value;
             const imageFile = document.getElementById('news-image').files[0];
-            let imageUrl = '';
 
-            const submitBtn = e.submitter;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
+            newsSubmitBtn.disabled = true;
+            newsSubmitBtn.innerHTML = editingNewsId ? 
+                '<i class="fas fa-spinner fa-spin"></i> Updating...' : 
+                '<i class="fas fa-spinner fa-spin"></i> Publishing...';
 
             try {
-                if (imageFile) {
-                    imageUrl = await resizeImage(imageFile);
-                }
-
-                await addDoc(collection(db, 'news'), {
+                const newsData = {
                     title: title,
                     content: content,
-                    media: imageUrl,
-                    createdAt: serverTimestamp(),
-                    date: new Date().toISOString().split('T')[0]
-                });
+                    date: date,
+                    updatedAt: serverTimestamp()
+                };
 
-                alert('News published successfully!');
-                newsForm.reset();
+                if (imageFile) {
+                    newsData.media = await resizeImage(imageFile);
+                } else if (editingNewsId) {
+                    // Keep existing image if not uploading new one
+                    const existingDoc = await getDoc(doc(db, 'news', editingNewsId));
+                    if (existingDoc.exists()) {
+                        newsData.media = existingDoc.data().media;
+                    }
+                }
+
+                if (editingNewsId) {
+                    await updateDoc(doc(db, 'news', editingNewsId), newsData);
+                    alert('News updated successfully!');
+                } else {
+                    newsData.createdAt = serverTimestamp();
+                    await addDoc(collection(db, 'news'), newsData);
+                    alert('News published successfully!');
+                }
+
+                resetNewsForm();
                 loadNews();
             } catch (error) {
-                console.error("Error publishing news: ", error);
-                alert('Error publishing news. Please try again.');
+                console.error("Error saving news: ", error);
+                alert('Error saving news. Please try again.');
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-plus"></i> Publish News';
+                newsSubmitBtn.disabled = false;
+                newsSubmitBtn.innerHTML = editingNewsId ? '<i class="fas fa-save"></i> Update News' : '<i class="fas fa-plus"></i> Publish News';
             }
         });
 
-        // --- News Management (Load/Edit/Delete) ---
+        newsCancelBtn.addEventListener('click', resetNewsForm);
+
+        function resetNewsForm() {
+            newsForm.reset();
+            document.getElementById('news-image-preview').innerHTML = '';
+            document.getElementById('news-id').value = '';
+            editingNewsId = null;
+            newsSubmitBtn.innerHTML = '<i class="fas fa-plus"></i> Publish News';
+            newsCancelBtn.style.display = 'none';
+            // Set default date to today
+            document.getElementById('news-date').value = new Date().toISOString().split('T')[0];
+        }
+
         async function loadNews() {
              await loadData('news', 'news-table', (id, data) => `
                 <td data-label="Title">${data.title}</td>
                 <td data-label="Date">${data.date || 'N/A'}</td>
+                <td data-label="Image">${data.media ? `<img src="${data.media}" class="table-image">` : 'No Image'}</td>
                 <td data-label="Content Snippet">${data.content.substring(0, 50)}${data.content.length > 50 ? '...' : ''}</td>
                 <td data-label="Actions">
                     <div class="action-btns">
@@ -656,97 +863,270 @@
                 </td>
             `);
         }
-        
-        // Handle News Edit Form Submission
-        newsEditForm.addEventListener('submit', async (e) => {
+
+        // --- Coach Management ---
+        const coachForm = document.getElementById('coach-form');
+        const coachSubmitBtn = document.getElementById('coach-submit-btn');
+        const coachCancelBtn = document.getElementById('coach-cancel-btn');
+        let editingCoachId = null;
+
+        coachForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const docId = document.getElementById('edit-news-id').value;
-            const title = document.getElementById('edit-news-title').value;
-            const content = document.getElementById('edit-news-content').value;
-            const newImageFile = document.getElementById('edit-news-new-image').files[0];
-            const submitBtn = e.submitter;
-            
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            const name = document.getElementById('coach-name').value;
+            const position = document.getElementById('coach-position').value;
+            const age = document.getElementById('coach-age').value;
+            const experience = document.getElementById('coach-experience').value;
+            const imageFile = document.getElementById('coach-image').files[0];
+
+            if (!imageFile && !editingCoachId) {
+                alert("Please select a coach image.");
+                return;
+            }
+
+            coachSubmitBtn.disabled = true;
+            coachSubmitBtn.innerHTML = editingCoachId ? 
+                '<i class="fas fa-spinner fa-spin"></i> Updating...' : 
+                '<i class="fas fa-spinner fa-spin"></i> Adding...';
 
             try {
-                const newsDocRef = doc(db, "news", docId);
-                const updateData = {
-                    title: title,
-                    content: content,
+                const coachData = {
+                    name: name,
+                    position: position,
+                    age: age,
+                    experience: experience || '',
                     updatedAt: serverTimestamp()
                 };
 
-                if (newImageFile) {
-                    updateData.media = await resizeImage(newImageFile);
+                if (imageFile) {
+                    coachData.img = await resizeImage(imageFile);
+                } else if (editingCoachId) {
+                    // Keep existing image if not uploading new one
+                    const existingDoc = await getDoc(doc(db, 'coaches', editingCoachId));
+                    if (existingDoc.exists()) {
+                        coachData.img = existingDoc.data().img;
+                    }
                 }
 
-                await updateDoc(newsDocRef, updateData);
-                alert('News updated successfully!');
-                newsEditModal.style.display = 'none';
-                newsEditForm.reset();
-                loadNews();
+                if (editingCoachId) {
+                    await updateDoc(doc(db, 'coaches', editingCoachId), coachData);
+                    alert('Coach updated successfully!');
+                } else {
+                    coachData.createdAt = serverTimestamp();
+                    await addDoc(collection(db, 'coaches'), coachData);
+                    alert('Coach added successfully!');
+                }
 
+                resetCoachForm();
+                loadCoaches();
             } catch (error) {
-                console.error("Error updating news: ", error);
-                alert('Error updating news. Please try again.');
+                console.error("Error saving coach: ", error);
+                alert('Error saving coach. Please try again.');
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+                coachSubmitBtn.disabled = false;
+                coachSubmitBtn.innerHTML = editingCoachId ? '<i class="fas fa-save"></i> Update Coach' : '<i class="fas fa-plus"></i> Add Coach';
             }
         });
 
-        // --- Coach Management ---
+        coachCancelBtn.addEventListener('click', resetCoachForm);
+
+        function resetCoachForm() {
+            coachForm.reset();
+            document.getElementById('coach-image-preview').innerHTML = '';
+            document.getElementById('coach-id').value = '';
+            editingCoachId = null;
+            coachSubmitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Coach';
+            coachCancelBtn.style.display = 'none';
+        }
+
         async function loadCoaches() {
             await loadData('coaches', 'coaches-table', (id, data) => `
                 <td data-label="Name">${data.name}</td>
                 <td data-label="Position">${data.position}</td>
                 <td data-label="Age">${data.age}</td>
-                <td data-label="Preview"><img src="${data.img}" style="max-width: 50px; height: auto; border-radius: 3px;"></td>
+                <td data-label="Preview"><img src="${data.img}" class="table-image"></td>
                 <td data-label="Actions">
                     <div class="action-btns">
+                        <button class="edit-coach-btn btn-warning" data-id="${id}"><i class="fas fa-edit"></i> Edit</button>
                         <button class="delete-coach-btn btn-danger" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
                     </div>
                 </td>
             `);
         }
 
-        // --- Contact Messages (Load/Delete) ---
+        // --- Contact Messages Management ---
         async function loadContactMessages() {
-             await loadData('contact-messages', 'contact-messages-table', (id, data) => `
-                <td data-label="Name">${data.name}</td>
-                <td data-label="Email">${data.email}</td>
-                <td data-label="Phone">${data.phone || 'N/A'}</td> <td data-label="Subject">${data.subject}</td>
-                <td data-label="Message Content">${data.message.substring(0, 50)}${data.message.length > 50 ? '...' : ''}</td>
-                <td data-label="Received On">${data.createdAt.toDate().toLocaleDateString()}</td>
-                <td data-label="Actions">
-                    <div class="action-btns">
-                        <button class="delete-message-btn btn-danger" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
-                    </div>
-                </td>
-            `);
+             await loadData('contact-messages', 'contact-messages-table', (id, data) => {
+                const date = data.createdAt ? data.createdAt.toDate().toLocaleDateString() : 'N/A';
+                const status = data.status || 'pending';
+                const statusClass = `status-${status}`;
+                
+                return `
+                    <td data-label="Name">${data.name}</td>
+                    <td data-label="Email">${data.email}</td>
+                    <td data-label="Phone">${data.phone || 'N/A'}</td>
+                    <td data-label="Subject">${data.subject}</td>
+                    <td data-label="Message">
+                        ${data.message.substring(0, 30)}${data.message.length > 30 ? '...' : ''}
+                        <button class="view-more-btn" onclick="viewFullMessage('${id}')">View More</button>
+                    </td>
+                    <td data-label="Received">${date}</td>
+                    <td data-label="Status"><span class="status-badge ${statusClass}">${status}</span></td>
+                    <td data-label="Actions">
+                        <div class="action-btns">
+                            <button class="update-status-btn btn-success" data-id="${id}" data-status="reviewed">Reviewed</button>
+                            <button class="delete-message-btn btn-danger" data-id="${id}"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                `;
+            });
         }
 
         // --- Join Us Applications Management ---
         async function loadApplications() {
-             await loadData('applications', 'join-requests-table', (id, data) => `
-                <td data-label="Full Name">${data.fullName}</td>
-                <td data-label="Email">${data.email}</td>
-                <td data-label="Phone">${data.phone || 'N/A'}</td>
-                <td data-label="DOB">${data.dob || 'N/A'}</td>
-                <td data-label="Position">${data.position || 'N/A'}</td>
-                <td data-label="Message">${data.message.substring(0, 50)}${data.message.length > 50 ? '...' : ''}</td>
-                <td data-label="Applied On">${data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString() : 'N/A'}</td>
-                <td data-label="Actions">
-                    <div class="action-btns">
-                        <button class="delete-join-request-btn btn-danger" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
-                    </div>
-                </td>
-            `);
+             await loadData('applications', 'join-requests-table', (id, data) => {
+                const age = data.dob ? calculateAge(data.dob) : 'N/A';
+                const date = data.createdAt ? data.createdAt.toDate().toLocaleDateString() : 'N/A';
+                const status = data.status || 'pending';
+                const statusClass = `status-${status}`;
+                
+                return `
+                    <td data-label="Full Name">${data.fullName}</td>
+                    <td data-label="Email">${data.email}</td>
+                    <td data-label="Phone">${data.phone || 'N/A'}</td>
+                    <td data-label="Age">${age}</td>
+                    <td data-label="Position">${data.position || 'N/A'}</td>
+                    <td data-label="Status"><span class="status-badge ${statusClass}">${status}</span></td>
+                    <td data-label="Applied">${date}</td>
+                    <td data-label="Actions">
+                        <div class="action-btns">
+                            <button class="view-application-btn btn-warning" data-id="${id}"><i class="fas fa-eye"></i> View</button>
+                            <select class="application-status-select" data-id="${id}" style="padding: 5px; margin: 2px;">
+                                <option value="pending" ${status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="reviewed" ${status === 'reviewed' ? 'selected' : ''}>Reviewed</option>
+                                <option value="approved" ${status === 'approved' ? 'selected' : ''}>Approved</option>
+                                <option value="rejected" ${status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                            </select>
+                            <button class="delete-join-request-btn btn-danger" data-id="${id}"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                `;
+            });
         }
 
-        // --- Event Delegation for Delete Buttons ---
+        // --- View Full Message Function ---
+        window.viewFullMessage = async function(id) {
+            try {
+                const docSnap = await getDoc(doc(db, "contact-messages", id));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('message-modal-title').textContent = `Message from ${data.name}`;
+                    document.getElementById('message-modal-content').innerHTML = `
+                        <p><strong>Email:</strong> ${data.email}</p>
+                        <p><strong>Phone:</strong> ${data.phone || 'N/A'}</p>
+                        <p><strong>Subject:</strong> ${data.subject}</p>
+                        <p><strong>Message:</strong></p>
+                        <p style="white-space: pre-wrap; background: #f9f9f9; padding: 10px; border-radius: 5px;">${data.message}</p>
+                        <p><strong>Received:</strong> ${data.createdAt ? data.createdAt.toDate().toLocaleString() : 'N/A'}</p>
+                    `;
+                    document.getElementById('view-message-modal').style.display = 'block';
+                }
+            } catch(error) {
+                console.error("Error loading message:", error);
+                alert("Could not load message.");
+            }
+        };
+
+        // --- View Application Function ---
         document.addEventListener('click', async (e) => {
+            if (e.target && e.target.classList.contains('view-application-btn')) {
+                const docId = e.target.dataset.id;
+                try {
+                    const docSnap = await getDoc(doc(db, "applications", docId));
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        const date = data.createdAt ? data.createdAt.toDate().toLocaleString() : 'N/A';
+                        
+                        let applicationHTML = `
+                            <div style="max-height: 60vh; overflow-y: auto;">
+                                <h3>${data.fullName}'s Application</h3>
+                                <p><strong>Email:</strong> ${data.email}</p>
+                                <p><strong>Phone:</strong> ${data.phone || 'N/A'}</p>
+                                <p><strong>Date of Birth:</strong> ${data.dob || 'N/A'}</p>
+                                <p><strong>Address:</strong> ${data.address || 'N/A'}</p>
+                                <p><strong>Parent Name:</strong> ${data.parentFullName || 'N/A'}</p>
+                                <p><strong>Parent Phone:</strong> ${data.parentPhone1 || 'N/A'}</p>
+                                <p><strong>Student/Graduate:</strong> ${data.studentOrGraduate || 'N/A'}</p>
+                        `;
+                        
+                        if (data.studentOrGraduate === 'student') {
+                            applicationHTML += `
+                                <p><strong>School:</strong> ${data.schoolName || 'N/A'}</p>
+                                <p><strong>Class:</strong> ${data.schoolClass || 'N/A'}</p>
+                            `;
+                        } else if (data.studentOrGraduate === 'graduate') {
+                            if (data.gradType === 'university') {
+                                applicationHTML += `
+                                    <p><strong>University:</strong> ${data.universityName || 'N/A'}</p>
+                                    <p><strong>Department:</strong> ${data.department || 'N/A'}</p>
+                                `;
+                            } else if (data.gradType === 'occupation') {
+                                applicationHTML += `<p><strong>Job:</strong> ${data.job || 'N/A'}</p>`;
+                            }
+                        }
+                        
+                        applicationHTML += `
+                                <p><strong>Preferred Position:</strong> ${data.position || 'N/A'}</p>
+                                <p><strong>Experience Level:</strong> ${data.experience || 'N/A'}</p>
+                                <p><strong>Previous Academy/Club:</strong> ${data.previousAcademy || 'N/A'}</p>
+                                <p><strong>Message:</strong></p>
+                                <p style="white-space: pre-wrap; background: #f9f9f9; padding: 10px; border-radius: 5px;">${data.message || 'No message'}</p>
+                                ${data.photograph ? `<p><strong>Photograph:</strong><br><img src="${data.photograph}" style="max-width: 200px; max-height: 200px; border-radius: 5px; margin: 10px 0;"></p>` : ''}
+                                <p><strong>Applied On:</strong> ${date}</p>
+                                <p><strong>Status:</strong> <span class="status-badge status-${data.status || 'pending'}">${data.status || 'pending'}</span></p>
+                            </div>
+                        `;
+                        
+                        document.getElementById('application-modal-content').innerHTML = applicationHTML;
+                        document.getElementById('view-application-modal').style.display = 'block';
+                    }
+                } catch(error) {
+                    console.error("Error loading application:", error);
+                    alert("Could not load application.");
+                }
+            }
+        });
+
+        // --- Event Delegation for All Actions ---
+        document.addEventListener('click', async (e) => {
+            // Edit Player
+            if (e.target && e.target.classList.contains('edit-player-btn')) {
+                const docId = e.target.dataset.id;
+                try {
+                    const docSnap = await getDoc(doc(db, "players", docId));
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        document.getElementById('player-id').value = docId;
+                        document.getElementById('player-name').value = data.name;
+                        document.getElementById('player-position').value = data.position;
+                        document.getElementById('player-dob').value = data.dateOfBirth;
+                        document.getElementById('player-nationality').value = data.nationality || '';
+                        document.getElementById('player-description').value = data.description || '';
+                        
+                        // Show existing image
+                        const preview = document.getElementById('player-image-preview');
+                        preview.innerHTML = data.image ? 
+                            `<img src="${data.image}" style="max-width: 150px; max-height: 150px; border-radius: 5px; margin: 5px;">` : '';
+                        
+                        editingPlayerId = docId;
+                        playerSubmitBtn.innerHTML = '<i class="fas fa-save"></i> Update Player';
+                        playerCancelBtn.style.display = 'inline-block';
+                    }
+                } catch(error) {
+                    console.error("Error loading player for edit:", error);
+                    alert("Could not load player data.");
+                }
+            }
+
             // Delete Player
             if (e.target && e.target.classList.contains('delete-player-btn')) {
                 if (!confirm("Are you sure you want to delete this player?")) return;
@@ -758,6 +1138,33 @@
                 } catch (error) {
                     console.error("Error deleting player: ", error);
                     alert('Error deleting player.');
+                }
+            }
+
+            // Edit Gallery Item
+            if (e.target && e.target.classList.contains('edit-gallery-btn')) {
+                const docId = e.target.dataset.id;
+                try {
+                    const docSnap = await getDoc(doc(db, "gallery", docId));
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        document.getElementById('gallery-id').value = docId;
+                        document.getElementById('gallery-title').value = data.title;
+                        document.getElementById('gallery-description').value = data.description || '';
+                        document.getElementById('gallery-date').value = data.date;
+                        
+                        // Show existing image
+                        const preview = document.getElementById('gallery-image-preview');
+                        preview.innerHTML = data.src ? 
+                            `<img src="${data.src}" style="max-width: 150px; max-height: 150px; border-radius: 5px; margin: 5px;">` : '';
+                        
+                        editingGalleryId = docId;
+                        gallerySubmitBtn.innerHTML = '<i class="fas fa-save"></i> Update';
+                        galleryCancelBtn.style.display = 'inline-block';
+                    }
+                } catch(error) {
+                    console.error("Error loading gallery item for edit:", error);
+                    alert("Could not load gallery item data.");
                 }
             }
 
@@ -782,15 +1189,19 @@
                     const docSnap = await getDoc(doc(db, "news", docId));
                     if (docSnap.exists()) {
                         const data = docSnap.data();
+                        document.getElementById('news-id').value = docId;
+                        document.getElementById('news-title').value = data.title;
+                        document.getElementById('news-content').value = data.content;
+                        document.getElementById('news-date').value = data.date || new Date().toISOString().split('T')[0];
                         
-                        document.getElementById('edit-news-id').value = docId;
-                        document.getElementById('edit-news-title').value = data.title;
-                        document.getElementById('edit-news-content').value = data.content;
-                        document.getElementById('edit-news-current-img').src = data.media || '';
-
-                        newsEditModal.style.display = 'block';
-                    } else {
-                        alert('News item not found.');
+                        // Show existing image
+                        const preview = document.getElementById('news-image-preview');
+                        preview.innerHTML = data.media ? 
+                            `<img src="${data.media}" style="max-width: 150px; max-height: 150px; border-radius: 5px; margin: 5px;">` : '';
+                        
+                        editingNewsId = docId;
+                        newsSubmitBtn.innerHTML = '<i class="fas fa-save"></i> Update News';
+                        newsCancelBtn.style.display = 'inline-block';
                     }
                 } catch(error) {
                     console.error("Error loading news for edit:", error);
@@ -812,6 +1223,34 @@
                 }
             }
 
+            // Edit Coach
+            if (e.target && e.target.classList.contains('edit-coach-btn')) {
+                const docId = e.target.dataset.id;
+                try {
+                    const docSnap = await getDoc(doc(db, "coaches", docId));
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        document.getElementById('coach-id').value = docId;
+                        document.getElementById('coach-name').value = data.name;
+                        document.getElementById('coach-position').value = data.position;
+                        document.getElementById('coach-age').value = data.age;
+                        document.getElementById('coach-experience').value = data.experience || '';
+                        
+                        // Show existing image
+                        const preview = document.getElementById('coach-image-preview');
+                        preview.innerHTML = data.img ? 
+                            `<img src="${data.img}" style="max-width: 150px; max-height: 150px; border-radius: 5px; margin: 5px;">` : '';
+                        
+                        editingCoachId = docId;
+                        coachSubmitBtn.innerHTML = '<i class="fas fa-save"></i> Update Coach';
+                        coachCancelBtn.style.display = 'inline-block';
+                    }
+                } catch(error) {
+                    console.error("Error loading coach for edit:", error);
+                    alert("Could not load coach data.");
+                }
+            }
+
             // Delete Coach
             if (e.target && e.target.classList.contains('delete-coach-btn')) {
                 if (!confirm("Are you sure you want to delete this coach?")) return;
@@ -823,6 +1262,23 @@
                 } catch (error) {
                     console.error("Error deleting coach: ", error);
                     alert('Error deleting coach.');
+                }
+            }
+
+            // Update Message Status
+            if (e.target && e.target.classList.contains('update-status-btn')) {
+                const docId = e.target.dataset.id;
+                const status = e.target.dataset.status;
+                try {
+                    await updateDoc(doc(db, "contact-messages", docId), {
+                        status: status,
+                        updatedAt: serverTimestamp()
+                    });
+                    alert('Message status updated.');
+                    loadContactMessages();
+                } catch (error) {
+                    console.error("Error updating message status: ", error);
+                    alert('Error updating status.');
                 }
             }
 
@@ -840,6 +1296,22 @@
                 }
             }
 
+            // Update Application Status
+            if (e.target && e.target.classList.contains('application-status-select')) {
+                const docId = e.target.dataset.id;
+                const status = e.target.value;
+                try {
+                    await updateDoc(doc(db, "applications", docId), {
+                        status: status,
+                        updatedAt: serverTimestamp()
+                    });
+                    loadApplications();
+                } catch (error) {
+                    console.error("Error updating application status: ", error);
+                    alert('Error updating status.');
+                }
+            }
+
             // Delete Join Request
             if (e.target && e.target.classList.contains('delete-join-request-btn')) {
                 if (!confirm("Are you sure you want to delete this application?")) return;
@@ -853,6 +1325,19 @@
                     alert('Error deleting application.');
                 }
             }
+        });
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Set default date for news form
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('news-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('gallery-date').value = new Date().toISOString().split('T')[0];
         });
 
     </script>
