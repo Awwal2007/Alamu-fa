@@ -1,2301 +1,4743 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Alamu Football Academy - Official Website</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+
     <link rel="icon" href="./image/alamu.png" type="image/png">
+
     <style>
+
         :root {
+
             /* Blue & White Theme */
+
             --gold: #007BFF; 	 /* Bright Blue */
+
             --red: #003366; 	 /* Navy Blue */
+
             --white: #FFFFFF; 	 /* White */
+
             --dark-red: #002244; 	 /* Darker Navy */
+
             --light-gold: #E6F2FF; /* Very Light Blue */
+
             --dark-gold: #0056B3; /* Medium Blue */
+
             --light-gray: #f5f5f5;
+
             --dark-gray: #333;
+
         }
+
         
+
         * {
+
             margin: 0;
+
             padding: 0;
+
             box-sizing: border-box;
+
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
         }
+
         
+
         body {
+
             background-color: var(--white);
+
             color: var(--dark-gray);
+
             line-height: 1.6;
+
         }
+
         
+
         .container {
+
             max-width: 1200px;
+
             margin: 0 auto;
+
             padding: 0 20px;
+
         } 
+
         
+
         /* Header Styles */
+
         header {
+
             background: linear-gradient(135deg, var(--gold), var(--dark-red));
+
             color: var(--white);
+
             
+
             position: sticky;
+
             top: 0;
+
             z-index: 100;
+
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+
         }
+
         
+
         .header-content {
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
+
         }
+
         
+
         .logo {
+
             display: flex;
+
             align-items: center;
+
             gap: 15px;
+
         }
+
         
+
         .logo-icon {    
+
             font-size: 2.5rem;
+
             color: var(--gold);
+
         }
+
         
+
         .logo-text h1 {
+
             font-size: 1.2rem;
+
             font-weight: 700;
+
         }
+
         
+
         .logo-text p {
+
             font-size: 0.9rem;
+
             opacity: 0.9;
+
         }
+
+
 
         .logo-image img {
+
             width: 100px;
+
             height: auto;
+
         }
+
+
 
         .logo-image img:hover {
+
             transform: scale(1.1);
+
         }
+
         
+
         nav ul {
+
             display: flex;
+
             list-style: none;
+
             gap: 25px;
+
         }
+
         
+
         nav a {
+
             color: var(--white);
+
             text-decoration: none;
+
             font-weight: 500;
+
             font-size: 1.1rem;
+
             transition: all 0.3s ease;
+
             padding: 5px 10px;
+
             border-radius: 4px;
+
         }
+
         
+
         nav a:hover {
+
             background: rgba(255, 255, 255, 0.1);
+
             color: var(--gold);
+
         }
+
         
+
         .mobile-menu-btn {
+
             display: none;
+
             background: none;
+
             border: none;
+
             color: var(--white);
+
             font-size: 1.5rem;
+
             cursor: pointer;
+
         }
+
+
 
         /* Ticker */
+
         .ticker-container {
+
             background: var(--red);
+
             color: var(--white);
+
             padding: 10px 0;
+
             overflow: hidden;
+
             position: relative;
+
             border-bottom: 2px solid var(--dark-gold);
+
         }
+
         
+
         .ticker-content {
+
             display: flex;
+
             animation: ticker 25s linear infinite;
+
             white-space: nowrap;
+
         }
+
         
+
         .ticker-item {
+
             display: flex;
+
             align-items: center;
+
             padding: 0 30px;
+
             font-weight: 600;
+
             font-size: 0.95rem;
+
         }
+
         
+
         .ticker-icon {
+
             color: var(--white);
+
             margin-right: 10px;
+
             font-size: 1.1rem;
+
         }
+
         
+
         @keyframes ticker {
+
             0% { transform: translateX(100%); }
+
             100% { transform: translateX(-100%); }
+
         }
+
         
+
         .ticker-container:hover .ticker-content {
+
             animation-play-state: paused;
+
         }
+
         
+
         /* Hero Section */
+
         .hero {
+
             background: var(--white);
+
         }
+
         
+
         .hero-container {
+
             display: flex;
+
             gap: 10px;
+
             border-color: #333;
+
         }
+
         
+
         .hero-left {
+
             flex: 2;
+
             border-radius: 15px;
+
             border-color: var(--light-gold);
+
             overflow: hidden;
+
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+
             height: 550px;
+
             width: 100%;
+
             background-color: #e6f2ff; 
+
             position: relative;
+
             top: 9px;
+
         }
+
         
+
         /* NEW SLIDER CSS */
+
         .hero-slider {
+
             width: 100%;
+
             height: 100%;
+
             position: relative;
+
         }
+
+
 
         .hero-slide {
+
             position: absolute;
+
             top: 0;
+
             left: 0;
+
             width: 100%;
+
             height: 100%;
+
             background-size: cover;
+
             background-position: center;
+
             opacity: 0;
+
             transition: opacity 1s ease-in-out;
+
             z-index: 1;
+
         }
+
+
 
         .hero-slide.active {
+
             opacity: 1;
+
             z-index: 2;
+
         }
+
         
+
         .hero-right {
+
             flex: 1;
+
             padding-left: 150px;
+
             background: var(--light-gray);
+
             border-radius: 15px;
+
             padding: 30px;
+
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
         }
+
         
+
         .news-feed-title {
+
             font-size: 1.8rem;
+
             margin-bottom: 25px;
+
             padding-bottom: 15px;
+
             border-bottom: 2px solid var(--gold);
+
             color: var(--dark-red);
+
             display: flex;
+
             align-items: center;
+
             gap: 10px;
+
         }
+
         
+
         .news-card {
+
             display: flex;
+
             gap: 20px;
+
             padding: 20px 0;
+
             border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
             transition: all 0.3s ease;
+
         }
+
+
 
         /* Special Styling for Pinned News */
+
         .news-card.pinned {
+
             background: #e6f2ff;
+
             border-left: 4px solid var(--gold);
+
             padding: 15px;
+
             border-radius: 8px;
+
             margin-bottom: 15px;
+
         }
+
         
+
         .news-card:last-child {
+
             border-bottom: none;
+
         }
+
         
+
         .news-card:hover {
+
             background: rgba(255, 255, 255, 0.5);
+
             transform: translateX(5px);
+
             border-radius: 8px;
+
             padding: 20px;
+
         }
+
         
+
         .news-image {
+
             flex: 0 0 120px;
+
             height: 100px;
+
             border-radius: 8px;
+
             overflow: hidden;
+
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+
             position: relative;
+
         }
+
         
+
         .news-image img {
+
             width: 100%;
+
             height: 100%;
+
             object-fit: cover;
+
             transition: transform 0.5s ease;
+
         }
+
         
+
         .news-card:hover .news-image img {
+
             transform: scale(1.05);
+
         }
+
         
+
         .news-content {
+
             flex: 1;
+
             display: flex;
+
             flex-direction: column;
+
             justify-content: space-between;
+
         }
+
         
+
         .news-date {
+
             color: var(--dark-gold);
+
             font-weight: 500;
+
             display: block;
+
             margin-bottom: 8px;
+
             font-size: 0.9rem;
+
             display: flex;
+
             align-items: center;
+
             gap: 5px;
+
         }
+
         
+
         .news-title {
+
             font-size: 1.2rem;
+
             margin-bottom: 15px;
+
             font-weight: 600;
+
             color: var(--dark-red);
+
             line-height: 1.4;
+
         }
+
         
+
         .read-more {
+
             display: inline-flex;
+
             align-items: center;
+
             gap: 8px;
+
             background: var(--red);
+
             color: var(--white);
+
             padding: 10px 20px;
+
             border-radius: 25px;
+
             text-decoration: none;
+
             font-weight: 600;
+
             font-size: 0.9rem;
+
             transition: all 0.3s ease;
+
             align-self: flex-start;
+
             margin-top: auto;
+
             cursor: pointer;
+
         }
+
         
+
         .read-more:hover {
+
             background: var(--dark-red);
+
             transform: translateY(-2px);
+
             box-shadow: 0 5px 15px rgba(0, 51, 102, 0.3);
+
             gap: 12px;
+
         }
+
         
+
         /* About Section */
+
         .about {
+
             padding: 80px 0;
+
             background: var(--light-gray);
+
         }
+
         
+
         .section-title {
+
             text-align: center;
+
             margin-bottom: 50px;
+
             position: relative;
+
         }
+
         
+
         .section-title h2 {
+
             font-size: 2.5rem;
+
             color: var(--red);
+
             display: inline-block;
+
             padding-bottom: 10px;
+
         }
+
         
+
         .section-title h2::after {
+
             content: '';
+
             position: absolute;
+
             width: 80px;
+
             height: 4px;
+
             background: var(--gold);
+
             bottom: 0;
+
             left: 50%;
+
             transform: translateX(-50%);
+
         }
+
         
+
         .about-content {
+
             display: flex;
+
             gap: 40px;
+
             align-items: center;
+
         }
+
         
+
         .about-image {
+
             flex: 1;
+
             border-radius: 10px;
+
             overflow: hidden;
+
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
             height: 450px;
+
             background: url('/image/group .jpg') center/cover;
+
         }
+
         
+
         .about-text {
+
             flex: 1;
+
         }
+
         
+
         .about-text h3 {
+
             font-size: 2rem;
+
             margin-bottom: 20px;
+
             color: var(--dark-red);
+
         }
+
         
+
         .about-text p {
+
             margin-bottom: 20px;
+
             font-size: 1.1rem;
+
         }
+
+
 
         /* ------------------ OUR SQUAD SECTION STYLES ------------------ */
+
         .squad {
+
             padding: 80px 0;
+
             background: var(--white);
+
         }
+
         
+
         /* Coaches Homepage Section Styling (reusing squad styles as base) */
+
         .coaches-homepage {
+
             padding: 80px 0;
+
             background: var(--light-gray);
+
         }
+
+
 
         .squad-intro {
+
             text-align: center;
+
             max-width: 800px;
+
             margin: 0 auto 40px auto;
+
             color: #555;
+
             font-size: 1.1rem;
+
         }
+
+
 
         .squad-container {
+
             display: grid;
+
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+
             gap: 30px;
+
             padding: 20px 0;
+
         }
+
+
 
         .player-card {
+
             background: var(--white);
+
             border-radius: 15px;
+
             overflow: hidden;
+
             box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+
             position: relative;
+
             border-bottom: 4px solid var(--gold);
+
         }
+
+
 
         .player-card:hover {
+
             transform: translateY(-12px);
+
             box-shadow: 0 18px 40px rgba(0,0,0,0.2);
+
             border-color: var(--dark-red);
+
         }
+
+
 
         .player-img-container {
+
             height: 320px;
+
             width: 100%;
+
             overflow: hidden;
+
             position: relative;
+
             background: var(--light-gray);
+
         }
+
+
 
         .player-img-container img {
+
             width: 100%;
+
             height: 100%;
+
             object-fit: cover;
+
             transition: transform 0.5s ease;
+
         }
+
+
 
         .player-card:hover .player-img-container img {
+
             transform: scale(1.08);
+
         }
+
+
 
         .player-number {
+
             position: absolute;
+
             top: 15px;
+
             right: 15px;
+
             background: var(--dark-red);
+
             color: var(--white);
+
             width: 50px;
+
             height: 50px;
+
             border-radius: 50%;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             font-weight: 800;
+
             font-size: 1.3rem;
+
             box-shadow: 0 5px 15px rgba(0,0,0,0.25);
+
             z-index: 2;
+
         }
+
+
 
         .player-info {
+
             padding: 20px;
+
             background: var(--white);
+
             text-align: center;
+
             position: relative;
+
         }
+
+
 
         .player-info::before {
+
             content: '';
+
             position: absolute;
+
             top: 0;
+
             left: 50%;
+
             transform: translateX(-50%);
+
             width: 40px;
+
             height: 4px;
+
             background: var(--gold);
+
         }
+
+
 
         .player-name {
+
             font-size: 1.5rem;
+
             font-weight: 700;
+
             color: var(--red);
+
             margin-bottom: 5px;
+
             text-transform: uppercase;
+
             letter-spacing: 0.5px;
+
         }
+
+
 
         .player-position {
+
             color: var(--dark-gold);
+
             font-weight: 600;
+
             font-size: 1rem;
+
             letter-spacing: 1px;
+
             margin-bottom: 10px;
+
         }
+
+
 
         .player-stats {
+
             display: flex;
+
             justify-content: center;
+
             gap: 20px;
+
             margin-top: 15px;
+
             padding-top: 15px;
+
             border-top: 1px solid var(--light-gray);
+
         }
+
+
 
         .stat-item {
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
         }
+
+
 
         .stat-val {
+
             font-weight: 700;
+
             color: var(--dark-gray);
+
             font-size: 1.1rem;
+
         }
+
+
 
         .stat-label {
+
             font-size: 0.8rem;
+
             color: #777;
+
             text-transform: uppercase;
+
             margin-top: 3px;
+
         }
+
+
 
         .view-all-squad {
+
             text-align: center;
+
             margin-top: 40px;
+
         }
+
+
 
         /* Activities Section */
+
         .activities {
+
             padding: 80px 0;
+
             background: var(--light-gray);
+
         }
+
+
 
         .activities-intro {
+
             text-align: center;
+
             margin-bottom: 40px;
+
             font-size: 1.1rem;
+
             color: #555;
+
             max-width: 800px;
+
             margin-left: auto;
+
             margin-right: auto;
+
         }
+
+
 
         .activities-container {
+
             display: grid;
+
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+
             gap: 30px;
+
         }
+
+
 
         .view-all-container {
+
             text-align: center;
+
             margin-top: 40px;
+
         }
+
+
 
         .view-all-btn {
+
             display: inline-flex;
+
             align-items: center;
+
             gap: 8px;
+
             background: var(--red);
+
             color: var(--white);
+
             padding: 12px 25px;
+
             border-radius: 25px;
+
             text-decoration: none;
+
             font-weight: 600;
+
             font-size: 1rem;
+
             transition: all 0.3s ease;
+
         }
+
+
 
         .view-all-btn:hover {
+
             background: var(--dark-red);
+
             transform: translateY(-2px);
+
             box-shadow: 0 5px 15px rgba(0, 51, 102, 0.3);
+
             gap: 12px;
+
         }
+
+
 
         /* Join Us Button */
+
         .join-us-btn {
+
             display: inline-flex;
+
             align-items: center;
+
             gap: 8px;
+
             background: var(--gold);
+
             color: var(--dark-gray);
+
             padding: 12px 25px;
+
             border-radius: 25px;
+
             text-decoration: none;
+
             font-weight: 600;
+
             font-size: 1rem;
+
             transition: all 0.3s ease;
+
             margin-left: 20px;
+
             cursor: pointer;
+
             border: none;
+
         }
+
+
 
         .join-us-btn:hover {
+
             background: var(--dark-gold);
+
             transform: translateY(-2px);
+
             box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+
             gap: 12px;
+
         }
+
+
 
         /* Modal Styles */
+
         .modal {
+
             display: none;
+
             position: fixed;
+
             z-index: 1000;
+
             left: 0;
+
             top: 0;
+
             width: 100%;
+
             height: 100%;
+
             overflow: auto;
+
             background-color: rgba(0,0,0,0.6);
+
             backdrop-filter: blur(5px);
+
             -webkit-backdrop-filter: blur(5px);
+
             padding-top: 60px;
+
             animation: fadeIn 0.3s ease-out;
+
         }
+
+
 
         @keyframes fadeIn {
+
             from { opacity: 0; }
+
             to { opacity: 1; }
+
         }
+
+
 
         .modal-content {
+
             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+
             margin: 5% auto;
+
             padding: 40px;
+
             border: none;
+
             width: 90%;
+
             max-width: 650px;
+
             border-radius: 20px;
+
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+
             animation: slideIn 0.4s ease-out;
+
             position: relative;
+
         }
+
+
 
         @keyframes slideIn {
+
             from {
+
                 opacity: 0;
+
                 transform: translateY(-50px) scale(0.9);
+
             }
+
             to {
+
                 opacity: 1;
+
                 transform: translateY(0) scale(1);
+
             }
+
         }
+
+
 
         .modal-content h2 {
+
             color: var(--red);
+
             font-size: 2rem;
+
             font-weight: 700;
+
             margin-bottom: 10px;
+
             text-align: center;
+
             position: relative;
+
             padding-bottom: 15px;
+
         }
+
+
 
         .modal-content h2::after {
+
             content: '';
+
             position: absolute;
+
             width: 60px;
+
             height: 4px;
+
             background: linear-gradient(90deg, var(--gold), var(--dark-red));
+
             bottom: 0;
+
             left: 50%;
+
             transform: translateX(-50%);
+
             border-radius: 2px;
+
         }
+
+
 
         .modal-content p {
+
             text-align: center;
+
             color: #666;
+
             margin-bottom: 30px;
+
             font-size: 1.1rem;
+
         }
+
+
 
         .close-btn {
+
             position: absolute;
+
             top: 20px;
+
             right: 25px;
+
             color: #666;
+
             font-size: 32px;
+
             font-weight: bold;
+
             background: rgba(255, 255, 255, 0.9);
+
             border-radius: 50%;
+
             width: 45px;
+
             height: 45px;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             cursor: pointer;
+
             transition: all 0.3s ease;
+
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
         }
+
+
 
         .close-btn:hover, .close-btn:focus {
+
             color: var(--red);
+
             background: #fff;
+
             transform: rotate(90deg) scale(1.1);
+
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+
         }
+
+
 
         .form-group {
+
             margin-bottom: 20px;
+
         }
+
+
 
         .form-group label {
+
             display: block;
+
             margin-bottom: 8px;
+
             font-weight: 600;
+
             color: var(--dark-red);
+
             font-size: 0.95rem;
+
         }
+
+
 
         .form-group input, .form-group select, .form-group textarea {
+
             width: 100%;
+
             padding: 14px 16px;
+
             border-radius: 10px;
+
             border: 2px solid #e1e5e9;
+
             font-size: 1rem;
+
             box-sizing: border-box;
+
             transition: all 0.3s ease;
+
             background: #fff;
+
             font-family: inherit;
+
         }
+
+
 
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+
             outline: none;
+
             border-color: var(--gold);
+
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+
             transform: translateY(-1px);
+
         }
+
+
 
         .form-group input[type="radio"] {
+
             width: auto;
+
             margin-right: 8px;
+
             accent-color: var(--gold);
+
         }
+
+
 
         .form-group input[type="radio"]:checked {
+
             background-color: var(--gold);
+
         }
+
+
 
         .conditional-field {
+
             display: none;
+
             animation: fadeInUp 0.3s ease-out;
+
         }
+
+
 
         @keyframes fadeInUp {
+
             from {
+
                 opacity: 0;
+
                 transform: translateY(10px);
+
             }
+
             to {
+
                 opacity: 1;
+
                 transform: translateY(0);
+
             }
+
         }
+
+
 
         .submit-btn {
+
             background: linear-gradient(135deg, var(--red), var(--dark-red));
+
             color: var(--white);
+
             padding: 16px 32px;
+
             border: none;
+
             border-radius: 30px;
+
             font-weight: 600;
+
             font-size: 1.1rem;
+
             cursor: pointer;
+
             transition: all 0.3s ease;
+
             width: 100%;
+
             margin-top: 10px;
+
             box-shadow: 0 4px 15px rgba(0, 51, 102, 0.3);
+
             position: relative;
+
             overflow: hidden;
+
         }
+
+
 
         .submit-btn::before {
+
             content: '';
+
             position: absolute;
+
             top: 0;
+
             left: -100%;
+
             width: 100%;
+
             height: 100%;
+
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+
             transition: left 0.5s;
+
         }
+
+
 
         .submit-btn:hover::before {
+
             left: 100%;
+
         }
+
+
 
         .submit-btn:hover {
+
             background: linear-gradient(135deg, var(--dark-red), var(--red));
+
             transform: translateY(-3px);
+
             box-shadow: 0 8px 25px rgba(0, 51, 102, 0.4);
+
         }
+
+
 
         .submit-btn:disabled {
+
             background: #ccc;
+
             cursor: not-allowed;
+
             transform: none;
+
             box-shadow: none;
+
         }
+
+
 
         .submit-btn:disabled:hover {
+
             background: #ccc;
+
             transform: none;
+
             box-shadow: none;
+
         }
+
+
 
         /* Image preview styles */
+
         .image-preview-container {
+
             margin-bottom: 20px;
+
             text-align: center;
+
         }
+
+
 
         .image-preview-label {
+
             display: block;
+
             margin-bottom: 8px;
+
             font-weight: 600;
+
             color: var(--dark-red);
+
             font-size: 0.95rem;
+
         }
+
+
 
         .image-preview-box {
+
             width: 200px;
+
             height: 200px;
+
             border: 2px dashed #ddd;
+
             border-radius: 10px;
+
             margin: 0 auto;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             overflow: hidden;
+
             background: #f9f9f9;
+
             transition: all 0.3s ease;
+
             position: relative;
+
         }
+
+
 
         .image-preview-box:hover {
+
             border-color: var(--gold);
+
             background: #f0f8ff;
+
         }
+
+
 
         .image-preview-box img {
+
             width: 100%;
+
             height: 100%;
+
             object-fit: cover;
+
             display: none;
+
         }
+
+
 
         .image-preview-placeholder {
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
             color: #777;
+
             padding: 20px;
+
             text-align: center;
+
         }
+
+
 
         .image-preview-placeholder i {
+
             font-size: 2.5rem;
+
             margin-bottom: 10px;
+
             color: var(--gold);
+
         }
+
+
 
         .preview-instructions {
+
             font-size: 0.85rem;
+
             color: #888;
+
             margin-top: 8px;
+
             text-align: center;
+
         }
+
+
 
         .remove-image-btn {
+
             position: absolute;
+
             top: 10px;
+
             right: 10px;
+
             background: rgba(255, 0, 0, 0.8);
+
             color: white;
+
             border: none;
+
             border-radius: 50%;
+
             width: 30px;
+
             height: 30px;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             cursor: pointer;
+
             z-index: 10;
+
             opacity: 0;
+
             transition: opacity 0.3s ease;
+
         }
+
+
 
         .image-preview-box:hover .remove-image-btn {
+
             opacity: 1;
+
         }
+
+
 
         .remove-image-btn:hover {
+
             background: rgba(255, 0, 0, 1);
+
         }
+
+
 
         .file-upload-btn {
+
             display: inline-flex;
+
             align-items: center;
+
             gap: 8px;
+
             background: var(--gold);
+
             color: var(--dark-gray);
+
             padding: 10px 20px;
+
             border-radius: 25px;
+
             text-decoration: none;
+
             font-weight: 600;
+
             font-size: 0.9rem;
+
             transition: all 0.3s ease;
+
             cursor: pointer;
+
             border: none;
+
             margin-top: 10px;
+
         }
+
+
 
         .file-upload-btn:hover {
+
             background: var(--dark-gold);
+
             transform: translateY(-2px);
+
             box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+
             gap: 12px;
+
         }
+
+
 
         /* Adjust the form group for photograph */
+
         #photograph {
+
             display: none;
+
         }
+
+
 
         .activity-card {
+
             background: var(--white);
+
             border-radius: 10px;
+
             overflow: hidden;
+
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+
             display: flex;
+
         }
+
+
 
         .activity-card:hover {
+
             transform: translateY(-10px);
+
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+
         }
+
+
 
         .activity-img {
+
             flex: 0 0 300px;
+
             height: 250px;
+
             overflow: hidden;
+
         }
+
+
 
         .activity-img img {
+
             width: 100%;
+
             height: 100%;
+
             object-fit: cover;
+
             transition: transform 0.5s ease;
+
         }
+
+
 
         .activity-card:hover .activity-img img {
+
             transform: scale(1.05);
+
         }
+
+
 
         .activity-content {
+
             flex: 1;
+
             padding: 25px;
+
             display: flex;
+
             flex-direction: column;
+
             justify-content: space-between;
+
         }
+
         
+
         .activity-date {
+
             display: flex;
+
             align-items: center;
+
             gap: 8px;
+
             color: var(--dark-gold);
+
             font-weight: 600;
+
             margin-bottom: 10px;
+
         }
+
         
+
         .activity-title {
+
             font-size: 1.4rem;
+
             margin-bottom: 15px;
+
             color: var(--dark-red);
+
         }
+
         
+
         .activity-desc {
+
             color: #555;
+
             margin-bottom: 20px;
+
         }
+
         
+
         .activity-status {
+
             display: inline-block;
+
             padding: 6px 15px;
+
             border-radius: 20px;
+
             font-weight: 600;
+
             font-size: 0.85rem;
+
         }
+
         
+
         .status-upcoming {
+
             background: rgba(0, 123, 255, 0.2);
+
             color: var(--dark-gold);
+
         }
+
         
+
         .status-past {
+
             background: rgba(0, 51, 102, 0.15);
+
             color: var(--dark-red);
+
         }
+
         
+
         /* Gallery Section */
+
         .gallery {
+
             padding: 80px 0;
+
             background: var(--white);
+
         }
+
         
+
         .gallery-intro {
+
             text-align: center;
+
             margin-bottom: 40px;
+
             font-size: 1.1rem;
+
             color: #555;
+
             max-width: 800px;
+
             margin-left: auto;
+
             margin-right: auto;
+
         }
+
         
+
         .gallery-container {
+
             display: grid;
+
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
             gap: 20px;
+
         }
+
         
+
         .gallery-item {
+
             position: relative;
+
             border-radius: 10px;
+
             overflow: hidden;
+
             height: 250px;
+
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+
             border: 1px solid transparent;
+
         }
+
         
+
         .gallery-item:hover {
+
             transform: translateY(-8px);
+
             box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+
             border-color: var(--gold);
+
         }
+
         
+
         .gallery-item img {
+
             width: 100%;
+
             height: 100%;
+
             object-fit: cover;
+
             transition: transform 0.5s ease;
+
         }
+
         
+
         .gallery-item:hover img {
+
             transform: scale(1.12);
+
         }
+
         
+
         .gallery-caption {
+
             position: absolute;
+
             bottom: 0;
+
             left: 0;
+
             width: 100%;
+
             background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4));
+
             color: var(--white);
+
             padding: 15px;
+
             transform: translateY(100%);
+
             transition: transform 0.3s ease;
+
             display: flex;
+
             flex-direction: column;
+
             justify-content: flex-end;
+
             min-height: 50%;
+
         }
+
         
+
         .gallery-item:hover .gallery-caption {
+
             transform: translateY(0);
+
         }
+
         
+
         .gallery-caption h3 {
+
             font-size: 1.2rem;
+
             margin-bottom: 5px;
+
             font-weight: 600;
+
             color: var(--white);
+
         }
+
         
+
         .gallery-caption p {
+
             font-size: 0.9rem;
+
             opacity: 0.9;
+
             color: var(--light-gold);
+
         }
+
         
+
         .view-all-gallery {
+
             text-align: center;
+
             margin-top: 40px;
+
         }
+
         
+
         /* Footer Styles */
+
         footer {
+
             background: linear-gradient(135deg, var(--red), var(--dark-red));
+
             color: var(--white);
+
             padding: 60px 0 20px;
+
         }
+
+
 
         footer a {
+
             color: var(--white);
+
             text-decoration: none;
+
             transition: color 0.3s;
+
         }
+
+
 
         footer a:hover {
+
             color: var(--gold);
+
         }
+
         
+
         .footer-content {
+
             display: grid;
+
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
             gap: 40px;
+
             margin-bottom: 40px;
+
         }
+
         
+
         .footer-column h3 {
+
             font-size: 1.5rem;
+
             margin-bottom: 20px;
+
             position: relative;
+
             padding-bottom: 10px;
+
         }
+
         
+
         .footer-column h3::after {
+
             content: '';
+
             position: absolute;
+
             width: 50px;
+
             height: 3px;
+
             background: var(--gold);
+
             bottom: 0;
+
             left: 0;
+
         }
+
         
+
         .contact-info {
+
             list-style: none;
+
             padding: 0;
+
         }
+
         
+
         .contact-info li {
+
             margin-bottom: 15px;
+
             display: flex;
+
             align-items: center;
+
             gap: 10px;
+
         }
+
+
 
         .contact-info a {
+
             display: inline-flex;
+
             align-items: center;
+
             gap: 10px;
+
         }
+
         
+
         .social-links {
+
             display: flex;
+
             gap: 15px;
+
             margin-top: 20px;
+
         }
+
+
 
         .social-links a {
+
             display: inline-flex;
+
             align-items: center;
+
             justify-content: center;
+
             width: 40px;
+
             height: 40px;
+
             background: rgba(255, 255, 255, 0.1);
+
             color: var(--white);
+
             border-radius: 50%;
+
             transition: all 0.3s ease;
+
         }
+
+
 
         .social-links a:hover {
+
             background: var(--gold);
+
             color: var(--dark-gray);
+
             transform: translateY(-5px);
+
         }
+
         
+
         .copyright {
+
             text-align: center;
+
             padding-top: 20px;
+
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+
             font-size: 0.9rem;
+
             opacity: 0.8;
+
         }
+
         
+
         /* Responsive adjustments */
+
         @media (max-width: 992px) {
+
             .hero-container {
+
                 flex-direction: column;
+
                 gap: 20px;
+
             }
+
+
 
             .hero-left {
+
                 display: flex;
+
                 width: 100%;
+
                 height: 80vh !important;
+
                 order: 1;
+
                 flex: none !important;
+
                 background: linear-gradient(45deg, #e6f2ff, #cce6ff); 
+
                 border: none !important;
+
             }
 
+
+
             .hero-right {
+
                 width: 100%;
+
                 order: 2;
+
                 padding-left: 30px;
+
                 padding-right: 30px;
+
             }
+
+
 
             .about-content {
+
                 flex-direction: column;
+
             }
+
+
 
             .about-image, .about-text {
+
                 flex: none;
+
                 width: 100%;
+
             }
+
         }
+
+
 
         @media (max-width: 768px) {
+
             nav ul {
+
                 display: none;
+
                 position: absolute;
+
                 top: 100%;
+
                 left: 0;
+
                 width: 100%;
+
                 background: var(--dark-red);
+
                 flex-direction: column;
+
                 padding: 20px;
+
                 gap: 15px;
+
             }
+
+
 
             nav ul.show {
+
                 display: flex;
+
             }
+
+
 
             .mobile-menu-btn {
+
                 display: block;
+
             }
 
+
+
             .news-card {
+
                 flex-direction: column;
+
             }
+
+
 
             .news-image {
+
                 flex: 0 0 180px;
+
                 width: 100%;
+
             }
+
+
 
             .activity-card {
+
                 flex-direction: column;
+
             }
+
+
 
             .activity-img {
+
                 flex: 0 0 200px;
+
                 width: 100%;
+
             }
+
+
 
             .gallery-container {
+
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
             }
+
+
 
             .hero-left {
+
                 height: 80vh !important;
+
                 background-size: cover !important;
+
                 border-radius: 10px;
+
                 flex: none !important;
+
                 padding: -30px !important;
+
             }
 
+
+
             .hero-right {
+
                 padding-left: 20px;
+
                 padding-right: 20px;
+
             }
+
         }
+
+
 
         @media (max-width: 576px) {
+
             .hero-left {
+
                 height: 35vh;
+
                 border-radius: 8px;
+
             }
+
             
+
             .section-title h2 {
+
                 font-size: 2rem;
+
             }
+
             
+
             .news-feed-title {
+
                 font-size: 1.5rem;
+
             }
+
             
+
             .activities-container {
+
                 grid-template-columns: 1fr;
+
             }
+
             
+
             .hero-right {
+
                 padding: 20px;
+
             }
+
             
+
             .news-card {
+
                 padding: 15px 0;
+
             }
+
             
+
             .news-card:hover {
+
                 padding: 15px;
+
             }
+
         }
+
     </style>
+
 </head>
+
 <body>
+
     <header>
+
         <div class="header-content">
+
             <div class="container logo">
+
                 <a href="/index.html" class="logo-image">
+
                     <img src="/image/alamu.png" alt="AFA Logo">
+
                 </a>
+
                 <div class="logo-text">
+
                     <h1>Alamu Football Academy</h1>
+
                     <p>Our Pride Their Fear</p>
+
                 </div>
+
             </div>
+
             
+
             <nav class="container">
+
                 <ul id="nav-menu">
+
                     <li><a href="/index.html"><i class="fas fa-home"></i> Home</a></li>
+
                     <li><a href="/pages/about.html"><i class="fas fa-info-circle"></i> About</a></li>
+
                     <li><a href="pages/OurPlayers.html"><i class="fas fa-users"></i> Our Players</a></li>
+
                     <li><a href="pages/coaches.html"><i class="fas fa-chalkboard-teacher"></i> Coaches</a></li>
+
                     <li><a href="pages/gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
+
                     <li><a href="/pages/news.html"><i class="fas fa-newspaper"></i> News</a></li>
+
                     <li><a href="/pages/contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+
                 </ul>
+
                 <button class="mobile-menu-btn" id="mobile-menu">
+
                     <i class="fas fa-bars"></i>
+
                 </button>
+
             </nav>
+
         </div>
+
     </header>
+
     
+
     <div class="ticker-container">
+
         <div class="ticker-content">
+
             <div class="ticker-item">
+
                 <i class="fas fa-star ticker-icon"></i>
+
                 <span>Welcome to the official website of Alamu Football Academy</span>
+
             </div>
+
             <div class="ticker-item">
+
                 <i class="fas fa-calendar-alt ticker-icon"></i>
+
                 <span>Open Trials: January 3-10, 2026 at the Academy Ground</span>
+
             </div>
+
             <div class="ticker-item">
+
                 <i class="fas fa-graduation-cap ticker-icon"></i>
+
                 <span>Scholarship applications now open for outstanding talents</span>
+
             </div>
+
         </div>
+
     </div>
+
     
+
     <section class="hero">
+
         <div class="hero-container">
+
             <div class="hero-left">
+
                 <div class="hero-slider" id="heroSlider"></div>
+
             </div>
+
             
+
             <div class="hero-right">
+
                 <h2 class="news-feed-title"><i class="fas fa-newspaper"></i> Academy News Feed</h2>
+
+                <!-- News cards will be dynamically inserted here -->
+
             </div>
+
         </div>
+
     </section>
+
     
+
     <section class="about" id="about">
+
         <div class="container">
+
             <div class="section-title">
+
                 <h2>About The Academy</h2>
+
             </div>
+
             <div class="about-content">
+
                 <div class="about-image">
+
                 </div>
+
                 <div class="about-text">
+
                     <h3>Alamu Football Academy</h3>
+
                     <p>Alamu Football Academy is the premier destination for youth football development in Iwo Land. Established with a vision to nurture the next generation of football stars, combines athletic training with character education.</p>
+
                     <p>Our academy is known for its progressive training methods, commitment to player development, and efforts to promote sportsmanship and discipline globally. We are dedicated to fostering unity and progress through the beautiful game.</p>
+
                     <p>Since inception,has witnessed significant success in youth leagues, talent discovery, and community engagement. The academy is also recognized for its advocacy for peace and initiatives to empower youth through sports.</p>
+
                 </div>
+
             </div>
+
         </div>
+
     </section>
+
+
 
     <section class="coaches-homepage" id="coaches-homepage">
+
         <div class="container">
+
             <div class="section-title">
+
                 <h2>Our Professional Coaches</h2>
+
             </div>
+
             <p class="squad-intro">Our coaching staff comprises highly experienced professionals dedicated to nurturing talent and fostering a winning mentality.</p>
+
             <div class="squad-container" id="homepageCoachesContainer">
+
                 </div>
+
             <div class="view-all-squad">
+
                 <a href="/pages/coaches.html" class="view-all-btn">View All Coaches <i class="fas fa-arrow-right"></i></a>
+
             </div>
+
         </div>
+
     </section>
+
+
 
     <section class="squad" id="squad">
+
         <div class="container">
+
             <div class="section-title">
+
                 <h2>Our Players</h2>
+
             </div>
+
             <p class="squad-intro">Meet the talented players of Alamu Football Academy. Our Players consists of dedicated athletes who are trained to excel both on and off the field.</p>
+
             <div class="squad-container" id="squadContainer">
+
                 </div>
+
             <div class="view-all-squad">
+
                 <a href="/pages/OurPlayers.html" class="view-all-btn">View Full Squad <i class="fas fa-arrow-right"></i></a>
+
                 <button class="join-us-btn" id="joinUsBtn">Join Us <i class="fas fa-user-plus"></i></button>
+
             </div>
+
         </div>
+
     </section>
+
+
 
     <div id="joinUsModal" class="modal">
+
         <div class="modal-content">
+
             <span class="close-btn" id="closeModal">&times;</span>
+
             <h2>Join Alamu Football Academy</h2>
+
             <p>Fill out the form below to express your interest in joining our academy. We'll get back to you soon!</p>
+
             <form id="joinUsForm">
+
                 <div class="form-group">
+
                     <label for="fullName">Full Name *</label>
+
                     <input type="text" id="fullName" name="fullName" required>
+
                 </div>
+
                 <div class="form-group">
+
                     <label for="address">Address</label>
+
                     <input type="text" id="address" name="address">
+
                 </div>
+
                 <div class="form-group">
+
                     <label for="dateOfBirth">Date Of Birth</label>
+
                     <input type="date" id="dateOfBirth" name="dateOfBirth">
+
                 </div>
+
                 <div class="form-group">
+
                     <label for="parentFullName">Parent Full Name</label>
+
                     <input type="text" id="parentFullName" name="parentFullName">
+
                 </div>
+
                 <div class="form-group">
+
                     <label for="parentAddress">Parent Address</label>
+
                     <input type="text" id="parentAddress" name="parentAddress">
+
                 </div>
+
                 <div class="form-group">
+
                     <label for="parentPhone1">Parent Phone Number 1</label>
+
                     <input type="tel" id="parentPhone1" name="parentPhone1">
+
                 </div>
+
                 <div class="form-group">
+
                     <label for="parentPhone2">Parent Phone Number 2</label>
+
                     <input type="tel" id="parentPhone2" name="parentPhone2">
+
                 </div>
+
                 <div class="form-group">
+
                     <label for="studentOrGraduate">Student or Graduate *</label>
+
                     <select id="studentOrGraduate" name="studentOrGraduate" required>
+
                         <option value="">Select Option</option>
+
                         <option value="student">Student</option>
+
                         <option value="graduate">Graduate</option>
+
                     </select>
+
                 </div>
+
                 <div class="form-group conditional-field" id="studentFields">
+
                     <label for="schoolName">School Name</label>
+
                     <input type="text" id="schoolName" name="schoolName">
+
                     <label for="schoolClass">Class</label>
+
                     <input type="text" id="schoolClass" name="schoolClass">
+
                 </div>
+
                 <div class="form-group conditional-field" id="graduateFields">
+
                     <label for="gradType">University or Occupation *</label>
+
                     <select id="gradType" name="gradType" required>
+
                         <option value="">Select Option</option>
+
                         <option value="university">University</option>
+
                         <option value="occupation">Occupation</option>
+
                     </select>
+
                 </div>
+
                 <div class="form-group conditional-field" id="universityFields">
+
                     <label for="universityName">University Name</label>
+
                     <input type="text" id="universityName" name="universityName">
+
                     <label for="department">Department</label>
+
                     <input type="text" id="department" name="department">
+
                 </div>
+
                 <div class="form-group conditional-field" id="occupationFields">
+
                     <label for="job">What Job</label>
+
                     <input type="text" id="job" name="job">
+
                 </div>
+
                 <div class="form-group">
+
                     <label for="email">Email Address *</label>
+
                     <input type="email" id="email" name="email" required>
+
                 </div>
+
                 <div class="form-group">
+
                     <label for="phone">Phone Number *</label>
+
                     <input type="tel" id="phone" name="phone" required>
+
                 </div>
+
                 <div class="form-group">
+
                     <div class="image-preview-container">
+
                         <label class="image-preview-label">Photograph Preview</label>
+
                         <div class="image-preview-box" id="imagePreviewBox">
+
                             <div class="image-preview-placeholder">
+
                                 <i class="fas fa-camera"></i>
+
                                 <span>No image selected</span>
+
                             </div>
+
                             <img id="previewImage" src="" alt="Image Preview">
+
                             <button type="button" class="remove-image-btn" id="removeImageBtn" title="Remove image">
+
                                 <i class="fas fa-times"></i>
+
                             </button>
+
                         </div>
+
                         <p class="preview-instructions">Click the button below to select an image</p>
+
                         <button type="button" class="file-upload-btn" id="uploadImageBtn">
+
                             <i class="fas fa-upload"></i> Select Photograph
+
                         </button>
+
                         <input type="file" id="photograph" name="photograph" accept="image/*" style="display: none;">
+
                     </div>
+
                 </div>
+
                 <div class="form-group">
+
                     <label for="previousAcademy">Previous Academy or Club</label>
+
                     <input type="text" id="previousAcademy" name="previousAcademy">
+
                 </div>
+
                 <div class="form-group">
+
                     <label for="position">Preferred Position</label>
+
                     <select id="position" name="position">
+
                         <option value="">Select Position</option>
+
                         <option value="Goalkeeper">Goalkeeper</option>
+
                         <option value="Defender">Defender</option>
+
                         <option value="Midfielder">Midfielder</option>
+
                         <option value="Forward">Forward</option>
+
                         <option value="Not Sure">Not Sure</option>
+
                     </select>
+
                 </div>
+
                 <div class="form-group">
+
                     <label for="experience">Football Experience</label>
+
                     <select id="experience" name="experience">
+
                         <option value="">Select Experience Level</option>
+
                         <option value="Beginner">Beginner</option>
+
                         <option value="Intermediate">Intermediate</option>
+
                         <option value="Advanced">Advanced</option>
+
                         <option value="Professional">Professional</option>
+
                     </select>
+
                 </div>
+
                 <div class="form-group">
+
                     <label for="message">Additional Message</label>
+
                     <textarea id="message" name="message" rows="4" placeholder="Tell us about yourself, your goals, or any questions you have..."></textarea>
+
                 </div>
+
                 <button type="submit" class="submit-btn">Submit Application</button>
+
             </form>
+
         </div>
+
     </div>
 
+
+
     <section class="gallery" id="gallery">
+
         <div class="container">
+
             <div class="section-title">
+
                 <h2>Photo Gallery</h2>
+
             </div>
+
             <p class="gallery-intro">Browse through our collection of memorable moments, training sessions, matches, and events at Alamu Football Academy.</p>
+
             <div class="gallery-container" id="galleryContainer">
+
                 </div>
+
             <div class="view-all-gallery">
+
                 <a href="/pages/gallery.html" class="view-all-btn">View Full Gallery <i class="fas fa-arrow-right"></i></a>
+
             </div>
+
         </div>
+
     </section>
+
     
+
     <footer>
+
         <div class="container">
+
             <div class="footer-content">
+
                 <div class="footer-column">
+
                     <h3>Contact Information</h3>
+
                     <ul class="contact-info">
+
                         <li><i class="fas fa-map-marker-alt"></i>Telu Football Club, Iwo, Osun State, Nigeria</li>
+
                         <li><i class="fas fa-phone"></i> +234 808 574 2261</li>
+
                         <li><i class="fas fa-envelope"></i> telufciwo@gmail.com</li>
+
                     </ul>
+
                     <div class="social-links">
+
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
+
                         <a href="#"><i class="fab fa-twitter"></i></a>
+
                         <a href="#"><i class="fab fa-instagram"></i></a>
+
                         <a href="#"><i class="fab fa-youtube"></i></a>
+
                     </div>
+
                 </div>
+
                 
+
                 <div class="footer-column">
+
                     <h3>Quick Links</h3>
+
                     <ul class="contact-info">
+
                         <li><a href="index.html"><i class="fas fa-arrow-right"></i> Home</a></li>
+
                         <li><a href="about.html"><i class="fas fa-arrow-right"></i> About</a></li>
+
                         <li><a href="OurPlayers.html"><i class="fas fa-arrow-right"></i> Our Players</a></li>>
+
                         <li><a href="gallery.html"><i class="fas fa-arrow-right"></i> Gallery</a></li>
+
                     </ul>
+
                 </div>
+
                 
+
                 <div class="footer-column">
+
                     <h3>Visit The Academy</h3>
+
                     <p>Alamu Football Academy is open to visitors and prospective talents by appointment. Experience the passion and dedication of our team.</p>
+
                 </div>
+
             </div>
+
             
+
             <div class="copyright">
+
                 <p>&copy; 2023 Alamu Football Academy - All Rights Reserved | Designed with <i class="fas fa-heart" style="color: var(--gold);"></i> for the Game</p>
+
             </div>
+
         </div>
+
     </footer>
 
+
+
     <script type="module">
+
         // Import all necessary functions from the Firebase SDKs
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+
         import { getFirestore, doc, getDoc, collection, getDocs, orderBy, query, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
+
+
         // Your web app's Firebase configuration
+
         const firebaseConfig = {
+
             apiKey: "AIzaSyB9JVWFn9a6RjC-_7-RweStkBTbE9P1F1k",
+
             authDomain: "alamu-fc.firebaseapp.com",
+
             projectId: "alamu-fc",
+
             storageBucket: "alamu-fc.firebasestorage.app",
+
             messagingSenderId: "519243570056",
+
             appId: "1:519243570056:web:b4d95c7266beb61757f83d",
+
             measurementId: "G-3HDT240BLK"
+
         };
 
+
+
         // Initialize Firebase
+
         const app = initializeApp(firebaseConfig);
+
         const analytics = getAnalytics(app);
+
         const db = getFirestore(app);
 
+
+
         // Global variables/elements setup
+
         window.galleryImages = [];
+
         let sliderInterval; 
+
         
+
         // Define all DOM elements needed in this scope
+
         const joinUsBtn = document.getElementById('joinUsBtn');
+
         const joinUsModal = document.getElementById('joinUsModal');
+
         const closeModal = document.getElementById('closeModal');
+
         const joinUsForm = document.getElementById('joinUsForm');
+
         const studentOrGraduateSelect = document.getElementById('studentOrGraduate');
+
         const gradTypeSelect = document.getElementById('gradType');
 
 
+
+
+
         // 1. DEFINE DEFAULT IMAGES 
+
         let heroImages = [
+
             'image/homepage1.jpg', 
+
             'image/homepage3.jpg',
+
             'image/group .jpg'
+
         ];
 
+
+
         // Load all data on page load
+
         document.addEventListener('DOMContentLoaded', () => {
+
             // Data loading functions
+
             startHeroSlider(); 
+
             loadHeroImageFromDB(); 
-            loadNewsFeed();
+
+            loadNewsFeed(); // Updated function
+
             loadHomepageCoaches(); 
+
             loadSquad(); 
+
             loadActivities();
+
             loadGallery();
+
             
+
             // Attach modal and form listeners AFTER DOM is ready
+
             setupModalAndFormListeners();
+
             setupImagePreview();
+
         });
 
+
+
         // Function to start/render the slider
+
         function startHeroSlider() {
+
             const sliderContainer = document.getElementById('heroSlider');
+
             if (!sliderContainer) return;
+
             
+
             // Clear existing content/timer if restarting
+
             sliderContainer.innerHTML = '';
+
             if (sliderInterval) clearInterval(sliderInterval);
+
             
+
             // Create slide elements
+
             heroImages.forEach((url, index) => {
+
                 const slide = document.createElement('div');
+
                 slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
+
                 slide.style.backgroundImage = `url('${url}')`;
+
                 sliderContainer.appendChild(slide);
+
             });
+
             
+
             // Start rotation if more than 1 image
+
             if (heroImages.length > 1) {
+
                 let currentSlide = 0;
+
                 sliderInterval = setInterval(() => {
+
                     const slides = document.querySelectorAll('.hero-slide');
+
                     if (slides.length === 0) return;
+
                     
+
                     slides[currentSlide].classList.remove('active');
+
                     currentSlide = (currentSlide + 1) % slides.length;
+
                     slides[currentSlide].classList.add('active');
+
                 }, 5000); 
+
             }
+
         }
+
+
 
         async function loadHeroImageFromDB() {
+
             try {
+
                 const docSnap = await getDoc(doc(db, 'settings', 'hero'));
+
                 if (docSnap.exists() && docSnap.data().url) {
+
                     heroImages = [
+
                         docSnap.data().url,
+
                         'image/homepage1.jpg', 
+
                         'image/homepage3.jpg',
+
                         'image/group .jpg',
+
                         'image/homepage1.jpg', 
+
                         'image/homepage3.jpg',
+
                         'image/group .jpg'
+
                     ];
+
                     startHeroSlider();
+
                 }
+
             } catch (error) {
+
                 console.log('Using default local images (DB fetch failed or empty)');
+
             }
+
         }
+
+
 
         async function loadNewsFeed() {
+
             const newsContainer = document.querySelector('.hero-right');
+
             if(!newsContainer) return;
-            // ... (rest of loadNewsFeed remains the same)
+
+            
+
+            // Clear existing cards (EXCEPT the title)
+
             const existingCards = newsContainer.querySelectorAll('.news-card');
+
             existingCards.forEach(card => card.remove());
 
-            try {
-                const q = query(collection(db, 'news'), orderBy('createdAt', 'desc'));
-                const querySnapshot = await getDocs(q);
-                let count = 0;
-                
-                if (querySnapshot.empty) {
-                     return;
-                }
 
-                querySnapshot.forEach((doc) => {
-                    if (count >= 4) return;
-                    const data = doc.data();
-                    const newsCard = document.createElement('div');
-                    newsCard.className = 'news-card';
-                    
-                    let displayDate = 'Recent';
-                    if (data.date) {
-                        if(typeof data.date.toDate === 'function') displayDate = data.date.toDate().toLocaleDateString();
-                        else displayDate = new Date(data.date).toLocaleDateString();
+
+            // --- ADD PINNED NEWS ITEMS HERE ---
+
+            // First pinned item: Player Recruitment
+
+            const pinnedCard1 = document.createElement('div');
+
+            pinnedCard1.className = 'news-card pinned';
+
+            pinnedCard1.innerHTML = `
+
+                <div class="news-image">
+
+                    <img src="image/telu - Copy.jpg" alt="Player Recruitment" onerror="this.src='image/news2.jpg'">
+
+                </div>
+
+                <div class="news-content">
+
+                    <span class="news-date" style="color: var(--dark-red); font-weight: bold;"><i class="fas fa-thumbtack"></i> Player Recruitment</span>
+
+                    <h3 class="news-title">We are recruiting players</h3>
+
+                    <a href="https://player.telufootballclub.com/" target="_blank" class="read-more" style="background: var(--gold); color: var(--white);">Click here to Apply <i class="fas fa-external-link-alt"></i></a>
+
+                </div>
+
+            `;
+
+            
+
+            // Second pinned item: Coach Hiring (NEW)
+
+            const pinnedCard2 = document.createElement('div');
+
+            pinnedCard2.className = 'news-card pinned';
+
+            pinnedCard2.innerHTML = `
+
+                <div class="news-image">
+
+                    <img src="image/telu - Copy.jpg" alt="Coach Hiring" onerror="this.src='image/news2.jpg'">
+
+                </div>
+
+                <div class="news-content">
+
+                    <span class="news-date" style="color: var(--dark-red); font-weight: bold;"><i class="fas fa-thumbtack"></i> Job Opportunity</span>
+
+                    <h3 class="news-title">Telu FC is hiring a coach</h3>
+
+                    <a href="https://telufootballclub.com/application-form" target="_blank" class="read-more" style="background: var(--red); color: var(--white);">Click here to Apply <i class="fas fa-external-link-alt"></i></a>
+
+                </div>
+
+            `;
+
+            
+
+            // Append pinned cards first
+
+            newsContainer.appendChild(pinnedCard1);
+
+            newsContainer.appendChild(pinnedCard2);
+
+            // ---------------------------------
+
+
+
+            try {
+
+                const q = query(collection(db, 'news'), orderBy('createdAt', 'desc'));
+
+                const querySnapshot = await getDocs(q);
+
+                
+
+                if (querySnapshot.empty) {
+
+                    // Add a placeholder if no news in database
+
+                    if (document.querySelectorAll('.news-card').length < 3) {
+
+                        const placeholderCard = document.createElement('div');
+
+                        placeholderCard.className = 'news-card';
+
+                        placeholderCard.innerHTML = `
+
+                            <div class="news-content">
+
+                                <span class="news-date"><i class="fas fa-calendar"></i> Latest</span>
+
+                                <h3 class="news-title">Stay tuned for academy updates</h3>
+
+                                <a href="/pages/news.html" class="read-more">View All News <i class="fas fa-arrow-right"></i></a>
+
+                            </div>
+
+                        `;
+
+                        newsContainer.appendChild(placeholderCard);
+
                     }
 
-                    newsCard.innerHTML = `
-                        <div class="news-image">
-                            <img src="${data.media}" alt="${data.title}">
-                        </div>
+                    return;
+
+                }
+
+
+
+                // Calculate how many regular news items we need (total 3 - pinned items)
+
+                const pinnedCount = document.querySelectorAll('.news-card.pinned').length;
+
+                const regularNewsNeeded = Math.max(0, 3 - pinnedCount);
+
+                
+
+                if (regularNewsNeeded > 0) {
+
+                    let count = 0;
+
+                    
+
+                    querySnapshot.forEach((doc) => {
+
+                        if (count >= regularNewsNeeded) return;
+
+                        
+
+                        const data = doc.data();
+
+                        const newsCard = document.createElement('div');
+
+                        newsCard.className = 'news-card';
+
+                        
+
+                        let displayDate = 'Recent';
+
+                        if (data.date) {
+
+                            if(typeof data.date.toDate === 'function') displayDate = data.date.toDate().toLocaleDateString();
+
+                            else displayDate = new Date(data.date).toLocaleDateString();
+
+                        }
+
+
+
+                        newsCard.innerHTML = `
+
+                            <div class="news-image">
+
+                                <img src="${data.media}" alt="${data.title}">
+
+                            </div>
+
+                            <div class="news-content">
+
+                                <span class="news-date"><i class="fas fa-calendar"></i> ${displayDate}</span>
+
+                                <h3 class="news-title">${data.title}</h3>
+
+                                <a href="/pages/news.html" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+
+                            </div>
+
+                        `;
+
+                        newsContainer.appendChild(newsCard);
+
+                        count++;
+
+                    });
+
+                }
+
+                
+
+                // If we still have less than 3 total items (including pinned), add a "View All News" card
+
+                const totalCards = document.querySelectorAll('.news-card').length;
+
+                if (totalCards < 3) {
+
+                    const viewAllCard = document.createElement('div');
+
+                    viewAllCard.className = 'news-card';
+
+                    viewAllCard.innerHTML = `
+
                         <div class="news-content">
-                            <span class="news-date"><i class="fas fa-calendar"></i> ${displayDate}</span>
-                            <h3 class="news-title">${data.title}</h3>
-                            <a href="/pages/news.html" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+
+                            <h3 class="news-title">More News Available</h3>
+
+                            <a href="/pages/news.html" class="read-more">View All News <i class="fas fa-arrow-right"></i></a>
+
                         </div>
+
                     `;
-                    newsContainer.appendChild(newsCard);
-                    count++;
-                });
+
+                    newsContainer.appendChild(viewAllCard);
+
+                }
+
             } catch (error) {
+
                 console.error('Error loading news:', error);
+
             }
+
         }
+
         
+
         async function loadHomepageCoaches() {
+
             const homepageCoachesContainer = document.getElementById('homepageCoachesContainer');
+
             if (!homepageCoachesContainer) return;
+
+
 
             homepageCoachesContainer.innerHTML = '<p>Loading coaches...</p>';
 
+
+
             try {
+
                 const q = query(collection(db, 'coaches'), orderBy('createdAt', 'desc'));
+
                 const querySnapshot = await getDocs(q);
 
+
+
                 if (querySnapshot.empty) {
+
                     homepageCoachesContainer.innerHTML = '<p>No coaches found.</p>';
+
                     return;
+
                 }
+
+
 
                 homepageCoachesContainer.innerHTML = '';
+
                 let count = 0;
+
                 querySnapshot.forEach((doc) => {
+
                     if (count >= 4) return;
+
                     const data = doc.data();
+
                     createCoachCard(data, homepageCoachesContainer);
+
                     count++;
+
                 });
 
+
+
             } catch (error) {
+
                 console.error('Error loading homepage coaches:', error);
+
                 homepageCoachesContainer.innerHTML = '<p>Failed to load coaches at this time.</p>';
+
             }
+
         }
+
+
 
         function createCoachCard(data, container) {
+
             const card = document.createElement('div');
+
             card.className = 'player-card'; 
+
             
+
             const coachName = data.name || 'Coach Name';
+
             const coachPosition = data.position || 'Position';
+
             const coachAge = data.age || '--';
+
             const coachImage = data.img || 'image/default-coach.png'; 
+
             
+
             card.innerHTML = `
+
                 <div class="player-img-container">
+
                     <img src="${coachImage}" alt="${coachName}" onerror="this.src='image/default-coach.png'">
+
                 </div>
+
                 <div class="player-info">
+
                     <h3 class="player-name">${coachName}</h3>
+
                     <div class="player-position">${coachPosition}</div>
+
                     <div class="player-stats">
+
                         <div class="stat-item"><span class="stat-val">${coachAge}</span><span class="stat-label">Age</span></div>
+
                     </div>
+
                 </div>
+
             `;
+
             container.appendChild(card);
+
         }
+
+
 
         async function loadSquad() {
+
             const squadContainer = document.getElementById('squadContainer');
+
             if (!squadContainer) return;
+
             
+
             squadContainer.innerHTML = '<p style="text-align:center; color:#777;"><i class="fas fa-spinner fa-spin"></i> Loading players...</p>';
 
+
+
             try {
+
                 // Load players from the 'players' collection, limit to 6
+
                 const q = query(collection(db, 'players'), orderBy('createdAt', 'desc'));
+
                 const querySnapshot = await getDocs(q);
+
                 
+
                 if (querySnapshot.empty) {
+
                     squadContainer.innerHTML = '<p style="text-align:center; color:#777;">No players have been added yet.</p>';
+
                     return;
+
                 }
+
+
 
                 squadContainer.innerHTML = '';
+
                 let count = 0;
+
                 
+
                 querySnapshot.forEach((doc) => {
+
                     if (count >= 6) return; // Show only 6 players on homepage
+
                     const data = doc.data();
+
                     createPlayerCard(data, squadContainer);
+
                     count++;
+
                 });
+
                 
+
                 // If fewer than 3 players, show a message
+
                 if (count < 3) {
+
                     squadContainer.innerHTML += '<p style="text-align:center; grid-column: 1/-1; color:#777; margin-top: 20px;">More players coming soon!</p>';
+
                 }
+
             } catch (error) {
+
                 console.error('Error loading squad:', error);
+
                 squadContainer.innerHTML = '<p style="text-align:center; color:red;">Unable to load players at this time.</p>';
+
             }
+
         }
+
+
 
         function createPlayerCard(data, container) {
+
             const card = document.createElement('div');
+
             card.className = 'player-card';
+
             
+
             const playerName = data.name || 'Player Name';
+
             const playerPosition = data.position || 'Position';
+
             
+
             // Generate a jersey number based on player name for display
+
             const jerseyNumber = data.name ? 
+
                 data.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % 99 + 1 : 
+
                 0;
+
             
+
             // Calculate age from date of birth
+
             let playerAge = '--';
+
             if (data.dateOfBirth) {
+
                 const birthDate = new Date(data.dateOfBirth);
+
                 const today = new Date();
+
                 let age = today.getFullYear() - birthDate.getFullYear();
+
                 const monthDiff = today.getMonth() - birthDate.getMonth();
+
                 if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+
                     age--;
+
                 }
+
                 playerAge = age;
+
             }
+
             
+
             const playerImage = data.image || data.img || 'image/players .jpg';
+
             
+
             card.innerHTML = `
+
                 
+
                 <div class="player-img-container">
+
                     <img src="${playerImage}" alt="${playerName}" onerror="this.src='image/players .jpg'">
+
                 </div>
+
                 <div class="player-info">
+
                     <h3 class="player-name">${playerName}</h3>
+
                     <div class="player-position">${playerPosition}</div>
+
                     <div class="player-stats">
+
                         <div class="stat-item"><span class="stat-val">${playerAge}</span><span class="stat-label">Age</span></div>
+
                         <div class="stat-item"><span class="stat-val">${data.nationality || 'N/A'}</span><span class="stat-label">Nationality</span></div>
+
                         <div class="stat-item"><span class="stat-val">${playerPosition.substring(0, 3)}</span><span class="stat-label">Pos</span></div>
+
                     </div>
+
                 </div>
+
             `;
+
             container.appendChild(card);
+
         }
+
+
 
         async function loadActivities() {
+
             const activitiesContainer = document.querySelector('.activities-container');
+
             activitiesContainer.innerHTML = ''; 
 
+
+
             try {
+
                 const q = query(collection(db, 'activities'), orderBy('createdAt', 'desc'));
+
                 const querySnapshot = await getDocs(q);
+
                 let count = 0;
+
                 querySnapshot.forEach((doc) => {
+
                     if (count >= 3) return; 
+
                     const data = doc.data();
+
                     const activityCard = document.createElement('div');
+
                     activityCard.className = 'activity-card';
+
                     activityCard.innerHTML = `
+
                         <div class="activity-img"><img src="${data.media}" alt="${data.title}"></div>
+
                         <div class="activity-content">
+
                             <div>
+
                                 <div class="activity-date"><i class="fas fa-calendar"></i> ${data.date}</div>
+
                                 <h3 class="activity-title">${data.title}</h3>
+
                                 <p class="activity-desc">${data.desc}</p>
+
                             </div>
+
                             <span class="activity-status status-${data.status}">${data.status}</span>
+
                         </div>
+
                     `;
+
                     activitiesContainer.appendChild(activityCard);
+
                     count++;
+
                 });
+
             } catch (error) { console.error(error); }
+
         }
+
+
 
         async function loadGallery() {
+
             const galleryContainer = document.getElementById('galleryContainer');
+
             galleryContainer.innerHTML = ''; 
+
             
+
             try {
+
                 const q = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
+
                 const querySnapshot = await getDocs(q);
+
                 
+
                 if (querySnapshot.empty) {
+
                     showFallbackGallery();
+
                     return;
+
                 }
+
+
 
                 window.galleryImages = [];
+
                 let count = 0;
+
                 
+
                 querySnapshot.forEach((doc) => {
+
                     if (count >= 6) return; 
+
                     const data = doc.data();
+
                     
+
                     const galleryItem = document.createElement('div');
+
                     galleryItem.className = 'gallery-item';
+
                     
+
                     galleryItem.innerHTML = `
+
                         <img src="${data.imageUrl || data.src}" alt="${data.title}" onerror="this.src='image/players .jpg'">
+
                         <div class="gallery-caption">
+
                             <h3>${data.title}</h3>
+
                             <p>${data.date || 'Recent'}</p>
+
                         </div>
+
                     `;
+
                     
+
                     galleryContainer.appendChild(galleryItem);
+
                     count++;
+
                 });
+
                 
+
             } catch (error) {
+
                 console.error('Error loading gallery:', error);
+
                 showFallbackGallery();
+
             }
+
         }
+
+
 
         function showFallbackGallery() {
+
             const galleryContainer = document.getElementById('galleryContainer');
+
             const fallbackImages = [
+
                 { src: 'image/news2.jpg', title: 'Academy Opening Ceremony', date: 'November 2015' },
+
                 { src: 'image/players .jpg', title: 'Morning Training Session', date: 'January 2023' },
+
                 { src: 'image/news1.jpg', title: 'Regional Tournament', date: 'August 2022' },
+
                 { src: 'image/title1.jpg', title: 'Team Celebration', date: 'July 2023' },
+
                 { src: 'image/title2.jpg', title: 'Player Development', date: 'April 2023' },
+
                 { src: 'image/group .jpg', title: 'Community Outreach', date: 'September 2023' }
+
             ];
+
             
+
             fallbackImages.forEach((image) => {
+
                 const galleryItem = document.createElement('div');
+
                 galleryItem.className = 'gallery-item';
+
                 
+
                 galleryItem.innerHTML = `
+
                     <img src="${image.src}" alt="${image.title}">
+
                     <div class="gallery-caption">
+
                         <h3>${image.title}</h3>
+
                         <p>${image.date}</p>
+
                     </div>
+
                 `;
+
                 
+
                 galleryContainer.appendChild(galleryItem);
+
             });
+
         }
+
         
+
         // Helper function to resize and encode image
+
         function resizeImage(file) {
+
             return new Promise((resolve, reject) => {
+
                 const reader = new FileReader();
+
                 reader.onload = (event) => {
+
                     const img = new Image();
+
                     img.onload = () => {
+
                         const canvas = document.createElement('canvas');
+
                         const MAX_WIDTH = 1920;
+
                         const MAX_HEIGHT = 1080;
+
                         let width = img.width;
+
                         let height = img.height;
 
+
+
                         if (width > height) {
+
                             if (width > MAX_WIDTH) {
+
                                 height *= MAX_WIDTH / width;
+
                                 width = MAX_WIDTH;
+
                             }
+
                         } else {
+
                             if (height > MAX_HEIGHT) {
+
                                 width *= MAX_HEIGHT / height;
+
                                 height = MAX_HEIGHT;
+
                             }
+
                         }
 
+
+
                         canvas.width = width;
+
                         canvas.height = height;
+
                         const ctx = canvas.getContext('2d');
+
                         ctx.drawImage(img, 0, 0, width, height);
+
                         resolve(canvas.toDataURL('image/webp', 0.8));
+
                     };
+
                     img.onerror = reject;
+
                     img.src = event.target.result;
+
                 };
+
                 reader.onerror = reject;
+
                 reader.readAsDataURL(file);
+
             });
+
         }
+
         
+
         // Image preview functionality
+
         function setupImagePreview() {
+
             const photographInput = document.getElementById('photograph');
+
             const uploadImageBtn = document.getElementById('uploadImageBtn');
+
             const previewImage = document.getElementById('previewImage');
+
             const imagePreviewBox = document.getElementById('imagePreviewBox');
+
             const imagePreviewPlaceholder = imagePreviewBox.querySelector('.image-preview-placeholder');
+
             const removeImageBtn = document.getElementById('removeImageBtn');
+
             
+
             // Open file dialog when button is clicked
+
             uploadImageBtn.addEventListener('click', function() {
+
                 photographInput.click();
+
             });
+
             
+
             // Handle image selection
+
             photographInput.addEventListener('change', function() {
+
                 if (this.files && this.files[0]) {
+
                     const file = this.files[0];
+
                     
+
                     // Check if file is an image
+
                     if (!file.type.match('image.*')) {
+
                         alert('Please select an image file (JPEG, PNG, etc.)');
+
                         this.value = '';
+
                         return;
+
                     }
+
                     
+
                     // Check file size (max 5MB)
+
                     if (file.size > 5 * 1024 * 1024) {
+
                         alert('Image size should be less than 5MB');
+
                         this.value = '';
+
                         return;
+
                     }
+
                     
+
                     const reader = new FileReader();
+
                     
+
                     reader.onload = function(e) {
+
                         // Show the image preview
+
                         previewImage.src = e.target.result;
+
                         previewImage.style.display = 'block';
+
                         imagePreviewPlaceholder.style.display = 'none';
+
                         
+
                         // Update button text
+
                         uploadImageBtn.innerHTML = '<i class="fas fa-sync"></i> Change Photograph';
+
                     };
+
                     
+
                     reader.readAsDataURL(file);
+
                 }
+
             });
+
             
+
             // Remove image
+
             removeImageBtn.addEventListener('click', function() {
+
                 photographInput.value = '';
+
                 previewImage.src = '';
+
                 previewImage.style.display = 'none';
+
                 imagePreviewPlaceholder.style.display = 'flex';
+
                 uploadImageBtn.innerHTML = '<i class="fas fa-upload"></i> Select Photograph';
+
             });
+
             
+
             // Reset preview when modal is closed
+
             closeModal.addEventListener('click', function() {
+
                 resetImagePreview();
+
             });
+
             
+
             // Reset preview when clicking outside modal
+
             window.addEventListener('click', function(event) {
+
                 if (event.target === joinUsModal) {
+
                     resetImagePreview();
+
                 }
+
             });
+
             
+
             // Reset image preview
+
             function resetImagePreview() {
+
                 photographInput.value = '';
+
                 previewImage.src = '';
+
                 previewImage.style.display = 'none';
+
                 imagePreviewPlaceholder.style.display = 'flex';
+
                 uploadImageBtn.innerHTML = '<i class="fas fa-upload"></i> Select Photograph';
+
             }
+
             
+
             // Also reset when form is submitted successfully
+
             joinUsForm.addEventListener('submit', function() {
+
                 // This will be called before the actual submission
+
                 setTimeout(resetImagePreview, 1000);
+
             });
+
         }
+
         
+
         // 2. MODAL & FORM LOGIC
+
         function setupModalAndFormListeners() {
+
             // Open modal
+
             joinUsBtn.addEventListener('click', () => {
+
                 joinUsModal.style.display = 'block';
+
                 document.body.style.overflow = 'hidden'; 
+
             });
+
+
 
             // Close modal
+
             closeModal.addEventListener('click', () => {
+
                 joinUsModal.style.display = 'none';
+
                 document.body.style.overflow = 'auto'; 
+
             });
+
+
 
             // Close modal when clicking outside
+
             window.addEventListener('click', (event) => {
+
                 if (event.target === joinUsModal) {
+
                     joinUsModal.style.display = 'none';
+
                     document.body.style.overflow = 'auto';
+
                 }
+
             });
+
+
 
             // Conditional field display logic
+
             studentOrGraduateSelect.addEventListener('change', () => {
+
                 const value = studentOrGraduateSelect.value;
+
                 // Hide all conditional fields first
+
                 document.getElementById('studentFields').style.display = 'none';
+
                 document.getElementById('graduateFields').style.display = 'none';
+
                 document.getElementById('universityFields').style.display = 'none';
+
                 document.getElementById('occupationFields').style.display = 'none';
+
+
 
                 if (value === 'student') {
+
                     document.getElementById('studentFields').style.display = 'block';
+
                 } else if (value === 'graduate') {
+
                     document.getElementById('graduateFields').style.display = 'block';
+
                     gradTypeSelect.value = ""; 
+
                 }
+
             });
+
+
 
             gradTypeSelect.addEventListener('change', () => {
+
                 const value = gradTypeSelect.value;
+
                 document.getElementById('universityFields').style.display = 'none';
+
                 document.getElementById('occupationFields').style.display = 'none';
 
+
+
                 if (value === 'university') {
+
                     document.getElementById('universityFields').style.display = 'block';
+
                 } else if (value === 'occupation') {
+
                     document.getElementById('occupationFields').style.display = 'block';
+
                 }
+
             });
+
+
+
 
 
             // Handle form submission
+
             joinUsForm.addEventListener('submit', async (event) => {
+
                 event.preventDefault();
 
+
+
                 const submitBtn = document.querySelector('.submit-btn');
+
                 submitBtn.disabled = true;
+
                 submitBtn.textContent = 'Submitting...';
 
+
+
                 // Get form data
+
                 const formData = new FormData(joinUsForm);
+
                 const data = Object.fromEntries(formData.entries());
+
+
 
                 let errors = [];
 
+
+
                 // Core Required Fields Check
+
                 if (!data.fullName) errors.push('Full Name');
+
                 if (!data.email) errors.push('Email');
+
                 if (!data.phone) errors.push('Phone');
+
                 if (!data.studentOrGraduate || data.studentOrGraduate === "") errors.push('Student or Graduate');
 
+
+
                 // Conditional Fields Check
+
                 if (data.studentOrGraduate === 'student') {
+
                     if (!data.schoolName) errors.push('School Name');
+
                     if (!data.schoolClass) errors.push('Class');
+
                 } else if (data.studentOrGraduate === 'graduate') {
+
                     if (!data.gradType || data.gradType === "") errors.push('University or Occupation');
 
+
+
                     if (data.gradType === 'university') {
+
                         if (!data.universityName) errors.push('University Name');
+
                         if (!data.department) errors.push('Department');
+
                     } else if (data.gradType === 'occupation') {
+
                         if (!data.job) errors.push('Job');
+
                     }
+
                 }
+
+
 
                 if (errors.length > 0) {
+
                     alert(`Please fill in all required fields: ${errors.join(', ')}`);
+
                     submitBtn.disabled = false;
+
                     submitBtn.textContent = 'Submit Application';
+
                     return;
+
                 }
 
+
+
                 try {
+
                     // Handle photograph upload
+
                     let photographUrl = '';
+
                     const photographFile = document.getElementById('photograph').files[0];
+
                     if (photographFile) {
+
                         photographUrl = await resizeImage(photographFile);
+
                     }
 
+
+
                     // Prepare data for Firebase
+
                     const applicationData = {
+
                         fullName: data.fullName,
+
                         address: data.address || '',
+
                         dob: data.dateOfBirth || null,
+
                         parentFullName: data.parentFullName || '',
+
                         parentAddress: data.parentAddress || '',
+
                         parentPhone1: data.parentPhone1 || '',
+
                         parentPhone2: data.parentPhone2 || '',
+
                         studentOrGraduate: data.studentOrGraduate,
+
                         schoolName: data.schoolName || '',
+
                         schoolClass: data.schoolClass || '',
+
                         gradType: data.gradType || '',
+
                         universityName: data.universityName || '',
+
                         department: data.department || '',
+
                         job: data.job || '',
+
                         email: data.email,
+
                         phone: data.phone,
+
                         photograph: photographUrl,
+
                         previousAcademy: data.previousAcademy || '',
+
                         position: data.position || '',
+
                         experience: data.experience || '',
+
                         message: data.message || '',
+
                         
+
                         // FIX: serverTimestamp() is now accessible
+
                         createdAt: serverTimestamp(), 
+
                         status: 'Pending' // Added a status field for applications
+
                     };
 
+
+
                     // Submit to Firebase
+
                     await addDoc(collection(db, 'applications'), applicationData);
+
+
 
                     alert('Thank you for your interest! We will contact you soon.');
 
+
+
                     // Reset form and close modal
+
                     joinUsForm.reset();
+
                     document.getElementById('studentFields').style.display = 'none';
+
                     document.getElementById('graduateFields').style.display = 'none';
+
                     document.getElementById('universityFields').style.display = 'none';
+
                     document.getElementById('occupationFields').style.display = 'none';
+
                     joinUsModal.style.display = 'none';
+
                     document.body.style.overflow = 'auto';
 
+
+
                 } catch (error) {
+
                     console.error('Error submitting application:', error);
+
                     alert('An error occurred while submitting your application. Please try again.');
+
                 } finally {
+
                     submitBtn.disabled = false;
+
                     submitBtn.textContent = 'Submit Application';
+
                 }
+
             });
+
         } // End setupModalAndFormListeners
+
         
 
+
+
     </script>
+
     
+
     <script>
+
         // Mobile menu toggle
+
         const mobileMenuBtn = document.getElementById('mobile-menu');
+
         const navMenu = document.getElementById('nav-menu');
 
+
+
         mobileMenuBtn.addEventListener('click', () => {
+
             navMenu.classList.toggle('show');
+
         });
 
+
+
         // Smooth scrolling
+
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+
             anchor.addEventListener('click', function (e) {
+
                 e.preventDefault();
 
+
+
                 const targetId = this.getAttribute('href');
+
                 if (targetId.startsWith('#')) {
+
                     const targetElement = document.querySelector(targetId);
+
                     if (targetElement) {
+
                         targetElement.scrollIntoView({
+
                             behavior: 'smooth'
+
                         });
+
                     }
+
                 }
 
+
+
         // Close mobile menu after clicking
+
         navMenu.classList.remove('show');
+
     });
+
 });
+
     </script>
+
 </body>
+
 </html>
